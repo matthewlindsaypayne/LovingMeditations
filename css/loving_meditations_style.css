@@ -17,6 +17,10 @@ body {
 .navbar-header {
 }
 
+.nav >  li > a {
+    padding: 10px 20px;
+}
+
 #lm-inspirations {
     margin: 250px 10px 100px 10px;
 }
@@ -43,4 +47,18 @@ body {
 
 .btn-group-vertical {
     margin-top: 20px;
+}
+
+#lm-invites {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+p {
+    border: 2px solid gray;
+    border-radius: 8px;
 }
