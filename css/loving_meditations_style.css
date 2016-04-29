@@ -1,0 +1,46 @@
+body, html { overflow-x:hidden; }
+
+body {
+    
+}
+
+#lm-main {
+}
+
+#lm-menu {
+    position: fixed;
+    top: 0;
+    z-index: 5;
+    width:100%;
+}
+
+.navbar-header {
+}
+
+#lm-inspirations {
+    margin: 250px 10px 100px 10px;
+}
+
+#lm-programs {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+#lm-meditations {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.videos-image {
+    max-width: 100%;
+    width: 480px;
+}
+
+#lm-login {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.btn-group-vertical {
+    margin-top: 20px;
+}
