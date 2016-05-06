@@ -1,4 +1,24 @@
-var lm_menu_height = 0;
+(function(angular) {
+  'use strict';
+    
+    var lmApp = angular.module('lmApp', []);
+    
+    /*lmApp.run(function(Parse) {
+        return Parse.auth.resumeSession();
+    }); */
+
+    lmApp.controller('LovingMeditationsController', ['$scope', function($scope) {
+        
+    }])
+
+    lmApp.controller('InspirationsController', ['$scope', function($scope) {
+        $scope.quoteText = 'No matter what people tell you, words and ideas can change the world.';
+        $scope.author = 'Robin Williams';  
+    }]);
+})(window.angular);
+
+
+/* var lm_menu_height = 0;
 jQuery(function($) {
     
     $(document).ready( function() {
@@ -30,4 +50,4 @@ function scrollTo(selectors)
     var selector_top = $(selectors).offset().top - lm_menu_height;
     $('html,body').animate({ scrollTop: selector_top }, 'slow');
 
-}
+} */

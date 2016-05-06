@@ -1,10 +1,28 @@
-body, html { overflow-x:hidden; }
+@font-face {
+    font-family: 'Champagne';
+    src: url('../misc/Champagne.tff');
+}
+
+body, html, h1, h2, h3, h4, h5, h6, p, a, button { 
+    /*overflow-x:hidden; */
+    font-family: 'Champagne', serif;
+    font-size: 120%;
+}
 
 body {
-    
+    background: url('../images/cloud_background.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: azure;
 }
 
 #lm-main {
+}
+
+.navbar-brand {
+    font-size: 120%;
 }
 
 #lm-menu {
@@ -12,6 +30,9 @@ body {
     top: 0;
     z-index: 5;
     width:100%;
+}
+
+#lm-nav-bar {
 }
 
 .navbar-header {
@@ -22,17 +43,44 @@ body {
 }
 
 #lm-inspirations {
-    margin: 250px 10px 100px 10px;
+    margin: 250px 10px 200px 10px;
+}
+
+#wrapper-inspirations {
+    background: url('../images/nice_snow.png');
+    padding: 20px 40px;
+    opacity: .9;
+    border-radius: 20px;
+    min-height: 160px;
 }
 
 #lm-programs {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 250px;
+    margin-bottom: 250px;
+}
+
+#wrapper-programs {
+    background: url('../images/nice_snow.png');
+    padding: 40px 60px;
+    opacity: .9;
+    border-radius: 20px;
+}
+
+#active-program {
+    border: 2px solid gray;
+    border-radius: 8px;
 }
 
 #lm-meditations {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 250px;
+    margin-bottom: 250px;
+}
+
+#wrapper-meditations {
+    background: url('../images/nice_snow.png');
+    padding: 40px 60px;
+    opacity: .9;
+    border-radius: 20px;
 }
 
 .videos-image {
@@ -41,8 +89,8 @@ body {
 }
 
 #lm-login {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 250px;
+    margin-bottom: 250px;
 }
 
 .btn-group-vertical {
@@ -50,15 +98,39 @@ body {
 }
 
 #lm-invites {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 250px;
+    margin-bottom: 250px;
+}
+
+#wrapper-invites {
+    background: url('../images/nice_snow.png');
+    padding: 40px 60px;
+    opacity: .9;
+    border-radius: 20px;
+}
+
+input {
+    border: 1px solid gray;
+    margin-bottom: 5px;
 }
 
 ul {
     list-style-type: none;
+    -webkit-padding-start: 0;
 }
 
 p {
     border: 2px solid gray;
     border-radius: 8px;
+}
+
+.btn-default {
+    border: 2px solid gray;
+    border-radius: 8px;
+}
+
+footer {
+    background: url('../images/nice_snow.png');
+    opacity: .9;
+    padding-top: 20px;
 }
