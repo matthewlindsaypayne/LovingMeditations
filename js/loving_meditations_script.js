@@ -3,18 +3,34 @@
     
     var lmApp = angular.module('lmApp', []);
     
-    /*lmApp.run(function(Parse) {
-        return Parse.auth.resumeSession();
-    }); */
+    lmApp.run(function() {
+        Parse.initialize("JEgXK9fpAD", "gmSkeY1CsB");
+        Parse.serverURL = "https://lmserver-1281.appspot.com/parse";
+    });
 
     lmApp.controller('LovingMeditationsController', ['$scope', function($scope) {
         
     }])
 
-    lmApp.controller('InspirationsController', ['$scope', function($scope) {
-        $scope.quoteText = 'No matter what people tell you, words and ideas can change the world.';
-        $scope.author = 'Robin Williams';  
-    }]);
+    lmApp.controller('InspirationsController', function($scope, $q) {
+        var InspirationsDfd = $q.defer();
+        var Inspirations = Parse.Object.extend('Inspirations');
+        var queryInspirations = new Parse.Query(Inspirations);
+        queryInspirations.equalTo("author", "Yoda");
+        queryInspirations.first().then(function (data) {
+            console.log(data);
+  	         InspirationsDfd.resolve(data);
+        }, function (error) {
+  	         InspirationsDfd.reject(error);
+        });
+        InspirationsDfd.promise
+            .then(function (inspiration) {
+                $scope.currentInspiration = inspiration;
+        })
+            .catch(function (error) {
+            // do something w/ this
+        });
+    });
 })(window.angular);
 
 
