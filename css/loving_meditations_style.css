@@ -34,8 +34,20 @@ body {
 .navbar-header {
 }
 
+#loving-meditations-logo {
+    height: 75px;
+}
+
 .nav >  li > a {
-    padding: 10px 20px;
+    padding: 10px 10px;
+}
+
+.navbar-default .navbar-nav > .active > a {
+    background-color: #f4ba46;
+}
+
+.navbar-default .navbar-nav > li > a.blue-text {
+    color: #0072bc;
 }
 
 #background {
@@ -43,12 +55,32 @@ body {
     height: 100%;
     z-index: 2;
     position: fixed;
-    background: url('../images/cloud_background.png');
+    background-image: url('../images/cloud_background_large.png');
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
     background-size: cover;
     background-color: azure;
+}
+
+#blur-mask {
+    z-index: 10;
+    overflow: hidden;
+    position: fixed;
+    height: 100%;
+    margin-left: 190px;
+}
+
+#blur-column {
+    width: 730px;;
+    height: 100%;
+    position: absolute;
+    background-image: url('../images/cloud_background_large.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    z-index: 1;
     -webkit-filter: blur(10px);
   -moz-filter: blur(10px);
   -o-filter: blur(10px);
@@ -56,56 +88,53 @@ body {
   filter: blur(10px);
 }
 
-#blur-mask {
-    z-index: 10;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-}
-
-#blur-column {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    background: url('../images/cloud_background.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    background-size: cover;
-    z-index: 1;
-    -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
-}
-
 #content-column {
     z-index: 10;
     color: white;
 }
 
-#lm-inspirations {
-    margin: 250px 10px 200px 10px;
+.section-img-top {
+    display: block;
+    margin: 0 auto 150px auto;
 }
 
-.section-img {
+.section-img-bottom {
     display: block;
-    margin: 0 auto;
+    margin: 150px auto 200px auto;
+}
+
+.glyphicon-img {
+    display: block;
+    margin: 0 100px;
+    
+}
+
+#lm-inspirations {
+    margin: 200px 10px 10px 10px;
+}
+
+.section-img-first {
+    display: block;
+    margin: 100px auto 150px auto;
 }
 
 #wrapper-inspirations {
-    padding: 20px 40px;
+    height: 100%;
+    padding: 40px 40px 75px 40px;
+    border: 2px solid white;
+    border-radius: 8px;
 }
 
 #lm-programs {
-    margin-top: 250px;
-    margin-bottom: 250px;
+    margin: 10px;
 }
 
 #wrapper-programs {
     padding: 40px 60px;
+}
+
+#programs-row {
+    margin-bottom: 20px;
 }
 
 #active-program {
@@ -114,8 +143,7 @@ body {
 }
 
 #lm-meditations {
-    margin-top: 250px;
-    margin-bottom: 250px;
+    margin: 10px
 }
 
 #wrapper-meditations {
@@ -128,8 +156,7 @@ body {
 }
 
 #lm-login {
-    margin-top: 250px;
-    margin-bottom: 250px;
+    margin: 10px;
 }
 
 .btn-group-vertical {
@@ -137,12 +164,19 @@ body {
 }
 
 #lm-invites {
-    margin-top: 250px;
-    margin-bottom: 250px;
+    margin: 10px;
 }
 
 #wrapper-invites {
     padding: 40px 60px;
+}
+
+#lm-contact {
+    margin: 10px;
+}
+
+#wrapper-contact {
+    padding 40px 60px;
 }
 
 input {
@@ -160,6 +194,11 @@ p {
     border-radius: 8px;
 }
 
+p span {
+    padding: 0 10px;
+    display: inline-block;
+}
+
 .btn-default {
     border: 2px solid white;
     border-radius: 8px;
@@ -168,5 +207,5 @@ p {
 footer {
     opacity: .9;
     padding-top: 20px;
-    z-index: 11;
+    z-index: 15;
 }

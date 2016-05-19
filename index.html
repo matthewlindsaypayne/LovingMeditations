@@ -17,6 +17,7 @@
         <script src="js/angular.js" type="text/javascript"></script>
         <script src="js/bootstrap.min.js"  type="text/javascript"></script>
         <script src="js/parse-1.6.14.js"></script>
+        <script src="http://fast.wistia.com/assets/external/E-v1.js"></script>
         <script src="js/loving_meditations_script.js" type="text/javascript"></script>
         
     </head>
@@ -34,15 +35,15 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                                 </button>
-                                <a href="#" class="navbar-brand"><h1>Loving Meditations</h1></a>
                             </div>
                             <div class="navbar-collapse collapse" id="lm-nav-bar">
+                                <a href="#" class="navbar-brand"><img id="loving-meditations-logo" src="images/loving_meditations_logo.png" alt="Loving Meditations" /></a>
                                 <ul class="nav navbar-nav navbar-right" style="margin-top: 40px;">
                                     <li class="active"><a href="#lm-inspirations">INSPIRATIONS</a></li>
-                                    <li><a href="#lm-programs">PROGRAMS</a></li>
+                                    <li><a href="#lm-programs" class="blue-text">PROGRAMS</a></li>
                                     <li><a href="#lm-meditations">MEDITATIONS</a></li>
-                                    <li><a href="#lm-login">LOGIN</a></li>
-                                    <li><a href="#lm-invites">INVITES</a></li>
+                                    <li><a href="#lm-invites" class="blue-text">INVITES</a></li>
+                                    <li><a href="#lm-contact">CONTACT</a></li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -52,209 +53,117 @@
             
             <div id="background"></div>
             <div class="container">
-                <!--<div id="blur-mask">
-                    <div id="blur-column" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8"></div>
-                </div>-->
-            <div id="content-column" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-            
-            <div id="lm-inspirations" ng-controller="InspirationsController as ic">
-                <div  class="row">
-                    <img class="section-img" height="70px" src="images/inspirations.png" align="middle" />
-                    <br />
-                    <br />
+                <div id="blur-mask" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+                    <div id="blur-column"></div>
                 </div>
-                    <div class="row">
-                        <div id="wrapper-inspirations" class="">
-                            <div class="pull-left"><h4>{{currentInspiration.attributes.text}}</h4></div>
-                            <div class="pull-right"><h4>- {{currentInspiration.attributes.author}}</h4></div>
-                        </div>
-                    </div>
-                <div  class="row">
-                    <br />
-                    <br />
-                    <img class="section-img" height="70px" src="images/inspirations.png" align="middle" />
-                </div>
-            </div>
+                <div id="content-column" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
             
-            <div id="lm-programs" class="text-center">
-                    <div id="wrapper-programs" class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8">
+                    <div id="lm-inspirations" ng-controller="InspirationsController as ic">
                         <div  class="row">
-                            <img class="section-img" height="70px" src="images/programs.png" align="middle" />
-                            <br />
-                            <br />
+                            <img class="section-img-first" height="100px" src="images/inspirations.png" align="middle" />
                         </div>
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <h3 id="active-program">Patient</h3>
-                        </div>
-                        <div class="col-sm-offset-2 col-sm-5">
-                            <h3>Caregiver</h3>
-                        </div>
-                    </div>
-                    <div class="row">
-                            <div class="btn-group-vertical center-block text-center">
-                                <button type="button" class="btn btn-default">Calm</button>
-                                <button type="button" class="btn btn-default">Ease</button>
-                                <button type="button" class="btn btn-default">Perseverance</button>
-                                <button type="button" class="btn btn-default">Symptoms</button>
-  <button type="button" class="btn btn-default">De-stressing</button>
-                            </div>
-                        </div>
-                        <div  class="row">
-                            <br />
-                            <br />
-                            <img class="section-img" height="70px" src="images/programs.png" align="middle" />
-                        </div>
-                    </div>
-            </div>
-            
-            <div id="lm-meditations" class="text-center">
-                    <div class="row">
-                        <div id="wrapper-meditations" class="">
-                            
-                        </div>
-                    </div>
-                    <div  class="row">
-                            <img class="section-img" height="70px" src="images/meditations.png" align="middle" />
-                            <br />
-                            <br />
-                        </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img class="videos-image" src="images/dummy_videos.png" alt="videos" />
-                        </div>
-                        <div class="col-md-6">
-                            <img class="videos-image" src="images/dummy_videos.png" alt="videos" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img class="videos-image" src="images/dummy_videos.png" alt="videos" />
-                        </div>
-                        <div class="col-md-6">
-                            <img class="videos-image" src="images/dummy_videos.png" alt="videos" />
-                        </div>
-                    </div>
-                <div  class="row">
-                            <br />
-                            <br />
-                            <img class="section-img" height="70px" src="images/meditations.png" align="middle" />
-                        </div>
-            </div>
-            
-            <div id="lm-login">
-                    <div id="wrapper-programs" class="">
-                    <div class="row">
-                        <div class="col-sm-6 center-block text-center">
-                            <div class="row">
-                                <h3>Login</h3>
-                                <br />
-                            </div>
-                            <div class="row">
-                                <form>
-                                    <div class="form-group">
-                                        <input id="login-email" class="center-block" type="email" placeholder="Email" />
-                                        <input id="login-password" class="center-block" type="password" placeholder="Password"  />
-                                    </div>
-                                    <button type="submit" class="btn btn-green center-block" value="Send">LOG IN</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 center-block text-center">
-                            <div class="row">
-                                <h3>Sign Up</h3>
-                                <br />
-                            </div>
-                            <div class="row">
-                                <form>
-                                    <div class="form-group">
-                                        <input id="signup-email" class="center-block" type="email" placeholder="Email" />
-                                        <input id="signup-code" class="center-block" type="password" placeholder="Invite Code"  />
-                                        <!--<input class="center-block" type="radio" name="patient-type" value="patient" checked><span>Patient</span>
-                                        <input class="center-block" type="radio" name="patient-type" value="caregiver"><span class="pull-left">Caregiver</span>-->
-                                
-                                    </div>
-                                    <button type="submit" class="btn btn-green center-block" value="Send">SIGN UP</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-            </div>
-            
-            <div id="lm-invites" class="center-block text-center">
-                    <div id="wrapper-invites" class="col-sm-offset-1 col-sm-10">
                         <div class="row">
+                            <div id="wrapper-inspirations">
+                                <div class="pull-left"><h4>{{currentInspiration.attributes.text}}</h4></div>
+                                <div class="pull-right"><h4>- {{currentInspiration.attributes.author}}</h4></div>
+                            </div>
+                        </div>
+                        <div  class="row">
+                            <img class="section-img-bottom" height="100px" src="images/inspirations.png" align="middle" />
+                        </div>
+                    </div>
+            
+                    <div id="lm-programs" class="center-block text-center">
+                        <div id="wrapper-programs" class="">
+                            <div  class="row">
+                                <img class="section-img-top" height="100px" src="images/programs.png" align="middle" />
+                            </div>
+                            <div id="programs-row" class="row">
+                                <div class="col-sm-5">
+                                    <h3 id="active-program">Patient</h3>
+                                </div>
+                                <div class="col-sm-offset-2 col-sm-5">
+                                    <h3>Caregiver</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <ul class="center-block">
+                                    <li>
+                                        <p><h2>Calm</h2></p>
+                                    </li>
+                                    <li>
+                                        <p><h2>Ease</h2></p>
+                                    </li>
+                                    <li>
+                                        <p><h2>Perseverance</h2></p>
+                                    </li>
+                                    <li>
+                                        <p><h2>Symptoms</h2></p>
+                                    </li>
+                                    <li>
+                                        <p><h2>De-stressing</h2></p>
+                                    </li>
+                            </div>
+                            <div  class="row">
+                                <img class="section-img-bottom" height="100px" src="images/programs.png" align="middle" />
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div id="lm-meditations" class="center-block text-center">
+                        <div id="wrapper-meditations" class="">
+                            <div  class="row">
+                                <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />
+                            </div>
+                            <div class="row">
+                                <script charset="ISO-8859-1" src="//fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_embed wistia_async_6bwlks9gvo center-block" style="height:360px;width:640px">&nbsp;</div>
+                            </div>
+                            <div  class="row">
+                                <img class="section-img-bottom" height="100px" src="images/meditations.png" align="middle" />
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div id="lm-invites" class="center-block text-center">
+                        <div id="wrapper-invites" class="">
+                            <div class="row">
+                                <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
+                            </div>
+                            <div class="row">
                             <h2>Manage Invites</h2>
                             <br />
                         </div>
                         <div class="row">
                             <h3>Active Users</h3>
                             <ul class="center-block">
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
+                                <li>
+                                    <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
                                 </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
+                                <li>
+                                    <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
+                                </li><li>
+                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
+                                </li><li>
+                                <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
+                                </li><li>
+                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
                                 </li>
                             </ul>
                         </div>
                         <div class="row">
                             <h3>Invites Sent</h3>
                             <ul class="center-block">
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
+                                <li>
+                                    <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
                                 </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
-                                </li>
-                                <li class="col-lg-3 col-md-3">
-                                    <p>Hillary Q. 03:23pm 3/5/16</p>
+                                <li>
+                                    <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
+                                </li><li>
+                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
+                                </li><li>
+                                <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Invite Sent: </strong> 3/5/16</span></p>
+                                </li><li>
+                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
                                 </li>
                             </ul>
                         </div>
@@ -269,17 +178,53 @@
                                 <button type="submit" class="btn btn-green center-block" value="Send">INVITE</button>
                             </form>
                         </div>
+                            <div class="row">
+                                <img class="section-img-bottom" height="100px" src="images/profile.png" align="middle" />
+                            </div>
+                        </div>
                     </div>
+                    
+                    <div id="lm-contact">
+                        <div id="wrapper-contact" class="">
+                            <div  class="row">
+                                <img class="section-img-top" height="100px" src="images/invites.png" align="middle" />
+                            </div>
+                            <div class="row">
+                                <div class="contact_right">
+                                    <h2 class="text-center">Have a Question?</h2>
+                                    <h2 class="text-center">Send us an Email!</h2>
+                                    <form class="form-horizontal" action="https://formspree.io/balancetemp@gmail.com" method="POST">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Your Name..." name="Name" maxlength="40" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="tel" class="form-control" placeholder="Your Phone Number..." name="Phone Number" maxlength="40" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="Your Email..." name="Email" maxlength="40" />
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea  class="form-control" style="height: 130px;" placeholder="Write down your message..." name="Message"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-green pull-right" value="Send">SEND</button>
+                                    </form>
+                        	
+                                </div>
+                            </div>
+                            <div  class="row">
+                                <img class="section-img-bottom" height="100px" src="images/invites.png" align="middle" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
-            <footer class="text-center">
+            
+        </div>
+        <footer class="text-center">
                 <h4>Crusoe Ventures 2016</h4>
                 <br />
             </footer>
-            </div>
-            </div>
-            
-            
-        </div>
         
     </body>
 </html>

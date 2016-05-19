@@ -34,7 +34,7 @@
 })(window.angular);
 
 
-/* var lm_menu_height = 0;
+ var lm_menu_height = 0;
 jQuery(function($) {
     
     $(document).ready( function() {
@@ -66,4 +66,4 @@ function scrollTo(selectors)
     var selector_top = $(selectors).offset().top - lm_menu_height;
     $('html,body').animate({ scrollTop: selector_top }, 'slow');
 
-} */
+} 
