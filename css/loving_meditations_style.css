@@ -1,11 +1,11 @@
 @font-face {
-    font-family: 'Champagne';
-    src: url('../misc/Champagne.tff');
+    font-family: 'ChampagneBold';
+    src: url('../misc/ChampagneBold.tff');
 }
 
 body, html, h1, h2, h3, h4, h5, h6, p, a, button { 
     /*overflow-x:hidden; */
-    font-family: 'Champagne', serif;
+    font-family: 'ChampagneBold', serif;
     font-size: 120%;
 }
 
@@ -46,7 +46,7 @@ body {
     background-color: #f4ba46;
 }
 
-.navbar-default .navbar-nav > li > a.blue-text {
+.navbar-default .navbar-nav > li > a {
     color: #0072bc;
 }
 
@@ -137,7 +137,7 @@ body {
     margin-bottom: 20px;
 }
 
-#active-program {
+.active-program {
     border: 2px solid white;
     border-radius: 8px;
 }

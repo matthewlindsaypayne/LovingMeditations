@@ -40,9 +40,9 @@
                                 <a href="#" class="navbar-brand"><img id="loving-meditations-logo" src="images/loving_meditations_logo.png" alt="Loving Meditations" /></a>
                                 <ul class="nav navbar-nav navbar-right" style="margin-top: 40px;">
                                     <li class="active"><a href="#lm-inspirations">INSPIRATIONS</a></li>
-                                    <li><a href="#lm-programs" class="blue-text">PROGRAMS</a></li>
+                                    <li><a href="#lm-programs">PROGRAMS</a></li>
                                     <li><a href="#lm-meditations">MEDITATIONS</a></li>
-                                    <li><a href="#lm-invites" class="blue-text">INVITES</a></li>
+                                    <li><a href="#lm-invites">INVITES</a></li>
                                     <li><a href="#lm-contact">CONTACT</a></li>
                                 </ul>
                             </div><!--/.nav-collapse -->
@@ -53,9 +53,6 @@
             
             <div id="background"></div>
             <div class="container">
-                <div id="blur-mask" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-                    <div id="blur-column"></div>
-                </div>
                 <div id="content-column" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
             
                     <div id="lm-inspirations" ng-controller="InspirationsController as ic">
@@ -73,44 +70,38 @@
                         </div>
                     </div>
             
-                    <div id="lm-programs" class="center-block text-center">
+                    <div id="lm-programs" class="center-block text-center" ng-controller="ProgramsController as pc">
                         <div id="wrapper-programs" class="">
                             <div  class="row">
                                 <img class="section-img-top" height="100px" src="images/programs.png" align="middle" />
                             </div>
                             <div id="programs-row" class="row">
                                 <div class="col-sm-5">
-                                    <h3 id="active-program">Patient</h3>
+                                    <btn class="active-program" ng-click="changeProgramType('Patient')">Patient</btn>
                                 </div>
                                 <div class="col-sm-offset-2 col-sm-5">
-                                    <h3>Caregiver</h3>
+                                    <btn ng-click="changeProgramType('Caregiver')">Caregiver</btn>
                                 </div>
                             </div>
                             <div class="row">
-                                <ul class="center-block">
-                                    <li>
-                                        <p><h2>Calm</h2></p>
+                                <ul class="center-block" >
+                                    <li ng-repeat="program in programs | filter: programDisplayFilter">
+                                        <p><btn ng-click="selectProgram(program.id, program.hashedId)">{{program.name | ProgramNameFilter}}</btn></p>
+                                        
                                     </li>
-                                    <li>
-                                        <p><h2>Ease</h2></p>
-                                    </li>
-                                    <li>
-                                        <p><h2>Perseverance</h2></p>
-                                    </li>
-                                    <li>
-                                        <p><h2>Symptoms</h2></p>
-                                    </li>
-                                    <li>
-                                        <p><h2>De-stressing</h2></p>
-                                    </li>
+                            </div>
+                            <div class="row" ng-show="selectedProgramId != -1">
+                                <script charset="ISO-8859-1" src="//fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_embed wistia_async_6bwlks9gvo center-block" style="height:360px;width:640px">&nbsp;</div>
+                                
                             </div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/programs.png" align="middle" />
                             </div>
                         </div>
                     </div>
+                        
             
-                    <div id="lm-meditations" class="center-block text-center">
+                    <div id="lm-meditations" class="center-block text-center" ng-controller="MeditationsController as mc">
                         <div id="wrapper-meditations" class="">
                             <div  class="row">
                                 <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />

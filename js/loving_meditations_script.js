@@ -1,6 +1,9 @@
 (function(angular) {
   'use strict';
     
+    var PATIENT_TYPE = 'Patient';
+    var CAREGIVER_TYPE = 'Caregiver';
+    
     var lmApp = angular.module('lmApp', []);
     
     lmApp.run(function() {
@@ -10,7 +13,7 @@
 
     lmApp.controller('LovingMeditationsController', ['$scope', function($scope) {
         
-    }])
+    }]);
 
     lmApp.controller('InspirationsController', function($scope, $q) {
         var InspirationsDfd = $q.defer();
@@ -18,7 +21,6 @@
         var queryInspirations = new Parse.Query(Inspirations);
         queryInspirations.equalTo("author", "Yoda");
         queryInspirations.first().then(function (data) {
-            console.log(data);
   	         InspirationsDfd.resolve(data);
         }, function (error) {
   	         InspirationsDfd.reject(error);
@@ -31,6 +33,72 @@
             // do something w/ this
         });
     });
+    
+    lmApp.controller('ProgramsController', function($scope, $http, $q) {
+        var programsList;
+        $scope.selectedProgramId = -1;
+        $scope.selectedProgramType = 'Patient'; //$scope.programType'';
+        $scope.selectedProgramEmbed = '';
+        $http.get("https://api.wistia.com/v1/projects.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
+            .success(function(data, status, headers, config) {
+                programsList = data;
+                console.log(programsList);
+                $scope.programs = programsList;
+            })
+            .error(function(data, status, headers, config) {
+                // log error
+            console.log("Programs retrieval failed.");
+        });
+        
+        $scope.changeProgramType = function(type) {
+            $scope.selectedProgramType = type;
+            $scope.selectedProgramId = -1;
+        }
+        
+        $scope.selectProgram = function(programId, programHashedId) {
+            if ($scope.selectedProgramId == -1) {
+                $scope.selectedProgramId = programId;
+                $scope.selectedProgramEmbed = "wistia_embed wistia_async_6bwlks9gvo center-block"
+            } else {
+                $scope.selectedProgramId = -1;
+                $scope.selectedProgramEmbed = '';
+            }
+            
+        };
+        
+        $scope.programDisplayFilter = function(item) {
+            if (item.name.includes($scope.selectedProgramType)) {
+                if (($scope.selectedProgramId == -1) || (item.id == $scope.selectedProgramId)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        };
+        /*var ProgramsDfd = $q.defer();
+        var xmlHttp = new XMLHttpRequest();
+        var url = "https://api.wistia.com/v1/projects.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee";
+        var Programs = ;
+        var ProgramsList = ;*/
+        
+    });
+    
+    lmApp.controller('MeditationsController', function($scope, $http, $q) {
+        var videosList;
+        $http.get("https://api.wistia.com/v1/projects/y9r6xq82wn.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
+            .success(function(data, status, headers, config) {
+                videosList = data.medias;
+                console.log(videosList);
+        })
+    });
+    
+    lmApp.filter('ProgramNameFilter', function () {
+        return function(programName) {
+                    var programDisplayName = programName.split('_')[2];
+                    return programDisplayName;
+                }
+    });
+    
 })(window.angular);
 
 
