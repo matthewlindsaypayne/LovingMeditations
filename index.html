@@ -8,7 +8,12 @@
         <meta name="keywords" content="Meditation,Cancer,Video" />
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link type="image/x-icon" rel="shortcut icon" href="images/favicon.ico" />
+        
+        <link rel="shortcut icon" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMediationsLogo_Horizonal_Black.png">
+        <link rel="apple-touch-icon" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMeditationsLogo_Vertical_57x57-LOGOonly.jpg">
+        <link rel="apple-touch-icon" sizes="114x114" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMeditationsLogo_Vertical_114x114-LOGOonly.jpg">
+        <link rel="apple-touch-icon" sizes="72x72" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMeditationsLogo_Vertical_72x72-LOGOonly.jpg">
+        <link rel="apple-touch-icon" sizes="144x144" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMeditationsLogo_Vertical_144x144-LOGOonly.jpg">
         
         <link href="css/bootstrap.css" rel='stylesheet' type="text/css">
         <link href="css/loving_meditations_style.css" rel='stylesheet' type="text/css">
@@ -77,10 +82,10 @@
                             </div>
                             <div id="programs-row" class="row">
                                 <div class="col-sm-5">
-                                    <btn class="active-program" ng-click="changeProgramType('Patient')">Patient</btn>
+                                    <btn ng-class="{'active-program': selectedProgramType=='Patient'}" ng-click="changeProgramType('Patient')">Patient</btn>
                                 </div>
                                 <div class="col-sm-offset-2 col-sm-5">
-                                    <btn ng-click="changeProgramType('Caregiver')">Caregiver</btn>
+                                    <btn ng-class="{'active-program': selectedProgramType=='Caregiver'}" ng-click="changeProgramType('Caregiver')">Caregiver</btn>
                                 </div>
                             </div>
                             <div class="row">
@@ -91,8 +96,7 @@
                                     </li>
                             </div>
                             <div class="row" ng-show="selectedProgramId != -1">
-                                <script charset="ISO-8859-1" src="//fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_embed wistia_async_6bwlks9gvo center-block" style="height:360px;width:640px">&nbsp;</div>
-                                
+                                <iframe src="//fast.wistia.net/embed/playlists/y9r6xq82wn?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=360&videoOptions%5BvideoWidth%5D=640&videoOptions%5BvolumeControl%5D=true" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_playlist" name="wistia_playlist" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen width="640" height="360"></iframe>
                             </div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/programs.png" align="middle" />
@@ -114,8 +118,12 @@
                             </div>
                         </div>
                     </div>
+                        
+                    <div id="lm-login" ng-controller="LoginController as lc">
+                    
+                    </div>
             
-                    <div id="lm-invites" class="center-block text-center">
+                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc">
                         <div id="wrapper-invites" class="">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -175,7 +183,7 @@
                         </div>
                     </div>
                     
-                    <div id="lm-contact">
+                    <div id="lm-contact" ng-controller="ContactController as cc">
                         <div id="wrapper-contact" class="">
                             <div  class="row">
                                 <img class="section-img-top" height="100px" src="images/invites.png" align="middle" />

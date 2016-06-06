@@ -53,7 +53,7 @@
         $scope.changeProgramType = function(type) {
             $scope.selectedProgramType = type;
             $scope.selectedProgramId = -1;
-        }
+        };
         
         $scope.selectProgram = function(programId, programHashedId) {
             if ($scope.selectedProgramId == -1) {
@@ -97,6 +97,18 @@
                     var programDisplayName = programName.split('_')[2];
                     return programDisplayName;
                 }
+    });
+    
+    lmApp.controller('LoginController', function($scope, $http, $q) {
+        
+    });
+    
+    lmApp.controller('InvitesController', function($scope, $http, $q) {
+        
+    });
+    
+    lmApp.controller('ContactController', function($scope, $http, $q) {
+        
     });
     
 })(window.angular);
