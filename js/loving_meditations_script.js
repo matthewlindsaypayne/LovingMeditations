@@ -34,11 +34,11 @@
         });
     });
     
-    lmApp.controller('ProgramsController', function($scope, $http, $q) {
+    lmApp.controller('ProgramsController', function($scope, $http, $sce, $q) {
         var programsList;
         $scope.selectedProgramId = -1;
         $scope.selectedProgramType = 'Patient'; //$scope.programType'';
-        $scope.selectedProgramEmbed = '';
+        $scope.selectedProgramEmbedSrc = '';
         $http.get("https://api.wistia.com/v1/projects.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
             .success(function(data, status, headers, config) {
                 programsList = data;
@@ -58,10 +58,10 @@
         $scope.selectProgram = function(programId, programHashedId) {
             if ($scope.selectedProgramId == -1) {
                 $scope.selectedProgramId = programId;
-                $scope.selectedProgramEmbed = "wistia_embed wistia_async_6bwlks9gvo center-block"
+                $scope.selectedProgramEmbedSrc = "//fast.wistia.net/embed/playlists/" + programId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=360&videoOptions%5BvideoWidth%5D=640&videoOptions%5BvolumeControl%5D=true"
             } else {
                 $scope.selectedProgramId = -1;
-                $scope.selectedProgramEmbed = '';
+                $scope.selectedProgramEmbedSrc = '';
             }
             
         };
@@ -74,6 +74,10 @@
             }
             
             return false;
+        };
+        
+        $scope.trustSrc = function(src) {
+            return $sce.trustAsResourceUrl(src);
         };
         /*var ProgramsDfd = $q.defer();
         var xmlHttp = new XMLHttpRequest();
