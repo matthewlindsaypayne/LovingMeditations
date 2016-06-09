@@ -42,7 +42,6 @@
         $http.get("https://api.wistia.com/v1/projects.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
             .success(function(data, status, headers, config) {
                 programsList = data;
-                console.log(programsList);
                 $scope.programs = programsList;
             })
             .error(function(data, status, headers, config) {
@@ -79,21 +78,38 @@
         $scope.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
         };
-        /*var ProgramsDfd = $q.defer();
-        var xmlHttp = new XMLHttpRequest();
-        var url = "https://api.wistia.com/v1/projects.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee";
-        var Programs = ;
-        var ProgramsList = ;*/
-        
     });
     
-    lmApp.controller('MeditationsController', function($scope, $http, $q) {
-        var videosList;
-        $http.get("https://api.wistia.com/v1/projects/y9r6xq82wn.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
+    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q) {
+        $scope.selectedMeditationId = -1;
+        $scope.selectedMeditationEmbedCode = '';
+        $http.get("https://api.wistia.com/v1/medias.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
             .success(function(data, status, headers, config) {
-                videosList = data.medias;
-                console.log(videosList);
-        })
+                $scope.videosList = data;
+                console.log($scope.videosList);
+        });
+        
+        $scope.selectMeditation = function(meditationId, meditationEmbedCode) {
+            if ($scope.selectedMeditationId != meditationId) {
+                $scope.selectedMeditationId = meditationId;
+                $scope.selectedMeditationEmbedCode = meditationEmbedCode;
+            } else {
+                $scope.selectedMeditationId = -1;
+                $scope.selectedMeditationEmbedCode = '';
+            }
+        };
+        
+        $scope.meditationDescriptionFilter = function(item) {
+            return item.match("<p>(.*)</p>")[1];
+        };
+        
+        $scope.meditationDurationFilter = function(item) {
+            var secondsTotal = Math.floor(item);
+            var minutes = Math.floor(secondsTotal/60);
+            var seconds = secondsTotal % 60;
+        }
+        
+        $scope.trustedEmbedCode = $sce.trustAsHtml($scope.selectedMeditationEmbedCode);
     });
     
     lmApp.filter('ProgramNameFilter', function () {
@@ -101,6 +117,12 @@
                     var programDisplayName = programName.split('_')[2];
                     return programDisplayName;
                 }
+    });
+    
+    lmApp.filter('secondsToHHmmss', function($filter) {
+        return function(seconds) {
+            return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
+        };
     });
     
     lmApp.controller('LoginController', function($scope, $http, $q) {

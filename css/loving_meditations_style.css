@@ -168,7 +168,7 @@ body {
 }
 
 #wrapper-invites {
-    padding: 40px 60px;
+    padding: 40px 20px;
 }
 
 #lm-contact {
@@ -189,7 +189,7 @@ ul {
     -webkit-padding-start: 0;
 }
 
-p {
+li p {
     border: 2px solid white;
     border-radius: 8px;
 }

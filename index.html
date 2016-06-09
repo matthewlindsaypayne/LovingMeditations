@@ -66,8 +66,7 @@
                         </div>
                         <div class="row">
                             <div id="wrapper-inspirations">
-                                <div class="pull-left"><h4>{{currentInspiration.attributes.text}}</h4></div>
-                                <div class="pull-right"><h4>- {{currentInspiration.attributes.author}}</h4></div>
+                                <div><h4 class="text-center">{{currentInspiration.attributes.text}}   -{{currentInspiration.attributes.author}}</h4></div>
                             </div>
                         </div>
                         <div  class="row">
@@ -111,7 +110,17 @@
                                 <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />
                             </div>
                             <div class="row">
-                                <script charset="ISO-8859-1" src="//fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_embed wistia_async_6bwlks9gvo center-block" style="height:360px;width:640px">&nbsp;</div>
+                                <div class="center-block">
+                                    <div ng-repeat="video in videosList">
+                                        <img ng-click="selectMeditation(video.id, video.embedCode)" class="pull-left" ng-src="{{video.thumbnail.url}}" />
+                                        <h2>{{video.name}}</h2>
+                                        <p>{{meditationDescriptionFilter(video.description)}}</p>
+                                        <span>{{video.duration | secondsToHHmmss}}</span>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="selectedMeditationId != -1" ng-include="selectedMeditationEmbedCode">
                             </div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/meditations.png" align="middle" />
