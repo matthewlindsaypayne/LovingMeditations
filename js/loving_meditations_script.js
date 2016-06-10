@@ -100,7 +100,13 @@
         };
         
         $scope.meditationDescriptionFilter = function(item) {
-            return item.match("<p>(.*)</p>")[1];
+            var description;
+            try {
+                description = item.match("<p>(.*)</p>")[1];
+                return description;
+            } catch(err) {
+                console.log("Poorly formed video description.");
+            }
         };
         
         $scope.meditationDurationFilter = function(item) {
