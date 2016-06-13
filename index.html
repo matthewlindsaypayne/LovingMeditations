@@ -27,7 +27,7 @@
         
     </head>
     <body ng-app="lmApp">
-        <div id="lm-main" ng-controller="LovingMeditationsController as lmc">
+        <div id="lm-main" ng-controller="LovingMeditationsController as lmc" scroll-spy>
             <div id="lm-menu">
                 <div class="container-fluid">
                 <!-- Static navbar -->
@@ -44,11 +44,12 @@
                             <div class="navbar-collapse collapse" id="lm-nav-bar">
                                 <a href="#" class="navbar-brand"><img id="loving-meditations-logo" src="images/loving_meditations_logo.png" alt="Loving Meditations" /></a>
                                 <ul class="nav navbar-nav navbar-right" style="margin-top: 40px;">
-                                    <li class="active"><a href="#lm-inspirations">INSPIRATIONS</a></li>
-                                    <li><a href="#lm-programs">PROGRAMS</a></li>
-                                    <li><a href="#lm-meditations">MEDITATIONS</a></li>
-                                    <li><a href="#lm-invites">INVITES</a></li>
-                                    <li><a href="#lm-contact">CONTACT</a></li>
+                                    <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
+                                    <li spy="lm-programs">PROGRAMS</li>
+                                    <li spy="lm-meditations">MEDITATIONS</li>
+                                    <li spy="lm-login" ng-hide="{{loggedIn}}">LOGIN</li>
+                                    <li spy="lm-invites" ng-show="{{canInvite}}">INVITES</li>
+                                    <li spy="lm-contact">CONTACT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -58,7 +59,7 @@
             
             <div id="background"></div>
             <div class="container">
-                <div id="content-column" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+                <div id="content-column" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
             
                     <div id="lm-inspirations" ng-controller="InspirationsController as ic">
                         <div  class="row">
@@ -66,7 +67,7 @@
                         </div>
                         <div class="row">
                             <div id="wrapper-inspirations">
-                                <div><h4 class="text-center">{{currentInspiration.attributes.text}}   -{{currentInspiration.attributes.author}}</h4></div>
+                                <div class="text-center">{{currentInspiration}}</div>
                             </div>
                         </div>
                         <div  class="row">
@@ -110,18 +111,35 @@
                                 <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />
                             </div>
                             <div class="row">
+                                <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                        Previous
+                                </button>
+                                {{currentPage+1}}/{{numberOfPages()}}
+                                <button ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                    Next
+                                </button>
+                            </div>
+                            <div class="row">
                                 <div class="center-block">
-                                    <div ng-repeat="video in videosList">
-                                        <img ng-click="selectMeditation(video.id, video.embedCode)" class="pull-left" ng-src="{{video.thumbnail.url}}" />
-                                        <h2>{{video.name}}</h2>
-                                        <p>{{meditationDescriptionFilter(video.description)}}</p>
-                                        <span>{{video.duration | secondsToHHmmss}}</span>
+                                    <div class="meditations-blurb" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id)">
+                                        <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
+                                        <span class="meditations-blurb-title">{{video.name}}</span><br/>
+                                        <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
+                                        <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
                                         <br />
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" ng-show="selectedMeditationId != -1" ng-include="selectedMeditationEmbedCode">
+                            <div class="row">
+                            <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                        Previous
+                                    </button>
+                                    {{currentPage+1}}/{{numberOfPages()}}
+                                    <button ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                        Next
+                                    </button>
                             </div>
+                            <div class="row" ng-show="selectedMeditationId != -1" ng-bind-html="selectedMeditationEmbed"></div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/meditations.png" align="middle" />
                             </div>
@@ -132,7 +150,7 @@
                     
                     </div>
             
-                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc">
+                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-show="{{canInvite}}">
                         <div id="wrapper-invites" class="">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -227,12 +245,11 @@
                     
                 </div>
             </div>
-            
-        </div>
-        <footer class="text-center">
-                <h4>Crusoe Ventures 2016</h4>
-                <br />
+            <footer class="text-center">
+                <span id="footerCrusoe">Crusoe Ventures 2016</span>
             </footer>
+        </div>
+        
         
     </body>
 </html>

@@ -7,6 +7,7 @@ body, html, h1, h2, h3, h4, h5, h6, p, a, button {
     /*overflow-x:hidden; */
     font-family: 'ChampagneBold', serif;
     font-size: 120%;
+    color: white;
 }
 
 body {
@@ -38,22 +39,21 @@ body {
     height: 75px;
 }
 
-.nav >  li > a {
+.nav >  li {
     padding: 10px 10px;
 }
 
-.navbar-default .navbar-nav > .active > a {
+.navbar-default .navbar-nav > .active {
     background-color: #f4ba46;
 }
 
-.navbar-default .navbar-nav > li > a {
+.navbar-default .navbar-nav > li {
     color: #0072bc;
 }
 
 #background {
     width: 100%;
     height: 100%;
-    z-index: 2;
     position: fixed;
     background-image: url('../images/cloud_background_large.png');
     background-repeat: no-repeat;
@@ -63,34 +63,8 @@ body {
     background-color: azure;
 }
 
-#blur-mask {
-    z-index: 10;
-    overflow: hidden;
-    position: fixed;
-    height: 100%;
-    margin-left: 190px;
-}
-
-#blur-column {
-    width: 730px;;
-    height: 100%;
-    position: absolute;
-    background-image: url('../images/cloud_background_large.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    background-size: cover;
-    z-index: 1;
-    -webkit-filter: blur(10px);
-  -moz-filter: blur(10px);
-  -o-filter: blur(10px);
-  -ms-filter: blur(10px);
-  filter: blur(10px);
-}
-
 #content-column {
     z-index: 10;
-    color: white;
 }
 
 .section-img-top {
@@ -111,6 +85,7 @@ body {
 
 #lm-inspirations {
     margin: 200px 10px 10px 10px;
+    font-size: 30px;
 }
 
 .section-img-first {
@@ -150,6 +125,29 @@ body {
     padding: 40px 60px;
 }
 
+.meditations-blurb {
+    border: 2px solid white;
+    border-radius: 8px;
+    margin: 10px;
+    min-height: 184px;
+}
+
+.meditations-blurb > img {
+    border-radius: 8px;
+}
+
+.meditations-blurb-title {
+    font-size: 30px;
+}
+
+.meditations-blurb-description {
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
 .videos-image {
     max-width: 100%;
     width: 480px;
@@ -184,6 +182,11 @@ input {
     margin-bottom: 5px;
 }
 
+btn {
+    font-size: 30px;
+    padding: 10px;
+}
+
 ul {
     list-style-type: none;
     -webkit-padding-start: 0;
@@ -207,5 +210,10 @@ p span {
 footer {
     opacity: .9;
     padding-top: 20px;
-    z-index: 15;
+    z-index: 50;
+}
+
+#footerCrusoe {
+    font-size: 40px;
+    padding-bottom: 30px;
 }
