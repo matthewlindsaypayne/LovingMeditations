@@ -20,16 +20,18 @@
         var currentDate = new Date();
         var originalDate = new Date("May 1, 2016 03:00:00");
         var dateCount = Math.round(Math.abs((originalDate.getTime() - currentDate.getTime())/(24*60*60*1000)));
-        var InspirationsDfd = $q.defer();
-        var Inspirations = Parse.Object.extend('Inspirations');
-        var queryInspirations = new Parse.Query(Inspirations);
+        
+        var inspirationsDfd = $q.defer();
+        var inspirations = Parse.Object.extend('Inspirations');
+        var queryInspirations = new Parse.Query(inspirations);
         queryInspirations.equalTo("index", (dateCount % 86));
         queryInspirations.first().then(function (data) {
-  	         InspirationsDfd.resolve(data);
+  	         inspirationsDfd.resolve(data);
         }, function (error) {
-  	         InspirationsDfd.reject(error);
+  	         inspirationsDfd.reject(error);
         });
-        InspirationsDfd.promise
+        
+        inspirationsDfd.promise
             .then(function (inspiration) {
                 $scope.currentInspiration = inspiration.attributes.text + "\n -" + inspiration.attributes.author;
         })
@@ -108,7 +110,7 @@
         $scope.selectMeditation = function(meditationId, meditationHashedId) {
             if ($scope.selectedMeditationId != meditationId) {
                 $scope.selectedMeditationId = meditationId;
-                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div ng-class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + "\" style=\"height:360px;width:640px\">&nbsp;</div>");
+                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:360px;width:640px\">&nbsp;</div>");
                 console.log("Now Showing!");
             } else {
                 $scope.selectedMeditationId = -1;
@@ -324,38 +326,3 @@ lmApp.service('anchorSmoothScroll', function(){
 });
     
 })(window.angular);
-
-
- /*var lm_menu_height = 0;
-jQuery(function($) {
-    
-    $(document).ready( function() {
-        
-        lm_menu_height = $('#lm-menu').height();
-        // scroll spy to auto active the nav item
-        $('body').scrollspy({ target: '#lm-nav-bar', offset: lm_menu_height + 10 });
-        
-        // scroll to specific id when click on menu
-        $('#lm-menu .navbar-nav a').click(function(e){
-            e.preventDefault(); 
-            var linkId = $(this).attr('href');
-            scrollTo(linkId);
-            if($('.navbar-toggle').is(":visible") == true){
-                $('.navbar-collapse').collapse('toggle');
-            }
-            $(this).blur();
-            return false;
-        });
-        
-    });
-});
-
-// scroll animation 
-function scrollTo(selectors)
-{
-
-    if(!$(selectors).size()) return;
-    var selector_top = $(selectors).offset().top - lm_menu_height;
-    $('html,body').animate({ scrollTop: selector_top }, 'slow');
-
-} */
