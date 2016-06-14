@@ -157,6 +157,10 @@ body {
     margin: 10px;
 }
 
+#wrapper-login {
+    padding: 40px 20px;
+}
+
 .btn-group-vertical {
     margin-top: 20px;
 }

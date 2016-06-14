@@ -63,8 +63,8 @@
         
         $scope.selectProgram = function(programId, programHashedId) {
             if ($scope.selectedProgramId == -1) {
+                $scope.selectedProgramEmbedSrc = "//fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=360&videoOptions%5BvideoWidth%5D=640&videoOptions%5BvolumeControl%5D=true";
                 $scope.selectedProgramId = programId;
-                $scope.selectedProgramEmbedSrc = "//fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=360&videoOptions%5BvideoWidth%5D=640&videoOptions%5BvolumeControl%5D=true"
             } else {
                 $scope.selectedProgramId = -1;
                 $scope.selectedProgramEmbedSrc = '';
@@ -87,7 +87,7 @@
         };
     });
     
-    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q) {
+    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, anchorSmoothScroll) {
         $scope.selectedMeditationId = -1;
         $scope.selectedMeditationEmbed = '';
         $scope.currentPage = 0;
@@ -112,6 +112,9 @@
                 $scope.selectedMeditationId = meditationId;
                 $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:360px;width:640px\">&nbsp;</div>");
                 console.log("Now Showing!");
+                $location.hash("meditation-embed");
+                anchorSmoothScroll.scrollTo("meditation-embed");
+                
             } else {
                 $scope.selectedMeditationId = -1;
                 $scope.selectedMeditationEmbed = '';
@@ -279,7 +282,7 @@ lmApp.service('anchorSmoothScroll', function(){
         // is from http://www.itnewb.com/tutorial/Creating-the-Smooth-Scroll-Effect-with-JavaScript
         
         var startY = currentYPosition();
-        var stopY = elmYPosition(eID);
+        var stopY = elmYPosition(eID) - $('#lm-menu').height() + 10;
         var distance = stopY > startY ? stopY - startY : startY - stopY;
         if (distance < 100) {
             scrollTo(0, stopY); return;

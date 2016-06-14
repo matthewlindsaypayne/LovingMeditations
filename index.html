@@ -48,7 +48,7 @@
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
                                     <li spy="lm-login" ng-hide="{{loggedIn}}">LOGIN</li>
-                                    <li spy="lm-invites" ng-show="{{canInvite}}">INVITES</li>
+                                    <li spy="lm-invites" ng-hide="!{{canInvite}}">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
@@ -140,18 +140,61 @@
                                     </button>
                                 <br />
                             </div>
+                            <div id="meditation-embed">
                             <div class="row" ng-show="selectedMeditationId != -1" ng-bind-html="selectedMeditationEmbed"></div>
+                        </div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/meditations.png" align="middle" />
                             </div>
                         </div>
                     </div>
                         
-                    <div id="lm-login" ng-controller="LoginController as lc">
-                    
+                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc">
+                        <div id="wrapper-login">
+                            <div class="row">
+                                <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
+                            </div>
+                      <div class="row">
+                          <div class="col-xs-6 col-sm-5">
+                              <h3>Login</h3>
+                          </div>
+                          <div class="col-xs-6 col-sm-offset-2 col-sm-5">
+                              <h3>Sign Up</h3>
+                          </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-xs-6  col-sm-5">
+                             <form>
+                                 <div class="form-group">
+                                     <input id="login-email" class="center-block" type="email" placeholder="Email" />
+                                     <input id="login-password" class="center-block" type="password" placeholder="Password"  />
+                                 </div>
+                                 <button type="submit" class="btn btn-green center-block" value="Send">LOG IN</button>
+                             </form>
+                         </div>
+                         <div class="col-xs-6 col-sm-offset-2 col-sm-5">
+                             <form>
+                                 <div class="form-group">
+                                     <input id="signup-email" class="center-block" type="email" placeholder="Email" />
+                                     <input id="signup-password" class="center-block" type="password" placeholder="Password"  />
+                                     <label class="radio-inline">
+                                        <input type="radio" name="type-radio">Patient
+                                     </label>
+                                     <label class="radio-inline">
+                                        <input type="radio" name="type-radio">Caretaker
+                                     </label>
+                                 </div>
+                                 <button type="submit" class="btn btn-green center-block" value="Send">SIGN UP</button>
+                              </form>
+                          </div>
+                      </div>  
+                            <div class="row">
+                                <img class="section-img-bottom" height="100px" src="images/profile.png" align="middle" />
+                            </div>
+                  </div>
                     </div>
             
-                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-show="{{canInvite}}">
+                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="!{{canInvite}}">
                         <div id="wrapper-invites" class="">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
