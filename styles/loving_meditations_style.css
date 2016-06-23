@@ -1,0 +1,223 @@
+@font-face {
+    font-family: 'ChampagneBold';
+    src: url('../misc/ChampagneBold.tff');
+}
+
+body, html, h1, h2, h3, h4, h5, h6, p, a, button { 
+    /*overflow-x:hidden; */
+    font-family: 'ChampagneBold', serif;
+    font-size: 120%;
+    color: white;
+}
+
+body {
+    
+}
+
+#lm-main {
+    
+}
+
+.navbar-brand {
+    font-size: 120%;
+}
+
+#lm-menu {
+    position: fixed;
+    top: 0;
+    z-index: 50;
+    width:100%;
+}
+
+#lm-nav-bar {
+}
+
+.navbar-header {
+}
+
+#loving-meditations-logo {
+    height: 75px;
+}
+
+.nav >  li {
+    padding: 10px 10px;
+}
+
+.navbar-default .navbar-nav > .active {
+    background-color: #f4ba46;
+}
+
+.navbar-default .navbar-nav > li {
+    color: #0072bc;
+}
+
+#background {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-image: url('../images/cloud_background_large.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: azure;
+}
+
+#content-column {
+    z-index: 10;
+}
+
+.section-img-top {
+    display: block;
+    margin: 0 auto 150px auto;
+}
+
+.section-img-bottom {
+    display: block;
+    margin: 150px auto 200px auto;
+}
+
+.glyphicon-img {
+    display: block;
+    margin: 0 100px;
+    
+}
+
+#lm-inspirations {
+    margin: 200px 10px 10px 10px;
+    font-size: 30px;
+}
+
+.section-img-first {
+    display: block;
+    margin: 100px auto 150px auto;
+}
+
+#wrapper-inspirations {
+    height: 100%;
+    padding: 40px 40px 75px 40px;
+    border: 2px solid white;
+    border-radius: 8px;
+}
+
+#lm-programs {
+    margin: 10px;
+}
+
+#wrapper-programs {
+    padding: 40px 60px;
+}
+
+#programs-row {
+    margin-bottom: 20px;
+}
+
+.active-program {
+    border: 2px solid white;
+    border-radius: 8px;
+}
+
+#lm-meditations {
+    margin: 10px
+}
+
+#wrapper-meditations {
+    padding: 40px 60px;
+}
+
+.meditations-blurb {
+    border: 2px solid white;
+    border-radius: 8px;
+    margin: 10px;
+    min-height: 184px;
+}
+
+.meditations-blurb > img {
+    border-radius: 8px;
+}
+
+.meditations-blurb-title {
+    font-size: 30px;
+}
+
+.meditations-blurb-description {
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.videos-image {
+    max-width: 100%;
+    width: 480px;
+}
+
+#lm-login {
+    margin: 10px;
+}
+
+#wrapper-login {
+    padding: 40px 20px;
+}
+
+.btn-group-vertical {
+    margin-top: 20px;
+}
+
+#lm-invites {
+    margin: 10px;
+}
+
+#wrapper-invites {
+    padding: 40px 20px;
+}
+
+#lm-contact {
+    margin: 10px;
+}
+
+#wrapper-contact {
+    padding 40px 60px;
+}
+
+input {
+    border: 1px solid white;
+    margin-bottom: 5px;
+}
+
+btn {
+    font-size: 30px;
+    padding: 10px;
+}
+
+ul {
+    list-style-type: none;
+    -webkit-padding-start: 0;
+}
+
+li p {
+    border: 2px solid white;
+    border-radius: 8px;
+}
+
+p span {
+    padding: 0 10px;
+    display: inline-block;
+}
+
+.btn-default {
+    border: 2px solid white;
+    border-radius: 8px;
+}
+
+footer {
+    opacity: .9;
+    padding-top: 20px;
+    z-index: 50;
+}
+
+#footerCrusoe {
+    font-size: 40px;
+    padding-bottom: 30px;
+}

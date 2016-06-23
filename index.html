@@ -15,15 +15,21 @@
         <link rel="apple-touch-icon" sizes="72x72" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMeditationsLogo_Vertical_72x72-LOGOonly.jpg">
         <link rel="apple-touch-icon" sizes="144x144" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMeditationsLogo_Vertical_144x144-LOGOonly.jpg">
         
-        <link href="css/bootstrap.css" rel='stylesheet' type="text/css">
-        <link href="css/loving_meditations_style.css" rel='stylesheet' type="text/css">
+        <link href="styles/bootstrap.css" rel='stylesheet' type="text/css">
+        <link href="styles/loving_meditations_style.css" rel='stylesheet' type="text/css">
         
-        <script src="js/jquery.min.js" type="text/javascript"></script>
-        <script src="js/angular.js" type="text/javascript"></script>
-        <script src="js/bootstrap.min.js"  type="text/javascript"></script>
-        <script src="js/parse-1.6.14.js"></script>
+        <script src="scripts/vendors/jquery.min.js" type="text/javascript"></script>
+        <script src="bower_components/angular/angular.js" type="text/javascript"></script>
+        <script src="bower_components/angular-route/angular-route.js" type="text/javascript"></script>
+        <script src="bower_components/angular-messages/angular-messages.js" type="text/javascript"></script>
+        <script src="scripts/vendors/bootstrap.min.js"  type="text/javascript"></script>
+        <script src="scripts/vendors/parse-1.6.14.js"></script>
         <script src="http://fast.wistia.com/assets/external/E-v1.js"></script>
-        <script src="js/loving_meditations_script.js" type="text/javascript"></script>
+        
+        <script src="scripts/misc/lmApp.models.js" type="text/javascript"></script>
+        <script src="scripts/misc/lmApp.scrolling.js" type="text/javascript"></script>
+        <script src="scripts/loving_meditations_controllers.js" type="text/javascript"></script>
+        <script src="scripts/lmapp.module.js" type="text/javascript"></script>
         
     </head>
     <body ng-app="lmApp">
@@ -47,9 +53,10 @@
                                     <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
-                                    <li spy="lm-login" ng-hide="{{loggedIn}}">LOGIN</li>
-                                    <li spy="lm-invites" ng-hide="!{{canInvite}}">INVITES</li>
+                                    <li spy="lm-login" ng-hide="sessionUser">LOG IN</li>
+                                    <li spy="lm-invites" ng-hide="sessionUser == null && !canInvite">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
+                                    <li ng-hide="!sessionUser" ng-click="logout()">LOG OUT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -114,7 +121,7 @@
                                 <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                                         Previous
                                 </button>
-                                {{currentPage+1}}/{{numberOfPages()}}
+                                {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
                                 <button ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                                     Next
                                 </button>
@@ -134,7 +141,7 @@
                             <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                                         Previous
                                     </button>
-                                    {{currentPage+1}}/{{numberOfPages()}}
+                                    {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
                                     <button ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                                         Next
                                     </button>
@@ -148,8 +155,10 @@
                             </div>
                         </div>
                     </div>
+                     
+                    <label class="center-block text-center">{{sessionUser.username}}</label>
                         
-                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc">
+                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="sessionUser" >
                         <div id="wrapper-login">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -164,25 +173,81 @@
                       </div>
                       <div class="row">
                          <div class="col-xs-6  col-sm-5">
-                             <form>
+                             
+                             <form name="loginForm" ng-submit="loginForm.$valid && login()" novalidate>
                                  <div class="form-group">
-                                     <input id="login-email" class="center-block" type="email" placeholder="Email" />
-                                     <input id="login-password" class="center-block" type="password" placeholder="Password"  />
-                                 </div>
-                                 <button type="submit" class="btn btn-green center-block" value="Send">LOG IN</button>
+                                     <input id="login-username" name="loginUsername" class="center-block" type="text" placeholder="Username" ng-model="userLogin.username" ng-minlength="8" ng-maxlength="20" required />
+                                     
+                                     <div class="help-block" ng-messages="loginForm.loginUsername.$error" ng-if="loginForm.loginUsername.$touched">
+                                        <p ng-message="minlength">Your Username is too short.</p>
+                                        <p ng-message="maxlength">Your Username is too long.</p>
+                                        <p ng-message="required">Your Username is required.</p>
+                                    </div>
+                                     
+                                </div>
+                                <div class="form-group">
+                                     <input id="login-password" name="loginPassword" class="center-block" type="password" placeholder="Password" ng-model="userLogin.password" ng-minlength="8" ng-maxlength="20" required />
+                                    
+                                    <div class="help-block" ng-messages="loginForm.loginPassword.$error" ng-if="loginForm.loginPassword.$touched">
+                                        <p ng-message="minlength">Your Password is too short.</p>
+                                        <p ng-message="maxlength">Your Password is too long.</p>
+                                        <p ng-message="required">Your Password is required.</p>
+                                    </div>
+                                </div>
+                                 <button type="submit" class="btn btn-green center-block">LOG IN</button>
+                                 
+                                 <button class="btn btn-green center-block">FORGET YOUR PASSWORD?</button>
                              </form>
                          </div>
+                          
                          <div class="col-xs-6 col-sm-offset-2 col-sm-5">
-                             <form>
+                             <form name="signupForm" ng-submit="signupForm.$valid && signup()" novalidate>
                                  <div class="form-group">
-                                     <input id="signup-email" class="center-block" type="email" placeholder="Email" />
-                                     <input id="signup-password" class="center-block" type="password" placeholder="Password"  />
+                                    <input name="signupName" class="center-block" type="text" placeholder="Name" ng-model="userSignup.name" ng-minlength="2" ng-maxlength="30" required />
+                                     
+                                     <div class="help-block" ng-messages="signupForm.signupName.$error" ng-if="signupForm.signupName.$touched">
+                                        <p ng-message="minlength">Your name is too short.</p>
+                                        <p ng-message="maxlength">Your name is too long.</p>
+                                        <p ng-message="required">Your name is required.</p>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <input id="signup-username" name="signupUsername" class="center-block" type="text" placeholder="Username" ng-model="userSignup.username" ng-minlength="8" ng-maxlength="20" required />
+                                     
+                                     <div class="help-block" ng-messages="signupForm.signupUsername.$error" ng-if="signupForm.signupUsername.$touched">
+                                        <p ng-message="minlength">Your Username is too short.</p>
+                                        <p ng-message="maxlength">Your Username is too long.</p>
+                                        <p ng-message="required">Your Username is required.</p>
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <input id="signup-email" name="signupEmail" class="center-block" type="email" placeholder="Email" ng-model="userSignup.email" required />
+                                     
+                                     <div class="help-block" ng-messages="signupForm.signupEmail.$error" ng-if="signupForm.signupEmail.$touched">
+                                        <p ng-message="email">This must be a valid email address.</p>
+                                        <p ng-message="required">Your Email is required.</p>
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <input id="signup-password" name="signupPassword" class="center-block" type="password" placeholder="Password" ng-model="userSignup.password" ng-minlength="8" ng-maxlength="20" required />
+                                     
+                                     <div class="help-block" ng-messages="signupForm.signupPassword.$error" ng-if="signupForm.signupPassword.$touched">
+                                        <p ng-message="minlength">Your Password is too short.</p>
+                                        <p ng-message="maxlength">Your Password is too long.</p>
+                                        <p ng-message="required">Your Password is required.</p>
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
                                      <label class="radio-inline">
-                                        <input type="radio" name="type-radio">Patient
+                                        <input type="radio" name="signupType" value="0" ng-model="userSignup.patientType" required>Patient
                                      </label>
                                      <label class="radio-inline">
-                                        <input type="radio" name="type-radio">Caretaker
+                                        <input type="radio" name="signupType" value="1" ng-model="userSignup.patientType" required>Caretaker
                                      </label>
+                                     
+                                     <div class="help-block" ng-messages="signupForm.signupType.$error" ng-if="signupForm.signupType.$touched">
+                                        <p ng-message="required">Your Password is required.</p>
+                                    </div>
                                  </div>
                                  <button type="submit" class="btn btn-green center-block" value="Send">SIGN UP</button>
                               </form>
@@ -194,7 +259,7 @@
                   </div>
                     </div>
             
-                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="!{{canInvite}}">
+                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="!sessionUser == null && !canInvite">
                         <div id="wrapper-invites" class="">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -203,47 +268,80 @@
                             <h2>Manage Invites</h2>
                             <br />
                         </div>
+                            <div class="row">
+                                <h3>Active Users</h3>
+                                <button ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                        Previous
+                                </button>
+                                {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
+                                <button ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                    Next
+                                </button>
+                            </div>
                         <div class="row">
-                            <h3>Active Users</h3>
                             <ul class="center-block">
-                                <li>
-                                    <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
-                                </li>
-                                <li>
-                                    <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
-                                </li><li>
-                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
-                                </li><li>
-                                <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
-                                </li><li>
-                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Logged In:</strong> 03:23pm 3/5/16</span></p>
+                                <li ng-repeat="activeUser in activeUsers.activeUserList | orderBy: 'lastLogin':true | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
+                                    <p><span class="text-left">User: {{activeUser.name}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
                                 </li>
                             </ul>
                         </div>
                         <div class="row">
-                            <h3>Invites Sent</h3>
+                            <button ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                        Previous
+                                    </button>
+                                    {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
+                                    <button ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                        Next
+                                    </button>
+                                <br />
+                            </div>
+                            <div class="row">
+                                <h3>Invites Sent</h3>
+                                <button ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                        Previous
+                                </button>
+                                {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
+                                <button ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                    Next
+                                </button>
+                            </div>
+                        <div class="row">
+                            
                             <ul class="center-block">
-                                <li>
-                                    <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
-                                </li>
-                                <li>
-                                    <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
-                                </li><li>
-                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
-                                </li><li>
-                                <p><span class="text-left">Hillary Q.</span><span class="text-right"><strong>Invite Sent: </strong> 3/5/16</span></p>
-                                </li><li>
-                                <p><span class="text-left">Hillary Queeeeeeeen.</span><span class="text-right"><strong>Invite Sent: </strong>3/5/16</span></p>
+                                <li ng-repeat="invite in invitesSent.invitesSentList | orderBy: 'createdAt':true | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
+                                    <p><span class="text-left">Sent To: {{invite.name}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
                                 </li>
                             </ul>
                         </div>
+                        <div class="row">
+                            <button ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                        Previous
+                                </button>
+                                {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
+                                <button ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                    Next
+                                </button>
+                                <br />
+                            </div>
                         <div class="row">
                             <br />
                             <h3>Send Invites</h3>
-                            <form>
+                            <form name="inviteForm" ng-submit="inviteForm.$valid && sendInvite()" novalidate>
                                 <div class="form-group">
-                                    <input id="invite-email" class="" type="email" placeholder="Email" />
-                                    <input id="invite-password" class="" type="text" placeholder="Name"  />
+                                    <input id="invite-email" name="inviteEmail" class="" type="email" placeholder="Email" ng-model="inviteTarget.email" required/>
+                                    <div class="help-block" ng-messages="inviteForm.inviteEmail.$error" ng-if="inviteForm.inviteEmail.$touched">
+                                        <p ng-message="email">This must be a valid email address.</p>
+                                        <p ng-message="required">An email address is required.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input id="invite-name" name="inviteName" class="" type="text" placeholder="Name"  ng-model="inviteTarget.name" ng-minlength="2" ng-maxlength="30" required/>
+                                    
+                                    <div class="help-block" ng-messages="inviteForm.inviteName.$error" ng-if="inviteForm.inviteName.$touched">
+                                        <p ng-message="minlength">This name is too short.</p>
+                                        <p ng-message="maxlength">This name is too long.</p>
+                                        <p ng-message="required">A name is required.</p>
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-green center-block" value="Send">INVITE</button>
                             </form>
@@ -263,18 +361,36 @@
                                 <div class="contact_right">
                                     <h2 class="text-center">Have a Question?</h2>
                                     <h2 class="text-center">Send us an Email!</h2>
-                                    <form class="form-horizontal" action="https://formspree.io/balancetemp@gmail.com" method="POST">
+                                    
+                                    <form name="contactForm" class="form-horizontal" ng-submit="contactForm.$valid && sendContactUs()" novalidate>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Your Name..." name="Name" maxlength="40" />
+                                            <input name="contactName" class="form-control" type="text" placeholder="Your Name..." ng-model="contactName" ng-minlength="4" ng-maxlength="40" required />
+                                            <div class="help-block" ng-messages="contactForm.contactName.$error" ng-if="contactForm.contactName.$touched">
+                                                <p ng-message="minlength">This name is too short.</p>
+                                                <p ng-message="maxlength">This name is too long.</p>
+                                                <p ng-message="required">A name is required.</p>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="tel" class="form-control" placeholder="Your Phone Number..." name="Phone Number" maxlength="40" />
+                                            <input name="contactTel" class="form-control" type="tel" placeholder="Your Phone Number..." ng-model="contactTel" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" ng-maxlength="40" />
+                                            <div class="help-block" ng-messages="contactForm.contactTel.$error" ng-if="contactForm.contactTel.$touched">
+                                                <p ng-message="maxlength">This phone number is too long.</p>
+                                                <p ng-message="pattern">This must be a valid telephone number.</p>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="Your Email..." name="Email" maxlength="40" />
+                                            <input name="contactEmail" class="form-control" type="email" placeholder="Your Email..." ng-maxlength="40" ng-model="contactEmail" required />
+                                            <div class="help-block" ng-messages="contactForm.contactEmail.$error" ng-if="contactForm.contactEmail.$touched">
+                                                <p ng-message="email">This must be a valid email address.</p>
+                                                <p ng-message="required">An email address is required.</p>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <textarea  class="form-control" style="height: 130px;" placeholder="Write down your message..." name="Message"></textarea>
+                                            <textarea name="contactMessage" class="form-control" style="height: 130px;" placeholder="Write down your message..." ng-model="contactMessage" ng-maxlength="500" required></textarea>
+                                            <div class="help-block" ng-messages="contactForm.contactMessage.$error" ng-if="contactForm.contactMessage.$touched">
+                                                <p ng-message="maxlength">This message is too long.</p>
+                                                <p ng-message="required">A message is required.</p>
+                                            </div>
                                         </div>
                                         <button type="submit" class="btn btn-green pull-right" value="Send">SEND</button>
                                     </form>
@@ -289,6 +405,7 @@
                     
                 </div>
             </div>
+                
             <footer class="text-center">
                 <span id="footerCrusoe">Crusoe Ventures 2016</span>
             </footer>
