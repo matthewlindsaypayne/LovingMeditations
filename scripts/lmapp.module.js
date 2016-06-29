@@ -18,7 +18,29 @@
         Parse.serverURL = "https://lmserver-1281.appspot.com/parse";
         
         $rootScope.sessionUser = Parse.User.current();
-        console.log($rootScope.sessionUser);
+        console.log("User is : " + $rootScope.sessionUser);
+    });
+    
+    lmApp.filter('uniqueVideoFilter', function () {
+        return function(videos) {
+            var out = [];
+            var used = [];
+            var videoId, matches;
+            
+            angular.forEach(videos, function(video) {
+                matches = video.description.match("<h2>(.*)</h2>");
+                if (matches) {
+                videoId = matches[1];
+                    if (videoId && used.indexOf(videoId) < 0) {
+                        used.push(videoId);
+                        video.uniqueVideoId = videoId;
+                        out.push(video);
+                    }
+                }
+            });
+            
+            return out;
+        }
     });
 
     lmApp.controller('LovingMeditationsController', function($scope) {
@@ -26,6 +48,7 @@
         
         $scope.logout = function() {
             Parse.User.logOut();
+            $scope.apply();
         };
         
     });
@@ -104,18 +127,20 @@
         };
     });
     
-    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, anchorSmoothScroll) {
+    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, $filter, $rootScope, anchorSmoothScroll, UserVideo) {
         $scope.selectedMeditationId = -1;
         $scope.selectedMeditationEmbed = '';
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.videosList = [];
         $scope.videoCount = 0;
+        $scope.adviserSelectedList = [];
+        $scope.uniqueVideoId = 0;
         
         $http.get("https://api.wistia.com/v1/medias.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
             .success(function(data, status, headers, config) {
-                $scope.videosList = data;
-                $scope.videoCount = data.length;
+                $scope.videosList = $filter('uniqueVideoFilter')(data);
+                $scope.videoCount = $scope.videosList.length;
         });
         
         $scope.numberOfPages = function() {
@@ -126,13 +151,43 @@
             }
         };
         
-        $scope.selectMeditation = function(meditationId, meditationHashedId) {
+        $scope.selectMeditation = function(meditationId, meditationHashedId, meditationUniqueVideoId) {
             if ($scope.selectedMeditationId != meditationId) {
                 $scope.selectedMeditationId = meditationId;
-                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:360px;width:640px\">&nbsp;</div>");
+                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"meditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:360px;width:640px\">&nbsp;</div>");
                 $location.hash("meditation-embed");
                 anchorSmoothScroll.scrollTo("meditation-embed");
                 
+                if ($rootScope.sessionUser) {
+                    var meditationVideo = Wistia.api("meditationVideo");
+                    video.bind("end", function() {
+                        var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
+                        if (userVideo) {
+                            userVideo.playCount++;
+                            userVideo.save(null, {
+                                success: function (userVideo) {
+                                    alert("User_Video updated!");
+                                },
+                                error: function(userVideo, error) {
+                                    alert("User_Video update failed, " + error.message);
+                                }
+                            });
+                        } else {
+                            userVideo = new UserVideo();
+                            userVideo.userId = $rootScope.sessionUser.id;
+                            userVideo.videoId = meditationUniqueVideoId;
+                            userVideo.playCount = 1;
+                            userVideo.save(null, {
+                                success: function (userVideo) {
+                                    alert("User_Video created!");
+                                },
+                                error: function(userVideo, error) {
+                                    alert("User_Video creation failed, " + error.message);
+                                }
+                            });
+                        }
+                    });
+                }
             } else {
                 $scope.selectedMeditationId = -1;
                 $scope.selectedMeditationEmbed = '';
@@ -161,8 +216,25 @@
             return item.replace("image_crop_resized=200x120", "image_crop_resized=" + thumbnailWidth + "x" + thumbnailHeight);
         };
         
+        $scope.openAdviser = function() {
+            
+        }
+        
+        
+        
         //$scope.trustedEmbedCode = $sce.trustAsHtml($scope.selectedMeditationEmbedCode);
     });
+    
+    lmApp.filter('adviserFilter', function (adviserSelectedList) {
+        return function(input) {
+            var out = [];
+            
+            angular.forEach(input, function(video) {
+                var tags = video.description.match("<h1>(.*)</h1>")[1].match("([^,]*)");
+                
+            })
+        }
+    })
     
     lmApp.filter('ProgramNameFilter', function () {
         return function(programName) {
@@ -179,12 +251,9 @@
     
     lmApp.filter('startFrom', function() {
         return function(input, start) {
-            try {
+            if (input != null && input.length > 0) {
                 start = +start; //parse to int
-                return input.slice(start);
-                }
-            catch(err) {
-                console.log("Meditations not yet loaded.");
+                return input.slice(start)
             }
         }
     });
@@ -207,6 +276,7 @@
                     alert('Failed to create new object, with error code: ' + error.message);
                 }
             });
+            $scope.$apply();
         };
         
         $scope.login = function() {
@@ -218,12 +288,14 @@
                     alert('Failed to log in, with error code: ' + error.message);
                 }
             });
+            $scope.$apply();
         };
         
         
     });
     
     lmApp.controller('InvitesController', function($scope, $http, $q, $rootScope, Invite) {
+        
         $scope.activeUsers = {};
         $scope.invitesSent = {};
         
@@ -233,6 +305,13 @@
         $scope.activeUsers.pageSize = 10;
         $scope.invitesSent.pageSize = 10;
         
+        $scope.activeUsers.activeUsersList = [];
+        $scope.invitesSent.invitesSentList = [];
+        
+        $scope.activeUsers.count = 0;
+        $scope.invitesSent.count = 0;
+        
+        if ($rootScope.sessionUser) {
         $rootScope.sessionUser.activeUsersInvited().then(function(users) {
             $scope.activeUsers.activeUsersList = users;
             $scope.activeUsers.count = users.length;
@@ -251,7 +330,7 @@
         $scope.invitesSent.invitesSentList = $rootScope.sessionUser.invitesSent();
         
         $scope.inviteTarget = new Invite();
-        
+        }
         $scope.numberOfPages = function(listLength, pageSize) {
             try {
                 return Math.ceil(listLength/pageSize);

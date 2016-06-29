@@ -72,7 +72,7 @@ scrollingModule.directive('scrollSpy', function ($window) {
       spyElems = [];
 
       scope.$watch('spies', function (spies) {
-        var spy, _i, _len, _results;
+        var spy, _i, _len, _results, current;
         _results = [];
 
         for (_i = 0, _len = spies.length; _i < _len; _i++) {
@@ -100,7 +100,7 @@ scrollingModule.directive('scrollSpy', function ($window) {
             continue;
           }
 
-          if ((pos = spyElems[spy.id].offset().top) - $window.scrollY <= 0) {
+          if ((pos = spyElems[spy.id].offset().top) - $window.scrollY <= 0 && !spyElems[spy.id].hasClass('ng-hide')) {
             // the window has been scrolled past the top of a spy element
             spy.pos = pos;
 

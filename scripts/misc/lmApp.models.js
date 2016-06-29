@@ -20,6 +20,7 @@
                 innerQuery.equalTo("sender_id", this.id);
                 var query = new Parse.Query(this);
                 query.matchesQuery("id", innerQuery);
+                query.descending("lastLogin");
                 query.find({
                     success: function(users) {
                         deferOuter.resolve(users);
@@ -38,6 +39,7 @@
                 
                 var query = new Parse.Query(Invite);
                 query.equalTo("invitedByUserId", this.id);
+                query.descending("CreatedAt");
                 query.find({
                     success: function(invites) {
                         defer.resolve(invites);
@@ -164,5 +166,58 @@
         
         return Invite;
     });
+    
+    modelsModule.factory('UserVideo', function() {
+        var UserVideo = Parse.Object.extend('UserVideo', {
+            initialize: function(attrs, options) {
+            }
+        }, 
+            {
+                getByUserIdAndVideoId: function(userId, videoId) {
+                    var userVideoDfd = $q.defer();
+                    var queryUserVideo = new Parse.Query(this);
+                    queryUserVideo.equalTo("userId", userId);
+                    queryUserVideo.equalTo("videoId", videoId);
+                    queryInspirations.find({
+                        success: function(aUserVideo) {
+                        userVideoDfd.resolve(aUserVideo);
+                    },
+                        error: function(error) {
+                            console.log(error);
+                            userVideoDfd.reject(error);
+                            return null;
+                        }
+                    });
+                    
+                    return userVideoDfd.promise;
+                }
+        });
+        
+        // UserId property
+        UserVideo.prototype.__defineGetter__("userId", function() {
+            return this.get("userId");
+        });
+        UserVideo.prototype.__defineSetter__("userId", function(aValue) {
+            return this.set("userId", aValue);
+        });
+        
+        // VideoId property
+        UserVideo.prototype.__defineGetter__("videoId", function() {
+            return this.get("videoId");
+        });
+        UserVideo.prototype.__defineSetter__("videoId", function(aValue) {
+            return this.set("videoId", aValue);
+        });
+        
+        // Playcount property
+        UserVideo.prototype.__defineGetter__("playCount", function() {
+            return this.get("playCount");
+        });
+        UserVideo.prototype.__defineSetter__("playCount", function(aValue) {
+            return this.set("playCount", aValue);
+        });
+        
+        return UserVideo;
+    })
     
 })(window.angular);

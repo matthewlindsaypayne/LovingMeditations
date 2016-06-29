@@ -53,10 +53,10 @@
                                     <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
-                                    <li spy="lm-login" ng-hide="sessionUser">LOG IN</li>
-                                    <li spy="lm-invites" ng-hide="sessionUser == null && !canInvite">INVITES</li>
+                                    <li spy="lm-login" ng-hide="true || sessionUser">LOG IN</li>
+                                    <li spy="lm-invites" ng-hide="true || sessionUser == null || sessionUser.userType == 0">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
-                                    <li ng-hide="!sessionUser" ng-click="logout()">LOG OUT</li>
+                                    <li ng-hide="true || !sessionUser" ng-click="logout()">LOG OUT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -118,8 +118,15 @@
                                 <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />
                             </div>
                             <div class="row">
+                                <btn class="adviser-btn" ng-click="triggerAdviser()">Adviser</btn>
+                                <br /><br /><br />
+                            </div>
+                            <div ng-show="showAdviser">
+                                
+                            </div>
+                            <div class="row">
                                 <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                                        Previous
+                                    Previous
                                 </button>
                                 {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
                                 <button ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
@@ -128,7 +135,7 @@
                             </div>
                             <div class="row">
                                 <div class="center-block">
-                                    <div class="meditations-blurb" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id)">
+                                    <div class="meditations-blurb" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
                                         <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
                                         <span class="meditations-blurb-title">{{video.name}}</span><br/>
                                         <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
@@ -156,9 +163,7 @@
                         </div>
                     </div>
                      
-                    <label class="center-block text-center">{{sessionUser.username}}</label>
-                        
-                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="sessionUser" >
+                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="true || sessionUser" >
                         <div id="wrapper-login">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -259,7 +264,7 @@
                   </div>
                     </div>
             
-                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="!sessionUser == null && !canInvite">
+                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || sessionUser == null || sessionUser.userType == 0">
                         <div id="wrapper-invites" class="">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -267,9 +272,10 @@
                             <div class="row">
                             <h2>Manage Invites</h2>
                             <br />
-                        </div>
+                            </div>
+                            <h3>Active Users</h3>
+                            <div ng-show="activeUsers.count > 0">
                             <div class="row">
-                                <h3>Active Users</h3>
                                 <button ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
                                 </button>
@@ -280,7 +286,7 @@
                             </div>
                         <div class="row">
                             <ul class="center-block">
-                                <li ng-repeat="activeUser in activeUsers.activeUserList | orderBy: 'lastLogin':true | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
+                                <li ng-repeat="activeUser in activeUsers.activeUserList | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
                                     <p><span class="text-left">User: {{activeUser.name}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
                                 </li>
                             </ul>
@@ -295,8 +301,14 @@
                                     </button>
                                 <br />
                             </div>
+                            </div>
+                            <div ng-show="activeUsers.count == 0">
+                                <p>None of your invitees have signed up!</p>
+                            </div>
+                            <h3>Invites Sent</h3>
+                            <div ng-show="invitesSent.count > 0">
                             <div class="row">
-                                <h3>Invites Sent</h3>
+                                
                                 <button ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
                                 </button>
@@ -308,7 +320,7 @@
                         <div class="row">
                             
                             <ul class="center-block">
-                                <li ng-repeat="invite in invitesSent.invitesSentList | orderBy: 'createdAt':true | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
+                                <li ng-repeat="invite in invitesSent.invitesSentList | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
                                     <p><span class="text-left">Sent To: {{invite.name}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
                                 </li>
                             </ul>
@@ -322,6 +334,10 @@
                                     Next
                                 </button>
                                 <br />
+                            </div>
+                            </div>
+                            <div ng-show="invitesSent.count == 0">
+                                <p>You have no pending invites!</p>
                             </div>
                         <div class="row">
                             <br />
@@ -362,7 +378,8 @@
                                     <h2 class="text-center">Have a Question?</h2>
                                     <h2 class="text-center">Send us an Email!</h2>
                                     
-                                    <form name="contactForm" class="form-horizontal" ng-submit="contactForm.$valid && sendContactUs()" novalidate>
+                                    <form name="contactForm" class="form-horizontal" action="https://formspree.io/balancetemp@gmail.com"
+      method="POST" ng-submit="contactForm.$valid && sendContactUs()" novalidate>
                                         <div class="form-group">
                                             <input name="contactName" class="form-control" type="text" placeholder="Your Name..." ng-model="contactName" ng-minlength="4" ng-maxlength="40" required />
                                             <div class="help-block" ng-messages="contactForm.contactName.$error" ng-if="contactForm.contactName.$touched">
