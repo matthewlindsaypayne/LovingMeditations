@@ -172,6 +172,11 @@ body {
     padding 40px 60px;
 }
 
+.contact-btn {
+    background-color: transparent;
+    border-width: 0px;
+}
+
 input {
     border: 1px solid white;
     margin-bottom: 5px;
