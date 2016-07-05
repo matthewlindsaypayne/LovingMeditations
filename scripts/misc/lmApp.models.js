@@ -131,21 +131,43 @@
         return User;
     });
     
-    modelsModule.factory('Invite', function() {
+    modelsModule.factory('Invite', function($q) {
         var Invite = Parse.Object.extend('Invite', {
             initialize: function(attrs, options) {
-                this.invitedByUserId = -1;
+                this.invitedByUserId = {};
                 this.email = "";
-                this.name = "";
+            }
+        }, {
+            inviteExists: function(email) {
+                var defer = $q.defer();
+ 
+                var query = new Parse.Query(this);
+                query.equalTo("email", email);
+                query.find({
+                    success : function(anEmail) {
+                        if (anEmail.length > 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                        //defer.resolve(aPresentations);
+                    },
+                    error : function(aError) {
+                        return false;
+                        //defer.reject(aError);
+                    }
+                });
             }
         });
         
+        
+        
         // InvitedByUserId property
-        Invite.prototype.__defineGetter__("invitedByUserId", function() {
-            return this.get("invitedByUserId");
+        Invite.prototype.__defineGetter__("invitedByUserIds", function() {
+            return this.get("invitedByUserIds");
         });
-        Invite.prototype.__defineSetter__("invitedByUserId", function(aValue) {
-            return this.set("invitedByUserId", aValue);
+        Invite.prototype.__defineSetter__("invitedByUserIds", function(aValue) {
+            return this.set("invitedByUserIds", aValue);
         });
         
         // Email property
@@ -154,14 +176,6 @@
         });
         Invite.prototype.__defineSetter__("email", function(aValue) {
             return this.set("email", aValue);
-        });
-        
-        // Name property
-        Invite.prototype.__defineGetter__("name", function() {
-            return this.get("name");
-        });
-        Invite.prototype.__defineSetter__("name", function(aValue) {
-            return this.set("name", aValue);
         });
         
         return Invite;

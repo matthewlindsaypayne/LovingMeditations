@@ -267,6 +267,7 @@
             $scope.userSignup.userType = 0;
             $scope.userSignup.programEnrolledIn = "";
             $scope.userSignup.emailVerified = false;
+            //if ()
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     alert('New object created with objectId: ' + newUser.id);
@@ -288,9 +289,11 @@
                     alert('Failed to log in, with error code: ' + error.message);
                 }
             });
-            $scope.$apply();
         };
         
+        $scope.forgotPassword = function() {
+            alert('Email sent!');
+        }
         
     });
     
@@ -340,25 +343,45 @@
         };
         
         $scope.sendInvite = function() {
-           //send email
-           alert("Email sent!");
+           if (Invite.inviteExists($scope.inviteTarget.email)) {
+                alert('Already been invited, cant again.');
+            } else {
+                $scope.inviteTarget.invitedByUserId = $rootScope.sessionUser.id;
+                $scope.inviteTarget.save(null, {
+                    success: function(sentInvite) {
+                        alert('Sent invite to ' + sentInvite.name);
+                        //send email
+                        alert("Email sent! Uses Name!");
+                        $scope.inviteTarget = new Invite();
+                    },
+                    error: function(sentInvite, error) {
+                        alert('Failed to send invite, with error code: ' + error.message);
+                    }
+                });
+            }
            
-           $scope.inviteTarget.invitedByUserId = $rootScope.sessionUser.id;
-           $scope.inviteTarget.save(null, {
-               success: function(sentInvite) {
-                   alert('Sent invite to ' + sentInvite.name);
-                   $scope.inviteTarget = new Invite();
-               },
-               error: function(sentInvite, error) {
-                   alert('Failed to send invite, with error code: ' + error.message);
-               }
-           });
-       }
+       };
     });
     
     lmApp.controller('ContactController', function($scope, $http, $q) {
-        $scope.sendContactUs = function() {
-            alert("Contact message sent!");
+        $scope.testSendEmail = function() {
+            var data = $.param({
+                json: JSON.stringify({
+                    toEmail: 'balancetemp@gmail.com',
+                    fromEmail: 'info@lovingmeditations.com',
+                    subject: 'loving meditations test',
+                    content: 'check check check check'
+                })
+            });
+            $http.post('https://lmserver-1281.appspot.com/parse/mail')
+                .success(function(data, status, headers, config) {
+                    programsList = data;
+                    $scope.programs = programsList;
+                })
+                .error(function(data, status, headers, config) {
+                    // log error
+                    console.log("Email send failed " + status);
+                });
         }
     });
     

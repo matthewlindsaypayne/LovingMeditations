@@ -96,8 +96,6 @@ body {
 #wrapper-inspirations {
     height: 100%;
     padding: 40px 40px 75px 40px;
-    border: 2px solid white;
-    border-radius: 8px;
 }
 
 #lm-programs {
@@ -112,16 +110,6 @@ body {
     margin-bottom: 20px;
 }
 
-.active-program {
-    border: 2px solid white;
-    border-radius: 8px;
-}
-
-.adviser-btn {
-    border: 2px solid white;
-    border-radius: 8px;
-}
-
 #lm-meditations {
     margin: 10px
 }
@@ -131,8 +119,6 @@ body {
 }
 
 .meditations-blurb {
-    border: 2px solid white;
-    border-radius: 8px;
     margin: 10px;
     min-height: 184px;
 }
@@ -193,7 +179,7 @@ input {
 
 btn {
     font-size: 30px;
-    padding: 10px;
+    border: 10px;
 }
 
 ul {
@@ -225,4 +211,9 @@ footer {
 #footerCrusoe {
     font-size: 40px;
     padding-bottom: 30px;
+}
+
+.border-white {
+    border: 2px solid white;
+    border-radius: 8px;
 }

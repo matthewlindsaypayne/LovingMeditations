@@ -73,7 +73,7 @@
                             <img class="section-img-first" height="100px" src="images/inspirations.png" align="middle" />
                         </div>
                         <div class="row">
-                            <div id="wrapper-inspirations">
+                            <div id="wrapper-inspirations" class="border-white">
                                 <div class="text-center">{{currentInspiration}}</div>
                             </div>
                         </div>
@@ -83,59 +83,64 @@
                     </div>
             
                     <div id="lm-programs" class="center-block text-center" ng-controller="ProgramsController as pc">
-                        <div id="wrapper-programs" class="">
+                        
                             <div  class="row">
                                 <img class="section-img-top" height="100px" src="images/programs.png" align="middle" />
                             </div>
+                        <div id="wrapper-programs">
                             <div id="programs-row" class="row">
-                                <div class="col-sm-5">
-                                    <btn ng-class="{'active-program': selectedProgramType=='Patient'}" ng-click="changeProgramType('Patient')">Patient</btn>
+                                <div class="col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Patient'}">
+                                    <btn ng-click="changeProgramType('Patient')">Patient</btn>
                                 </div>
-                                <div class="col-sm-offset-2 col-sm-5">
-                                    <btn ng-class="{'active-program': selectedProgramType=='Caregiver'}" ng-click="changeProgramType('Caregiver')">Caregiver</btn>
+                                <div class="col-sm-offset-2 col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Caregiver'}">
+                                    <btn ng-click="changeProgramType('Caregiver')">Caregiver</btn>
                                 </div>
                             </div>
                             <div class="row">
                                 <ul class="center-block" >
                                     <li ng-repeat="program in programs | filter: programDisplayFilter">
-                                        <p><btn ng-click="selectProgram(program.id, program.hashedId)">{{program.name | ProgramNameFilter}}</btn></p>
-                                        
+                                        <div class="border-white">
+                                            <btn ng-click="selectProgram(program.id, program.hashedId)">{{program.name | ProgramNameFilter}}</btn>
+                                        </div>
                                     </li>
                             </div>
-                            <div class="row" ng-show="selectedProgramId != -1">
-                                <iframe ng-src="{{trustSrc(selectedProgramEmbedSrc)}}" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_playlist" name="wistia_playlist" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen width="640" height="360"></iframe>
+                            <div class="row center-block" ng-show="selectedProgramId != -1">
+                                <iframe ng-src="{{trustSrc(selectedProgramEmbedSrc)}}" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_playlist" align="middle" name="wistia_playlist" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen width="640" height="360"></iframe>
                             </div>
+                                </div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/programs.png" align="middle" />
                             </div>
-                        </div>
+                        
                     </div>
                         
-            
                     <div id="lm-meditations" class="center-block text-center" ng-controller="MeditationsController as mc">
                         <div id="wrapper-meditations" class="">
                             <div  class="row">
                                 <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />
                             </div>
-                            <div class="row">
-                                <btn class="adviser-btn" ng-click="triggerAdviser()">Adviser</btn>
-                                <br /><br /><br />
+                            <div class="row border-white" ng-hide="true">
+                                <btn ng-click="triggerAdviser()">Adviser</btn>
                             </div>
+                            <br /><br /><br />
                             <div ng-show="showAdviser">
                                 
                             </div>
                             <div class="row">
-                                <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                
+                            </div>
+                            <div class="row">
+                                <btn class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                                     Previous
-                                </button>
+                                </btn>
                                 {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                <button ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                <btn class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                                     Next
-                                </button>
+                                </btn>
                             </div>
                             <div class="row">
                                 <div class="center-block">
-                                    <div class="meditations-blurb" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
+                                    <div class="meditations-blurb border-white" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
                                         <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
                                         <span class="meditations-blurb-title">{{video.name}}</span><br/>
                                         <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
@@ -145,13 +150,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                            <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                            <btn class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                                         Previous
-                                    </button>
+                                    </btn>
                                     {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                    <button ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                    <btn class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                                         Next
-                                    </button>
+                                    </btn>
                                 <br />
                             </div>
                             <div id="meditation-embed">
@@ -169,16 +174,8 @@
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
                             </div>
                       <div class="row">
-                          <div class="col-xs-6 col-sm-5">
-                              <h3>Login</h3>
-                          </div>
-                          <div class="col-xs-6 col-sm-offset-2 col-sm-5">
-                              <h3>Sign Up</h3>
-                          </div>
-                      </div>
-                      <div class="row">
-                         <div class="col-xs-6  col-sm-5">
-                             
+                         <div class="col-sm-5 text-center center-block">
+                             <h3 class="center-block">Login</h3>
                              <form name="loginForm" ng-submit="loginForm.$valid && login()" novalidate>
                                  <div class="form-group">
                                      <input id="login-username" name="loginUsername" class="center-block" type="text" placeholder="Username" ng-model="userLogin.username" ng-minlength="8" ng-maxlength="20" required />
@@ -199,13 +196,17 @@
                                         <p ng-message="required">Your Password is required.</p>
                                     </div>
                                 </div>
-                                 <button type="submit" class="btn btn-green center-block">LOG IN</button>
-                                 
-                                 <button class="btn btn-green center-block">FORGET YOUR PASSWORD?</button>
+                                 <div class="border-white">
+                                    <button type="submit" class="center-block">Log In</button>
+                                 </div>
                              </form>
+                             <div class="border-white">
+                                    <btn class="center-block" ng-click="forgotPassword()">Forget your Password?</btn>
+                                 </div>
                          </div>
                           
-                         <div class="col-xs-6 col-sm-offset-2 col-sm-5">
+                         <div class="col-sm-offset-2 col-sm-5">
+                             <h3>Sign Up</h3>
                              <form name="signupForm" ng-submit="signupForm.$valid && signup()" novalidate>
                                  <div class="form-group">
                                     <input name="signupName" class="center-block" type="text" placeholder="Name" ng-model="userSignup.name" ng-minlength="2" ng-maxlength="30" required />
@@ -244,17 +245,20 @@
                                  </div>
                                  <div class="form-group">
                                      <label class="radio-inline">
-                                        <input type="radio" name="signupType" value="0" ng-model="userSignup.patientType" required>Patient
+                                        <input type="radio" name="signupType" value="0" ng-model="userSignup.patientType" ng-required="!userSignup.patientType">Patient
                                      </label>
                                      <label class="radio-inline">
-                                        <input type="radio" name="signupType" value="1" ng-model="userSignup.patientType" required>Caretaker
+                                        <input type="radio" name="signupType" value="1" ng-model="userSignup.patientType" ng-required="!userSignup.patientType">Caretaker
                                      </label>
                                      
-                                     <div class="help-block" ng-messages="signupForm.signupType.$error" ng-if="signupForm.signupType.$touched">
-                                        <p ng-message="required">Your Password is required.</p>
+                                     <div class="help-block" ng-messages="signupForm.signupType.$error">
+                                        <p ng-message="required">Please choose a user type.</p>
                                     </div>
                                  </div>
-                                 <button type="submit" class="btn btn-green center-block" value="Send">SIGN UP</button>
+                                 <div class="border-white">
+                                    <btn type="submit" class="center-block" value="Send">Sign Up</btn>
+                                 </div>
+                                 
                               </form>
                           </div>
                       </div>  
@@ -264,7 +268,7 @@
                   </div>
                     </div>
             
-                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || sessionUser == null || sessionUser.userType == 0">
+                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || sessionUser == null || sessionUser.userType != 0">
                         <div id="wrapper-invites" class="">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -276,13 +280,13 @@
                             <h3>Active Users</h3>
                             <div ng-show="activeUsers.count > 0">
                             <div class="row">
-                                <button ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                <btn class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
-                                </button>
+                                </btn>
                                 {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                <button ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                <btn class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
                                     Next
-                                </button>
+                                </btn>
                             </div>
                         <div class="row">
                             <ul class="center-block">
@@ -292,13 +296,13 @@
                             </ul>
                         </div>
                         <div class="row">
-                            <button ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                            <btn class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
-                                    </button>
+                                    </btn>
                                     {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                    <button ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                    <btn class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
                                         Next
-                                    </button>
+                                    </btn>
                                 <br />
                             </div>
                             </div>
@@ -309,13 +313,13 @@
                             <div ng-show="invitesSent.count > 0">
                             <div class="row">
                                 
-                                <button ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                <btn class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
-                                </button>
+                                </btn>
                                 {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                <button ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                <btn class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
                                     Next
-                                </button>
+                                </btn>
                             </div>
                         <div class="row">
                             
@@ -326,13 +330,13 @@
                             </ul>
                         </div>
                         <div class="row">
-                            <button ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                            <btn class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
-                                </button>
+                                </btn>
                                 {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                <button ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                <btn class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
                                     Next
-                                </button>
+                                </btn>
                                 <br />
                             </div>
                             </div>
@@ -359,7 +363,7 @@
                                         <p ng-message="required">A name is required.</p>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-green center-block" value="Send">INVITE</button>
+                                <button type="submit" class="center-block" value="Send">INVITE</button>
                             </form>
                         </div>
                             <div class="row">
@@ -409,17 +413,21 @@
                                                 <p ng-message="required">A message is required.</p>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-green pull-right" value="Send">SEND</button>
+                                        <div class="pull-right border-white">
+                                            <btn type="submit" class="" value="Send">Send</btn>
+                                        </div>
+                                        
                                     </form>
                         	
+                                    
                                 </div>
+                                
                             </div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/invites.png" align="middle" />
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
                 
