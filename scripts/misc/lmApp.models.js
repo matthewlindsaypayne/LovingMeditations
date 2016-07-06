@@ -137,37 +137,16 @@
                 this.invitedByUserId = {};
                 this.email = "";
             }
-        }, {
-            inviteExists: function(email) {
-                var defer = $q.defer();
- 
-                var query = new Parse.Query(this);
-                query.equalTo("email", email);
-                query.find({
-                    success : function(anEmail) {
-                        if (anEmail.length > 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                        //defer.resolve(aPresentations);
-                    },
-                    error : function(aError) {
-                        return false;
-                        //defer.reject(aError);
-                    }
-                });
-            }
         });
         
         
         
         // InvitedByUserId property
-        Invite.prototype.__defineGetter__("invitedByUserIds", function() {
-            return this.get("invitedByUserIds");
+        Invite.prototype.__defineGetter__("invitedByUserId", function() {
+            return this.get("invitedByUserId");
         });
-        Invite.prototype.__defineSetter__("invitedByUserIds", function(aValue) {
-            return this.set("invitedByUserIds", aValue);
+        Invite.prototype.__defineSetter__("invitedByUserId", function(aValue) {
+            return this.set("invitedByUserId", aValue);
         });
         
         // Email property

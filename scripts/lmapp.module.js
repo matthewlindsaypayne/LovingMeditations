@@ -334,6 +334,7 @@
         
         $scope.inviteTarget = new Invite();
         }
+        
         $scope.numberOfPages = function(listLength, pageSize) {
             try {
                 return Math.ceil(listLength/pageSize);
@@ -343,23 +344,42 @@
         };
         
         $scope.sendInvite = function() {
-           if (Invite.inviteExists($scope.inviteTarget.email)) {
-                alert('Already been invited, cant again.');
-            } else {
-                $scope.inviteTarget.invitedByUserId = $rootScope.sessionUser.id;
-                $scope.inviteTarget.save(null, {
-                    success: function(sentInvite) {
-                        alert('Sent invite to ' + sentInvite.name);
-                        //send email
-                        alert("Email sent! Uses Name!");
-                        $scope.inviteTarget = new Invite();
-                    },
-                    error: function(sentInvite, error) {
-                        alert('Failed to send invite, with error code: ' + error.message);
+            var inviteDfd = $q.defer();
+ 
+            var query = new Parse.Query(Invite);
+            query.equalTo("email", $scope.inviteTarget.email);
+            query.find({
+                success : function(anInvite) {
+                    inviteDfd.resolve(anInvite);
+                },
+                error : function(aError) {
+                    inviteDfd.reject(aError);
+                }
+            });
+            
+            inviteDfd.promise
+                .then(function (anInvite) {
+                    if (anInvite.length > 0) {
+                        alert('Already been invited, can\'t again.');
+                    } else {
+                        $scope.inviteTarget.invitedByUserId = $rootScope.sessionUser.id;
+                        $scope.inviteTarget.save(null, {
+                            success: function(sentInvite) {
+                                alert('Sent invite to ' + sentInvite.name);
+                                //send email
+                                alert("Email sent! Uses Name!");
+                                $scope.inviteTarget = new Invite();
+                            },
+                            error: function(sentInvite, error) {
+                                alert('Failed to send invite, with error code: ' + error.message);
+                            }
+                        });
                     }
+                })
+                .catch(function (error) {
+                    // log error
+                    alert("Invite retrieval promise failed.");
                 });
-            }
-           
        };
     });
     
