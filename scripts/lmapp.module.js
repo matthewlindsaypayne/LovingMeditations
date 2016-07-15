@@ -18,6 +18,7 @@
         Parse.serverURL = "https://lmserver-1281.appspot.com/parse";
         
         $rootScope.sessionUser = Parse.User.current();
+        $rootScope.loggedIn = ($rootScope.sessionUser != null);
         console.log("User is : " + $rootScope.sessionUser);
     });
     
@@ -43,12 +44,12 @@
         }
     });
 
-    lmApp.controller('LovingMeditationsController', function($scope) {
+    lmApp.controller('LovingMeditationsController', function($scope, $rootScope) {
         $scope.canInvite = true;
         
         $scope.logout = function() {
             Parse.User.logOut();
-            $scope.apply();
+            $rootScope.loggedIn = false;
         };
         
     });
@@ -263,32 +264,46 @@
         $scope.userLogin = {};
         
         $scope.signup = function() {
-            $scope.userSignup.lastLogin = "";
+            $scope.userSignup.username = $scope.userSignup.email;
             $scope.userSignup.userType = 0;
+            $scope.userSignup.patientType = parseInt($scope.userSignup.patientType);
             $scope.userSignup.programEnrolledIn = "";
             $scope.userSignup.emailVerified = false;
             //if ()
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     alert('New object created with objectId: ' + newUser.id);
+                    $rootScope.loggedIn = true;
+                    $rootScope.$apply();
+                    $scope.userSignup = new LMUser();
                 },
                 error: function(newUser, error) {
                     console.log(error);
                     alert('Failed to create new object, with error code: ' + error.message);
+                    $rootScope.loggedIn = false;
+                    $rootScope.$apply();
                 }
             });
-            $scope.$apply();
         };
         
         $scope.login = function() {
+            if ($rootScope.loggedIn == false) {
             LMUser.logIn($scope.userLogin.username, $scope.userLogin.password, {
                 success: function(loggedInUser) {
                     alert('Logged in as user with objectId: ' + loggedInUser.id);
+                    $rootScope.loggedIn = true;
+                    $rootScope.$apply();
+                    $scope.userLogin = {};
                 },
                 error: function(loggedInUser, error) {
                     alert('Failed to log in, with error code: ' + error.message);
+                    $rootScope.loggedIn = false;
+                    $rootScope.$apply();
                 }
             });
+            } else {
+                alert('Attempted log in when user was already logged in.');
+            }
         };
         
         $scope.forgotPassword = function() {

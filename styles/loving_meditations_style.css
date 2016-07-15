@@ -10,6 +10,15 @@ body, html, h1, h2, h3, h4, h5, h6, p, a, button {
     color: white;
 }
 
+a:hover {
+    text-decoration: none;
+}
+
+button {
+    background-color: transparent;
+    border-width: 0px;
+}
+
 body {
     
 }
@@ -173,8 +182,6 @@ body {
 }
 
 .contact-btn {
-    background-color: transparent;
-    border-width: 0px;
 }
 
 input {

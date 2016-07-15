@@ -6,8 +6,6 @@
     modelsModule.factory('LMUser', function($q, Invite) {
         var User = Parse.User.extend({
             initialize: function(attrs, options) {
-                this.name = "";
-                this.lastLogin = "";
                 this.userType = 0;
                 this.patientType = 0;
                 this.programEnrolledIn = 0;
@@ -78,14 +76,6 @@
         });
         User.prototype.__defineSetter__("email", function(aValue) {
             return this.set("email", aValue);
-        });
-        
-        // Name property
-        User.prototype.__defineGetter__("name", function() {
-            return this.get("name");
-        });
-        User.prototype.__defineSetter__("name", function(aValue) {
-            return this.set("name", aValue);
         });
         
         // LastLogin property

@@ -53,10 +53,10 @@
                                     <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
-                                    <li spy="lm-login" ng-hide="true || sessionUser">LOG IN</li>
-                                    <li spy="lm-invites" ng-hide="true || sessionUser == null || sessionUser.userType == 0">INVITES</li>
+                                    <li spy="lm-login" ng-hide="true || loggedIn === true">LOG IN</li>
+                                    <li spy="lm-invites" ng-hide="true || loggedIn === false || sessionUser.userType == 0">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
-                                    <li ng-hide="true || !sessionUser" ng-click="logout()">LOG OUT</li>
+                                    <li ng-hide="true || loggedIn===false" ng-click="logout()">LOG OUT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -168,7 +168,7 @@
                         </div>
                     </div>
                      
-                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="true || sessionUser" >
+                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="true || loggedIn === true" >
                         <div id="wrapper-login">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -178,12 +178,11 @@
                              <h3 class="center-block">Login</h3>
                              <form name="loginForm" ng-submit="loginForm.$valid && login()" novalidate>
                                  <div class="form-group">
-                                     <input id="login-username" name="loginUsername" class="center-block" type="text" placeholder="Username" ng-model="userLogin.username" ng-minlength="8" ng-maxlength="20" required />
+                                     <input id="login-username" name="loginUsername" class="center-block" type="email" placeholder="Email" ng-model="userLogin.username" required />
                                      
                                      <div class="help-block" ng-messages="loginForm.loginUsername.$error" ng-if="loginForm.loginUsername.$touched">
-                                        <p ng-message="minlength">Your Username is too short.</p>
-                                        <p ng-message="maxlength">Your Username is too long.</p>
-                                        <p ng-message="required">Your Username is required.</p>
+                                        <p ng-message="email">This must be a valid email address.</p>
+                                        <p ng-message="required">Your Email is required.</p>
                                     </div>
                                      
                                 </div>
@@ -208,24 +207,6 @@
                          <div class="col-sm-offset-2 col-sm-5">
                              <h3>Sign Up</h3>
                              <form name="signupForm" ng-submit="signupForm.$valid && signup()" novalidate>
-                                 <div class="form-group">
-                                    <input name="signupName" class="center-block" type="text" placeholder="Name" ng-model="userSignup.name" ng-minlength="2" ng-maxlength="30" required />
-                                     
-                                     <div class="help-block" ng-messages="signupForm.signupName.$error" ng-if="signupForm.signupName.$touched">
-                                        <p ng-message="minlength">Your name is too short.</p>
-                                        <p ng-message="maxlength">Your name is too long.</p>
-                                        <p ng-message="required">Your name is required.</p>
-                                     </div>
-                                 </div>
-                                 <div class="form-group">
-                                     <input id="signup-username" name="signupUsername" class="center-block" type="text" placeholder="Username" ng-model="userSignup.username" ng-minlength="8" ng-maxlength="20" required />
-                                     
-                                     <div class="help-block" ng-messages="signupForm.signupUsername.$error" ng-if="signupForm.signupUsername.$touched">
-                                        <p ng-message="minlength">Your Username is too short.</p>
-                                        <p ng-message="maxlength">Your Username is too long.</p>
-                                        <p ng-message="required">Your Username is required.</p>
-                                    </div>
-                                 </div>
                                  <div class="form-group">
                                      <input id="signup-email" name="signupEmail" class="center-block" type="email" placeholder="Email" ng-model="userSignup.email" required />
                                      
@@ -256,7 +237,7 @@
                                     </div>
                                  </div>
                                  <div class="border-white">
-                                    <btn type="submit" class="center-block" value="Send">Sign Up</btn>
+                                    <button type="submit" class="center-block" value="Send">Sign Up</button>
                                  </div>
                                  
                               </form>
@@ -268,7 +249,7 @@
                   </div>
                     </div>
             
-                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || sessionUser == null || sessionUser.userType != 0">
+                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || loggedIn === false || sessionUser.userType != 0">
                         <div id="wrapper-invites" class="">
                             <div class="row">
                                 <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
@@ -433,9 +414,10 @@
             </div>
                 
             <footer class="text-center">
-                <span><a href="http://lovingmeditations.com/support">Support</a></span><br />
+                <span><a href="http://lovingmeditations.com/support">Support</a>     </span>
                 <span><a href="http://lovingmeditations.com/privacy-policy">Privacy Policy</a></span><br />
                 <span><a href="http://lovingmeditations.com/web-app-faq">Frequently Asked Questions</a></span><br />
+                <span><a href="http://lovingmeditations.com/terms-of-service">Terms of Service</a></span><br />
                 <span id="footerCrusoe">Crusoe Ventures 2016</span>
                 
             </footer>
