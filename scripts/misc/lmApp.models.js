@@ -201,6 +201,149 @@
         });
         
         return UserVideo;
-    })
+    });
+    
+    modelsModule.factory('AdviserVideo', function() {
+        var AdviserVideo = function() {
+            this.hashedId = 0;
+            this.name = '';
+            this.description = '';
+            this.duration = null;
+            this.thumbnailUrl = '';
+            this.tags = {};
+        }
+        
+        return AdviserVideo;
+    });
+    
+    modelsModule.factory('AdviserVideoCollection', function(AdviserVideo) {
+        var AdviserVideoCollection = function() {
+            this.adviserVideos = [];
+        };
+        
+        AdviserVideoCollection.prototype.addVideo = function(hashedId, name, description, duration, thumbnailUrl, tags) {
+            var adviserVideo = new AdviserVideo();
+            adviserVideo.hashedId = hashedId;
+            adviserVideo.name = name;
+            adviserVideo.description = description;
+            adviserVideo.duration = duration;
+            adviserVideo.thumbnailUrl = thumbnailUrl;
+            adviserVideo.tags = tags;
+            
+            this.adviserVideos.push(adviserVideo);
+        }
+        
+        AdviserVideoCollection.prototype.removeVideo = function(videoId) {
+            var videoToRemove = this.adviserVideos.filter(function(video) {return video.hashedId == videoId;} );
+            this.adviserVideos.splice(this.adviserVideos.indexOf(videoToRemove), 1);
+        }
+        
+        AdviserVideoCollection.prototype.keepTag = function(tagId) {
+            console.log(this.adviserVideos);
+            var adviserVideosToRemove = [];
+            for (var i = 0; i < this.adviserVideos.length; i++) {
+                var video = this.adviserVideos[i]
+                if (!video.tags.includes(tagId)) {
+                    adviserVideosToRemove.push(video);
+                }
+            }
+            
+            for (var i = 0; i < adviserVideosToRemove.length; i++) {
+                this.adviserVideos.splice(this.adviserVideos.indexOf(adviserVideosToRemove[i]), 1);
+            }
+        }
+        
+        AdviserVideoCollection.prototype.removeTag = function(tagId) {
+            var adviserVideosToRemove = [];
+            for (var i = 0; i < this.adviserVideos.length; i++) {
+                var video = this.adviserVideos[i];
+                if (video.tags.includes(tagId)) {
+                    adviserVideosToRemove.push(video);
+                }
+            }
+            
+            for (var i = 0; i < adviserVideosToRemove.length; i++) {
+                this.adviserVideos.splice(this.adviserVideos.indexOf(adviserVideosToRemove[i]), 1);
+            }
+        }
+        
+        AdviserVideoCollection.prototype.getNextTagIndex = function() {
+            var tagCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            //iterate through adviserVideos
+            for (var i = 0; i < this.adviserVideos.length; i++) {
+                //tally tag counts
+                for (var j = 0; j < this.adviserVideos[i].tags.length; j++) {
+                    tagCounts[this.adviserVideos[i].tags[j]] += 1;
+                }
+            }
+            
+            //return highest
+            return (indexOfMinAboveZero(tagCounts) - 1);
+        }
+        
+        AdviserVideoCollection.prototype.isReadyToDisplay = function() {
+            if (this.adviserVideos.length == 1) {
+                //if there's only one video left remaining
+                return true;
+            } else {
+                var tags = this.adviserVideos[0].tags;
+                //for remaining adviserVideos, compile growing list of tags
+                for (var i = 0; i < this.adviserVideos.length; i++) {
+                    //if current video adds new tag, false
+                    //if current video is missing a tag, false
+                    if (!arraysEqual(this.adviserVideos[i].tags, tags)) {
+                        return false;
+                    }
+                }
+                //if iterate through all, true
+                return true;
+            }
+        }
+        
+        AdviserVideoCollection.prototype.getVideoIdToDisplay = function() {
+            return this.adviserVideos[Math.floor(Math.random() * this.adviserVideos.length)].hashedId;
+        }
+        
+        function arraysEqual(arr1, arr2) {
+            if(arr1.length !== arr2.length)
+                return false;
+            for(var i = arr1.length; i--;) {
+                if(arr1[i] !== arr2[i])
+                return false;
+            }
+            return true;
+        }
+        
+        function indexOfMinAboveZero(arr) {
+            if (arr.length === 0) {
+                return -1;
+            }
+
+            var minAboveZero = arr[0];
+            var minAboveZeroIndex = 0;
+            
+            for (var i = 1; i < arr.length; i++) {
+                if (minAboveZero == 0) {
+                    minAboveZeroIndex = i;
+                    minAboveZero = arr[i];
+                } else if (arr[i] != 0 && arr[i] < minAboveZero) {
+                    minAboveZeroIndex = i;
+                    minAboveZero = arr[i];
+                } else if (arr[i] != 0 && arr[i] == minAboveZero) {
+                    var chosenIndex = Math.random() < 0.5 ? i : minAboveZeroIndex;
+                    minAboveZeroIndex = chosenIndex;
+                    minAboveZero = arr[chosenIndex];
+                }
+            }
+            if (minAboveZero > 0) {
+                return minAboveZeroIndex;
+            } else {
+                return -1;
+            }
+            
+        }
+        
+        return AdviserVideoCollection;
+    });
     
 })(window.angular);

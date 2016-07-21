@@ -106,12 +106,46 @@
             if ($scope.selectedProgramId == -1) {
                 $scope.selectedProgramEmbedSrc = "//fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=360&videoOptions%5BvideoWidth%5D=640&videoOptions%5BvolumeControl%5D=true";
                 $scope.selectedProgramId = programId;
+                
+                if ($rootScope.loggedIn === true) {
+                    var programPlaylist = Wistia.playlist(programHashedId);
+                    programPlaylist.bind("end", function(sectionIndex, videoIndex) {
+                        {
+                        var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoIndex);
+                        if (userVideo) {
+                            userVideo.playCount++;
+                            userVideo.save(null, {
+                                success: function (userVideo) {
+                                    alert("User_Video updated!");
+                                },
+                                error: function(userVideo, error) {
+                                    alert("User_Video update failed, " + error.message);
+                                }
+                            });
+                        } else {
+                            userVideo = new UserVideo();
+                            userVideo.userId = $rootScope.sessionUser.id;
+                            userVideo.videoId = videoIndex;
+                            userVideo.playCount = 1;
+                            userVideo.save(null, {
+                                success: function (userVideo) {
+                                    alert("User_Video created!");
+                                },
+                                error: function(userVideo, error) {
+                                    alert("User_Video creation failed, " + error.message);
+                                }
+                            });
+                        }
+                    };
+                });
+                }
             } else {
                 $scope.selectedProgramId = -1;
                 $scope.selectedProgramEmbedSrc = '';
             }
             
         };
+        
         
         $scope.programDisplayFilter = function(item) {
             if (item.name.includes($scope.selectedProgramType)) {
@@ -128,7 +162,7 @@
         };
     });
     
-    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, $filter, $rootScope, anchorSmoothScroll, UserVideo) {
+    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, $filter, $rootScope, anchorSmoothScroll, UserVideo, AdviserVideoCollection) {
         $scope.selectedMeditationId = -1;
         $scope.selectedMeditationEmbed = '';
         $scope.currentPage = 0;
@@ -137,6 +171,20 @@
         $scope.videoCount = 0;
         $scope.adviserSelectedList = [];
         $scope.uniqueVideoId = 0;
+        $scope.showAdviser = false;
+        $scope.showAdviserBlurbs = false;
+        $scope.showAdviserMeditation = false;
+        
+        $scope.adviserQuestionList = [['1', 'Do you feel stressed or overwhelmed?'], ['2', 'Do you feel anxious or depressed?'], 
+                                      ['3', 'Do you feel discomfort or pain?'], ['4', 'Do you feel fatigued or burnt out?'],
+                                     ['5', 'Do you feel alone or disconnected?'], ['6', 'Do you feel worried?'],
+                                     ['7', 'Do you feel fearful or hopeless?'], 
+                                      ['8', 'Are you judging yourself, others or judging your situation?'],
+                                     ['9', 'Are you experiencing lack of mental clarity?'], ['10', 'Do you feel stuck or unappreciated?']];
+        
+        $scope.adviserQuestionText = '';
+        $scope.currentAdviserQuestionTag = 0;
+        $scope.adviserVideoCollection = new AdviserVideoCollection();
         
         $http.get("https://api.wistia.com/v1/medias.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
             .success(function(data, status, headers, config) {
@@ -159,7 +207,7 @@
                 $location.hash("meditation-embed");
                 anchorSmoothScroll.scrollTo("meditation-embed");
                 
-                if ($rootScope.sessionUser) {
+                if ($rootScope.loggedIn === true) {
                     var meditationVideo = Wistia.api("meditationVideo");
                     video.bind("end", function() {
                         var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
@@ -217,25 +265,71 @@
             return item.replace("image_crop_resized=200x120", "image_crop_resized=" + thumbnailWidth + "x" + thumbnailHeight);
         };
         
-        $scope.openAdviser = function() {
-            
-        }
-        
-        
-        
-        //$scope.trustedEmbedCode = $sce.trustAsHtml($scope.selectedMeditationEmbedCode);
-    });
-    
-    lmApp.filter('adviserFilter', function (adviserSelectedList) {
-        return function(input) {
-            var out = [];
-            
-            angular.forEach(input, function(video) {
-                var tags = video.description.match("<h1>(.*)</h1>")[1].match("([^,]*)");
+        $scope.toggleAdviser = function() {
+            if ($scope.showAdviser || $scope.showAdviserMeditation || $scope.showAdviserBlurbs) {
+                $scope.showAdviser = false;
+                $scope.showAdviserBlurbs = false;
+                $scope.showAdviserMeditation = false;
+                $scope.adviserQuestionText = '';
+                $scope.currentAdviserQuestionTag = 0;
+                $scope.adviserVideoCollection = new AdviserVideoCollection();
+                $scope.currentPage = 0;
+                $scope.selectedMeditationId = -1;
+                $scope.selectedMeditationEmbed = '';
+            } else {
+                $scope.showAdviser = true;
+                $scope.showAdviserBlurbs = false;
+                $scope.showAdviserMeditation = false;
+                var adviserQuestion = $scope.adviserQuestionList[Math.floor(Math.random() * $scope.adviserQuestionList.length)];
+                $scope.adviserQuestionText = adviserQuestion[1];
+                $scope.currentAdviserQuestionTag = adviserQuestion[0];
                 
-            })
+                $scope.videosList.forEach(function(video) {
+                    try {
+                        var tags = video.description.match("<h1>(.*)</h1>")[1].split(",");
+                        $scope.adviserVideoCollection.addVideo(video.hashed_id, video.name, video.description, video.duration, video.thumbnail.url, tags);
+                    } catch (err) {
+                        console.log("Poorly formed description.");
+                    }
+                });
+            }
         }
-    })
+        
+        $scope.adviserAnswer = function(answer) {
+            if (answer) {
+                $scope.adviserVideoCollection.keepTag($scope.currentAdviserQuestionTag);
+            } else {
+                $scope.adviserVideoCollection.removeTag($scope.currentAdviserQuestionTag);
+            }
+            
+            if ($scope.adviserVideoCollection.isReadyToDisplay()) {
+                $scope.displayAdviserBlurbs();
+            } else {
+                var nextTagIndex = $scope.adviserVideoCollection.getNextTagIndex();
+                if (nextTagIndex > -1) {
+                    $scope.currentAdviserQuestionTag = $scope.adviserQuestionList[nextTagIndex][0];
+                    $scope.adviserQuestionText = $scope.adviserQuestionList[nextTagIndex][1];
+                } else {
+                    //throw error message
+                }
+            }
+        }
+        
+        $scope.displayAdviserBlurbs = function() {
+            $scope.showAdviser = false;
+            $scope.showAdviserBlurbs = true;
+            $scope.showAdviserMeditation = false;
+        }
+        
+        $scope.displayAdviserMeditation = function(hashedId) {   
+            
+            $scope.selectedAdviserMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"adviserMeditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(hashedId) + " center-block\" style=\"height:360px;width:640px\">&nbsp;</div>");
+            $scope.showAdviser = false;
+            $scope.showAdviserBlurbs = false;
+            $scope.showAdviserMeditation = true;
+        }
+        
+    });
     
     lmApp.filter('ProgramNameFilter', function () {
         return function(programName) {

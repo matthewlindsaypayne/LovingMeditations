@@ -123,6 +123,10 @@ body {
     margin: 10px
 }
 
+.adviser-question {
+    font-size: 30px;
+}
+
 #wrapper-meditations {
     padding: 40px 60px;
 }

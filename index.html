@@ -119,15 +119,45 @@
                             <div  class="row">
                                 <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />
                             </div>
-                            <div class="row border-white" ng-hide="true">
-                                <btn ng-click="triggerAdviser()">Adviser</btn>
+                            <div class="row border-white" ng-hide="false">
+                                <button ng-click="toggleAdviser()">Adviser</button>
                             </div>
-                            <br /><br /><br />
-                            <div ng-show="showAdviser">
-                                
+                            
+                            <div ng-show="showAdviser === true">
+                                <br />
+                                <div class="adviser-question">{{adviserQuestionText}}</div>
+                                <br />
+                                <div class="col-sm-5 text-center border-white">
+                                    <button ng-click="adviserAnswer(false)">No</button>
+                                </div>
+                                <div class="col-sm-offset-2 col-sm-5 border-white">
+                                    <button ng-click="adviserAnswer(true)">Yes</button>
+                                </div>
+                                <br />
+                                <br />
+                                <br />
+                                <div class="col-sm-offset-3 col-sm-6 border-white">
+                                    <button ng-click="displayAdviserBlurbs()">Display Videos ({{adviserVideoCollection.adviserVideos.length}})</button>
+                                </div>
                             </div>
+                            <br />
+                            <div ng-show="showAdviserBlurbs === true">
+                                <div class="center-block">
+                                    <div class="meditations-blurb border-white" ng-repeat="video in adviserVideoCollection.adviserVideos" ng-click="displayAdviserMeditation(video.hashedId)">
+                                        <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnailUrl)}}" />
+                                        <span class="meditations-blurb-title">{{video.name}}</span><br/>
+                                        <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
+                                        <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="adviser-meditation-embed">
+                                <div class="row" ng-show="showAdviserMeditation === true" ng-bind-html="selectedAdviserMeditationEmbed"></div>
+                            </div>
+                            <div ng-show="showAdviser === false && showAdviserMeditation === false && showAdviserBlurbs === false">
                             <div class="row">
-                                
+                               <br /><br /><br /> 
                             </div>
                             <div class="row">
                                 <btn class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
@@ -159,12 +189,15 @@
                                     </btn>
                                 <br />
                             </div>
+                            <br /> <br />
                             <div id="meditation-embed">
-                            <div class="row" ng-show="selectedMeditationId != -1" ng-bind-html="selectedMeditationEmbed"></div>
+                                <div class="row" ng-show="selectedMeditationId !== -1" ng-bind-html="selectedMeditationEmbed"></div>
+                            </div>
                         </div>
                             <div  class="row">
                                 <img class="section-img-bottom" height="100px" src="images/meditations.png" align="middle" />
                             </div>
+                        
                         </div>
                     </div>
                      
