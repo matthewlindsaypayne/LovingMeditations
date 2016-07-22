@@ -254,17 +254,13 @@
         }
         
         AdviserVideoCollection.prototype.removeTag = function(tagId) {
-            var adviserVideosToRemove = [];
             for (var i = 0; i < this.adviserVideos.length; i++) {
                 var video = this.adviserVideos[i];
                 if (video.tags.includes(tagId)) {
-                    adviserVideosToRemove.push(video);
+                    video.tags.splice(video.tags.indexOf(tagId), 1);
                 }
             }
             
-            for (var i = 0; i < adviserVideosToRemove.length; i++) {
-                this.adviserVideos.splice(this.adviserVideos.indexOf(adviserVideosToRemove[i]), 1);
-            }
         }
         
         AdviserVideoCollection.prototype.getNextTagIndex = function() {
