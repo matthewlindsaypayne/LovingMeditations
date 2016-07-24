@@ -160,13 +160,13 @@
                                <br /><br /><br /> 
                             </div>
                             <div class="row">
-                                <btn class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                                     Previous
-                                </btn>
+                                </button>
                                 {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                <btn class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                                     Next
-                                </btn>
+                                </button>
                             </div>
                             <div class="row">
                                 <div class="center-block">
@@ -180,13 +180,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                            <btn class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                            <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                                         Previous
-                                    </btn>
+                                    </button>
                                     {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                    <btn class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                                         Next
-                                    </btn>
+                                    </button>
                                 <br />
                             </div>
                             <br /> <br />
@@ -294,13 +294,13 @@
                             <h3>Active Users</h3>
                             <div ng-show="activeUsers.count > 0">
                             <div class="row">
-                                <btn class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
-                                </btn>
+                                </button>
                                 {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                <btn class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
                                     Next
-                                </btn>
+                                </button>
                             </div>
                         <div class="row">
                             <ul class="center-block">
@@ -310,13 +310,13 @@
                             </ul>
                         </div>
                         <div class="row">
-                            <btn class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                            <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
-                                    </btn>
+                                    </button>
                                     {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                    <btn class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
                                         Next
-                                    </btn>
+                                    </button>
                                 <br />
                             </div>
                             </div>
@@ -327,13 +327,13 @@
                             <div ng-show="invitesSent.count > 0">
                             <div class="row">
                                 
-                                <btn class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
-                                </btn>
+                                </button>
                                 {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                <btn class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
                                     Next
-                                </btn>
+                                </button>
                             </div>
                         <div class="row">
                             
@@ -344,13 +344,13 @@
                             </ul>
                         </div>
                         <div class="row">
-                            <btn class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                            <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
-                                </btn>
+                                </button>
                                 {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                <btn class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
                                     Next
-                                </btn>
+                                </button>
                                 <br />
                             </div>
                             </div>
@@ -397,8 +397,9 @@
                                     <h2 class="text-center">Like something?  Found a bug?</h2>
                                     <h2 class="text-center">Send us an Email!</h2>
                                     
-                                    <form name="contactForm" class="form-horizontal" action="https://formspree.io/balancetemp@gmail.com"
+                                    <form name="contactForm" class="form-horizontal" action="https://formspree.io/matthew.lindsay.payne@gmail.com"
       method="POST" ng-submit="contactForm.$valid && sendContactUs()" novalidate>
+                                        <input type="hidden" name="_cc" value="info@lovingmeditations.com" />
                                         <div class="form-group">
                                             <input name="contactName" class="form-control" type="text" placeholder="Your Name..." ng-model="contactName" ng-minlength="4" ng-maxlength="40" required />
                                             <div class="help-block" ng-messages="contactForm.contactName.$error" ng-if="contactForm.contactName.$touched">
