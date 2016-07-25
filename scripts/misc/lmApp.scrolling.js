@@ -12,7 +12,7 @@ scrollingModule.service('anchorSmoothScroll', function(){
         // is from http://www.itnewb.com/tutorial/Creating-the-Smooth-Scroll-Effect-with-JavaScript
         
         var startY = currentYPosition();
-        var stopY = elmYPosition(eID) - $('#lm-menu').height() + 10;
+        var stopY = elmYPosition(eID); // + $('#lm-menu').height();
         var distance = stopY > startY ? stopY - startY : startY - stopY;
         if (distance < 100) {
             scrollTo(0, stopY); return;

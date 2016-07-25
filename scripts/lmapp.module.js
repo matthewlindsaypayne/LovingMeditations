@@ -260,8 +260,8 @@
         }
         
         $scope.formatMeditationBlurbImage = function(item) {
-            var thumbnailWidth = "250";
-            var thumbnailHeight = "180";
+            var thumbnailWidth = "300";
+            var thumbnailHeight = "246";
             return item.replace("image_crop_resized=200x120", "image_crop_resized=" + thumbnailWidth + "x" + thumbnailHeight);
         };
         

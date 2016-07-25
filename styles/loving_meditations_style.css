@@ -78,12 +78,12 @@ body {
 
 .section-img-top {
     display: block;
-    margin: 0 auto 150px auto;
+    margin: 150px auto 150px auto;
 }
 
 .section-img-bottom {
     display: block;
-    margin: 150px auto 200px auto;
+    margin: 150px auto 50px auto;
 }
 
 .glyphicon-img {
@@ -93,13 +93,13 @@ body {
 }
 
 #lm-inspirations {
-    margin: 200px 10px 10px 10px;
+    margin: 0px 10px 10px 10px;
     font-size: 30px;
 }
 
 .section-img-first {
     display: block;
-    margin: 100px auto 150px auto;
+    margin: 300px auto 150px auto;
 }
 
 #wrapper-inspirations {
@@ -133,7 +133,7 @@ body {
 
 .meditations-blurb {
     margin: 10px;
-    min-height: 184px;
+    min-height: 250px;
 }
 
 .meditations-blurb > img {
@@ -148,7 +148,7 @@ body {
     overflow : hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
 }
 
