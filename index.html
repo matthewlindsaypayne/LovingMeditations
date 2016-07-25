@@ -423,6 +423,22 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <input name="contactDevice" class="form-control" type="text" placeholder="Your Device..." ng-model="contactDevice" ng-minlength="4" ng-maxlength="40" required />
+                                            <div class="help-block" ng-messages="contactForm.contactDevice.$error" ng-if="contactForm.contactDevice.$touched">
+                                                <p ng-message="minlength">This device is too short.</p>
+                                                <p ng-message="maxlength">This device is too long.</p>
+                                                <p ng-message="required">A device is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="contactBrowser" class="form-control" type="text" placeholder="Your Browser and Version..." ng-model="contactBrowser" ng-minlength="4" ng-maxlength="40" required />
+                                            <div class="help-block" ng-messages="contactForm.contactBrowser.$error" ng-if="contactForm.contactBrowser.$touched">
+                                                <p ng-message="minlength">This browser is too short.</p>
+                                                <p ng-message="maxlength">This browser is too long.</p>
+                                                <p ng-message="required">A browser is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <textarea name="contactMessage" class="form-control" style="height: 130px;" placeholder="Write down your message..." ng-model="contactMessage" ng-maxlength="500" required></textarea>
                                             <div class="help-block" ng-messages="contactForm.contactMessage.$error" ng-if="contactForm.contactMessage.$touched">
                                                 <p ng-message="maxlength">This message is too long.</p>
