@@ -66,7 +66,7 @@
             
             <div id="background"></div>
             <div class="container">
-                <div id="content-column" class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                <div id="content-column" class="col-xs-12 col-md-offset-1 col-md-10">
             
                     <div id="lm-inspirations" ng-controller="InspirationsController as ic">
                         <div  class="row">
@@ -147,6 +147,7 @@
                                         <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnailUrl)}}" />
                                         <span class="meditations-blurb-title">{{video.name}}</span><br/>
                                         <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
+                                        
                                         <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
                                         <br />
                                     </div>

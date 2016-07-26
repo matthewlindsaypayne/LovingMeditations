@@ -11,7 +11,8 @@ body, html, h1, h2, h3, h4, h5, h6, p, a, button {
 }
 
 a:hover {
-    text-decoration: none;
+    
+    color: inherit;
 }
 
 button {
@@ -25,6 +26,43 @@ body {
 
 #lm-main {
     
+}
+
+@media (max-width: 1070px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+		top: 0;
+		border-width: 0 0 1px;
+	}
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+		margin-top: 7.5px;
+	}
+	.navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+  		display:block !important;
+	}
 }
 
 .navbar-brand {
@@ -128,7 +166,7 @@ body {
 }
 
 #wrapper-meditations {
-    padding: 40px 60px;
+    padding: 0px 60px;
 }
 
 .meditations-blurb {
@@ -146,10 +184,10 @@ body {
 
 .meditations-blurb-description {
     overflow : hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
+}
+
+.meditations-blurb-duration {
+    
 }
 
 .videos-image {
