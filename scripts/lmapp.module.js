@@ -521,8 +521,9 @@
         
         $scope.sendInvite = function() {
             //send email
-                                var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
-                                $http.post("http://localhost:8080/api/invite", {toEmail: 'jane@gmail.com', name: 'jane'})
+                                //var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
+                                var params = {'fromEmail': 'balancetemp@gmail.com', 'toEmail': 'matthew.lindsay.payne@gmail.com', 'subject': 'Email testing from Server', 'content': 'Light: The oldest game in the world.'};
+                                $http.post("https://lmserver-1281.appspot.com/mail", params)
                                     .success(function(data, status, headers, config) {
                                       alert("Email sent! Uses Name!"); 
                                 })
