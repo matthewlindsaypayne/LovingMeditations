@@ -217,6 +217,11 @@ footer {
     border-radius: 8px;
 }
 
+#program-playlist {
+    width: 640px;
+    height: 360px;
+}
+
 @media (max-width: 767px) {
     .navbar-brand {
         max-width: 250px;
@@ -229,6 +234,10 @@ footer {
     .meditations-blurb-image {
         margin-bottom: 10px;
     }
+    #program-playlist {
+        width: 301px;
+        height: 180px;
+    }
 }
 
 @media (max-width: 1023px) {
@@ -239,5 +248,12 @@ footer {
     .nav >  li {
         padding: 17px 5px;
         font-size: 15px;
+    }
+}
+
+@media (max-width: 424px) {
+    #program-playlist {
+        width: 246px;
+        height: 150px;
     }
 }
