@@ -56,10 +56,10 @@ maximum-scale=1.0; user-scalable=no" />
                                     <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
-                                    <li spy="lm-login" ng-hide="false || loggedIn === true">LOG IN</li>
-                                    <li spy="lm-invites" ng-hide="false || loggedIn === false || sessionUser.userType != 0">INVITES</li>
+                                    <li spy="lm-login" ng-hide="true || loggedIn === true">LOG IN</li>
+                                    <li spy="lm-invites" ng-hide="true || loggedIn === false || sessionUser.userType != 0">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
-                                    <li ng-hide="false || loggedIn===false" ng-click="logout()">LOG OUT</li>
+                                    <li ng-hide="true || loggedIn===false" ng-click="logout()">LOG OUT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -186,7 +186,7 @@ maximum-scale=1.0; user-scalable=no" />
                             </div>
                     </section>
                      
-                    <section id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="false || loggedIn === true" >
+                    <section id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="true || loggedIn === true" >
                         <div id="wrapper-login">
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/profile.png" align="middle" />
@@ -267,7 +267,7 @@ maximum-scale=1.0; user-scalable=no" />
                   </div>
                     </section>
             
-                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="loggedIn === false || sessionUser.userType != 0">
+                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || loggedIn === false || sessionUser.userType != 0">
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
