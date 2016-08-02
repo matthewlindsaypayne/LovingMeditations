@@ -7,7 +7,8 @@
         <meta name="description" content="Guided Meditation Programs for Cancer Patients and Family Members" />
         <meta name="keywords" content="Meditation,Cancer,Video" />
         
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width; initial-scale = 1.0; 
+maximum-scale=1.0; user-scalable=no" /> 
         
         <link rel="shortcut icon" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMediationsLogo_Horizonal_Black.png">
         <link rel="apple-touch-icon" href="http://lovingmeditations.com/wp-content/uploads/2016/03/LovingMeditationsLogo_Vertical_57x57-LOGOonly.jpg">
@@ -41,22 +42,24 @@
                         <div class="container-fluid">
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
                                 </button>
+                                <a href="http://lovingmeditations.com/" class="navbar-brand">
+                                        <img id="loving-meditations-logo" src="images/loving_meditations_logo.png" alt="Loving Meditations" />
+                                </a>
                             </div>
                             <div class="navbar-collapse collapse" id="lm-nav-bar">
-                                <a href="#" class="navbar-brand"><img id="loving-meditations-logo" src="images/loving_meditations_logo.png" alt="Loving Meditations" /></a>
-                                <ul class="nav navbar-nav navbar-right" style="margin-top: 40px;">
+                                <ul class="nav navbar-nav navbar-right" style="">
                                     <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
-                                    <li spy="lm-login" ng-hide="true || loggedIn === true">LOG IN</li>
-                                    <li spy="lm-invites" ng-hide="true || loggedIn === false || sessionUser.userType == 0">INVITES</li>
+                                    <li spy="lm-login" ng-hide="loggedIn === true">LOG IN</li>
+                                    <li spy="lm-invites" ng-hide="loggedIn === false || sessionUser.userType != 0">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
-                                    <li ng-hide="true || loggedIn===false" ng-click="logout()">LOG OUT</li>
+                                    <li ng-hide="loggedIn===false" ng-click="logout()">LOG OUT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -66,81 +69,69 @@
             
             <div id="background"></div>
             <div class="container">
-                <div id="content-column" class="col-xs-12 col-md-offset-1 col-md-10">
+                <div id="content-column" class="col-md-offset-1 col-md-10">
             
-                    <div id="lm-inspirations" ng-controller="InspirationsController as ic">
-                        <div  class="row">
-                            <img class="section-img-first" height="100px" src="images/inspirations.png" align="middle" />
+                    <section id="lm-inspirations" ng-controller="InspirationsController as ic">
+                        <div class="row">
+                            <img class="section-img section-img-first" height="100px" src="images/inspirations.png" align="middle" />
+                        </div>
+                        <div id="wrapper-inspirations" class="border-white row">
+                            <div class="text-center">{{currentInspiration}}</div>
                         </div>
                         <div class="row">
-                            <div id="wrapper-inspirations" class="border-white">
-                                <div class="text-center">{{currentInspiration}}</div>
+                            <img class="section-img section-img-bottom" height="100px" src="images/inspirations.png" align="middle" />
+                        </div>
+                    </section>
+            
+                    <section id="lm-programs" class="center-block text-center" ng-controller="ProgramsController as pc">
+                        <div  class="row">
+                            <img class="section-img" height="100px" src="images/programs.png" align="middle" />
+                        </div>
+                        <div id="programs-row" class="row">
+                            <div class="col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Patient'}">
+                                <btn ng-click="changeProgramType('Patient')">Patient</btn>
                             </div>
+                            <div class="col-sm-offset-2 col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Caregiver'}">
+                                <btn ng-click="changeProgramType('Caregiver')">Caregiver</btn>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <ul class="center-block" >
+                                <li ng-repeat="program in programs | filter: programDisplayFilter">
+                                    <div class="border-white">
+                                        <btn ng-click="selectProgram(program.id, program.hashedId)">{{program.name | ProgramNameFilter}}</btn>
+                                    </div>
+                                </li>
+                        </div>
+                        <div class="row center-block" ng-show="selectedProgramId != -1">
+                            <iframe ng-src="{{trustSrc(selectedProgramEmbedSrc)}}" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_playlist" align="middle" name="wistia_playlist" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen></iframe>
                         </div>
                         <div  class="row">
-                            <img class="section-img-bottom" height="100px" src="images/inspirations.png" align="middle" />
-                        </div>
-                    </div>
-            
-                    <div id="lm-programs" class="center-block text-center" ng-controller="ProgramsController as pc">
+                            <img class="section-img" height="100px" src="images/programs.png" align="middle" />
+                        </div>    
+                    </section>
                         
+                    <section id="lm-meditations" class="center-block text-center" ng-controller="MeditationsController as mc">
                             <div  class="row">
-                                <img class="section-img-top" height="100px" src="images/programs.png" align="middle" />
+                                <img class="section-img" height="100px" src="images/meditations.png" align="middle" />
                             </div>
-                        <div id="wrapper-programs">
-                            <div id="programs-row" class="row">
-                                <div class="col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Patient'}">
-                                    <btn ng-click="changeProgramType('Patient')">Patient</btn>
-                                </div>
-                                <div class="col-sm-offset-2 col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Caregiver'}">
-                                    <btn ng-click="changeProgramType('Caregiver')">Caregiver</btn>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <ul class="center-block" >
-                                    <li ng-repeat="program in programs | filter: programDisplayFilter">
-                                        <div class="border-white">
-                                            <btn ng-click="selectProgram(program.id, program.hashedId)">{{program.name | ProgramNameFilter}}</btn>
-                                        </div>
-                                    </li>
-                            </div>
-                            <div class="row center-block" ng-show="selectedProgramId != -1">
-                                <iframe ng-src="{{trustSrc(selectedProgramEmbedSrc)}}" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_playlist" align="middle" name="wistia_playlist" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen width="640" height="360"></iframe>
-                            </div>
-                                </div>
-                            <div  class="row">
-                                <img class="section-img-bottom" height="100px" src="images/programs.png" align="middle" />
-                            </div>
-                        
-                    </div>
-                        
-                    <div id="lm-meditations" class="center-block text-center" ng-controller="MeditationsController as mc">
-                        <div id="wrapper-meditations" class="">
-                            <div  class="row">
-                                <img class="section-img-top" height="100px" src="images/meditations.png" align="middle" />
-                            </div>
-                            <div class="row border-white" ng-hide="false">
-                                <button ng-click="toggleAdviser()">Adviser</button>
+                            <div class="adviser-button row" ng-hide="false">
+                                <button class="border-white" ng-click="toggleAdviser()">Adviser</button>
                             </div>
                             
                             <div ng-show="showAdviser === true">
-                                <br />
-                                <div class="adviser-question">{{adviserQuestionText}}</div>
-                                <br />
-                                <div class="col-sm-5 text-center border-white">
-                                    <button ng-click="adviserAnswer(false)">No</button>
+                                <div class="adviser-question border-white">{{adviserQuestionText}}</div>
+                                <div class="col-xs-5 text-center border-white" ng-click="adviserAnswer(false)">
+                                    <button>No</button>
                                 </div>
-                                <div class="col-sm-offset-2 col-sm-5 border-white">
-                                    <button ng-click="adviserAnswer(true)">Yes</button>
+                                <div class="col-xs-offset-2 col-xs-5 border-white" ng-click="adviserAnswer(true)">
+                                    <button>Yes</button>
                                 </div>
-                                <br />
-                                <br />
-                                <br />
-                                <div class="col-sm-offset-3 col-sm-6 border-white">
-                                    <button ng-click="displayAdviserBlurbs()">Display Videos ({{adviserVideoCollection.adviserVideos.length}})</button>
+                                <div>
+                                    <button class="border-white adviser-display-videos" ng-click="displayAdviserBlurbs()">Display Videos ({{adviserVideoCollection.adviserVideos.length}})</button>
                                 </div>
                             </div>
-                            <br />
+                        
                             <div ng-show="showAdviserBlurbs === true">
                                 <div class="center-block">
                                     <div class="meditations-blurb border-white" ng-repeat="video in adviserVideoCollection.adviserVideos" ng-click="displayAdviserMeditation(video.hashedId)">
@@ -149,63 +140,56 @@
                                         <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
                                         
                                         <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
-                                        <br />
                                     </div>
                                 </div>
                             </div>
+                        
                             <div id="adviser-meditation-embed">
                                 <div class="row" ng-show="showAdviserMeditation === true" ng-bind-html="selectedAdviserMeditationEmbed"></div>
                             </div>
+                            
                             <div ng-show="showAdviser === false && showAdviserMeditation === false && showAdviserBlurbs === false">
-                            <div class="row">
-                               <br /><br /><br /> 
-                            </div>
-                            <div class="row">
-                                <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                                    Previous
-                                </button>
-                                {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
-                                    Next
-                                </button>
-                            </div>
-                            <div class="row">
-                                <div class="center-block">
-                                    <div class="meditations-blurb border-white" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
-                                        <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
-                                        <span class="meditations-blurb-title">{{video.name}}</span><br/>
-                                        <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
-                                        <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
-                                        <br />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                            <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                                         Previous
                                     </button>
                                     {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
                                     <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                                         Next
                                     </button>
-                                <br />
+                                </div>
+                                <div class="row">
+                                    <div class="center-block">
+                                        <div class="meditations-blurb border-white" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
+                                            <img class="meditations-blurb-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
+                                            <span class="meditations-blurb-title">{{video.name}}</span><br/>
+                                            <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span><br />
+                                            <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                        Previous
+                                    </button>
+                                        {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
+                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                        Next
+                                    </button>
+                                </div>
+                                <div id="meditation-embed">
+                                    <div class="row" ng-show="selectedMeditationId !== -1" ng-bind-html="selectedMeditationEmbed"></div>
+                                </div>
                             </div>
-                            <br /> <br />
-                            <div id="meditation-embed">
-                                <div class="row" ng-show="selectedMeditationId !== -1" ng-bind-html="selectedMeditationEmbed"></div>
-                            </div>
-                        </div>
                             <div  class="row">
-                                <img class="section-img-bottom" height="100px" src="images/meditations.png" align="middle" />
+                                <img class="section-img" height="100px" src="images/meditations.png" align="middle" />
                             </div>
-                        
-                        </div>
-                    </div>
+                    </section>
                      
-                    <div id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="true || loggedIn === true" >
+                    <section id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="loggedIn === true" >
                         <div id="wrapper-login">
                             <div class="row">
-                                <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
+                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
                       <div class="row">
                          <div class="col-sm-5 text-center center-block">
@@ -278,43 +262,41 @@
                           </div>
                       </div>  
                             <div class="row">
-                                <img class="section-img-bottom" height="100px" src="images/profile.png" align="middle" />
+                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
                   </div>
-                    </div>
+                    </section>
             
-                    <div id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || loggedIn === false || sessionUser.userType != 0">
-                        <div id="wrapper-invites" class="">
+                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="loggedIn === false || sessionUser.userType != 0">
                             <div class="row">
-                                <img class="section-img-top" height="100px" src="images/profile.png" align="middle" />
+                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
                             <div class="row">
-                            <h2>Manage Invites</h2>
-                            <br />
+                                <h2>Manage Invites</h2>
                             </div>
                             <h3>Active Users</h3>
                             <div ng-show="activeUsers.count > 0">
-                            <div class="row">
-                                <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
-                                        Previous
-                                </button>
-                                {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
-                                    Next
-                                </button>
-                            </div>
-                        <div class="row">
-                            <ul class="center-block">
-                                <li ng-repeat="activeUser in activeUsers.activeUserList | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
-                                    <p><span class="text-left">User: {{activeUser.name}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="row">
-                            <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
                                     </button>
                                     {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                        Next
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <ul class="center-block">
+                                        <li ng-repeat="activeUser in activeUsers.activeUserList | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
+                                            <p><span class="text-left">User: {{activeUser.name}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                        Previous
+                                    </button>
+                                        {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
                                     <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
                                         Next
                                     </button>
@@ -326,149 +308,139 @@
                             </div>
                             <h3>Invites Sent</h3>
                             <div ng-show="invitesSent.count > 0">
-                            <div class="row">
-                                
-                                <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
-                                </button>
-                                {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
-                                    Next
-                                </button>
-                            </div>
-                        <div class="row">
-                            
-                            <ul class="center-block">
-                                <li ng-repeat="invite in invitesSent.invitesSentList | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
-                                    <p><span class="text-left">Sent To: {{invite.name}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="row">
-                            <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                    </button>
+                                    {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                        Next
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <ul class="center-block">
+                                        <li ng-repeat="invite in invitesSent.invitesSentList | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
+                                            <p><span class="text-left">Sent To: {{invite.name}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
-                                </button>
-                                {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
-                                    Next
-                                </button>
-                                <br />
-                            </div>
+                                    </button>
+                                    {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                        Next
+                                    </button>
+                                </div>
                             </div>
                             <div ng-show="invitesSent.count == 0">
                                 <p>You have no pending invites!</p>
                             </div>
-                        <div class="row">
-                            <br />
-                            <h3>Send Invites</h3>
-                            <form name="inviteForm" ng-submit="inviteForm.$valid && sendInvite()" novalidate>
-                                <div class="form-group">
-                                    <input id="invite-email" name="inviteEmail" class="" type="email" placeholder="Email" ng-model="inviteTarget.email" required/>
-                                    <div class="help-block" ng-messages="inviteForm.inviteEmail.$error" ng-if="inviteForm.inviteEmail.$touched">
-                                        <p ng-message="email">This must be a valid email address.</p>
-                                        <p ng-message="required">An email address is required.</p>
+                            <div class="row center-block">
+                                <h3>Send Invites</h3>
+                                <form name="inviteForm" class="center-block" ng-submit="inviteForm.$valid && sendInvite()" novalidate>
+                                    <div class="form-group">
+                                        <input id="invite-email" name="inviteEmail" class="" type="email" placeholder="Email" ng-model="inviteTarget.email" required/>
+                                        <div class="help-block" ng-messages="inviteForm.inviteEmail.$error" ng-if="inviteForm.inviteEmail.$touched">
+                                            <p ng-message="email">This must be a valid email address.</p>
+                                            <p ng-message="required">An email address is required.</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="invite-name" name="inviteName" class="" type="text" placeholder="Name"  ng-model="inviteTarget.name" ng-minlength="2" ng-maxlength="30" required/>
+                                    <div class="form-group">
+                                        <input id="invite-name" name="inviteName" class="" type="text" placeholder="Name"  ng-model="inviteTarget.name" ng-minlength="2" ng-maxlength="30" required/>
                                     
-                                    <div class="help-block" ng-messages="inviteForm.inviteName.$error" ng-if="inviteForm.inviteName.$touched">
-                                        <p ng-message="minlength">This name is too short.</p>
-                                        <p ng-message="maxlength">This name is too long.</p>
-                                        <p ng-message="required">A name is required.</p>
+                                        <div class="help-block" ng-messages="inviteForm.inviteName.$error" ng-if="inviteForm.inviteName.$touched">
+                                            <p ng-message="minlength">This name is too short.</p>
+                                            <p ng-message="maxlength">This name is too long.</p>
+                                            <p ng-message="required">A name is required.</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="submit" class="center-block" value="Send">Invite</button>
-                            </form>
-                        </div>
-                            <div class="row">
-                                <img class="section-img-bottom" height="100px" src="images/profile.png" align="middle" />
+                                    <div class="border-white">
+                                        <button type="submit" value="Send">Invite</button>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                    </div>
+                            <div class="row">
+                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
+                            </div>
+                    </section>
                     
-                    <div id="lm-contact" ng-controller="ContactController as cc">
-                        <div id="wrapper-contact" class="">
-                            <div  class="row">
-                                <img class="section-img-top" height="100px" src="images/invites.png" align="middle" />
+                    <section id="lm-contact" ng-controller="ContactController as cc">
+                            <div class="row">
+                                <img class="section-img" height="100px" src="images/invites.png" align="middle" />
                             </div>
                             <div class="row">
-                                <div class="contact_right">
-                                    <h2 class="text-center">What do you think of the site?</h2>
-                                    <h2 class="text-center">Like something?  Found a bug?</h2>
-                                    <h2 class="text-center">Send us an Email!</h2>
+                                <h2 class="text-center">What do you think of the site?</h2>
+                                <h2 class="text-center">Like something?  Found a bug?</h2>
+                                <h2 class="text-center">Send us an Email!</h2>
                                     
-                                    <form name="contactForm" class="form-horizontal" action="https://formspree.io/matthew.lindsay.payne@gmail.com"
+                                <form name="contactForm" class="form-horizontal" action="https://formspree.io/matthew.lindsay.payne@gmail.com"
       method="POST" ng-submit="contactForm.$valid && sendContactUs()" novalidate>
-                                        <input type="hidden" name="_cc" value="info@lovingmeditations.com" />
-                                        <div class="form-group">
-                                            <input name="contactName" class="form-control" type="text" placeholder="Your Name..." ng-model="contactName" ng-minlength="4" ng-maxlength="40" required />
-                                            <div class="help-block" ng-messages="contactForm.contactName.$error" ng-if="contactForm.contactName.$touched">
-                                                <p ng-message="minlength">This name is too short.</p>
-                                                <p ng-message="maxlength">This name is too long.</p>
-                                                <p ng-message="required">A name is required.</p>
-                                            </div>
+                                    <input type="hidden" name="_cc" value="info@lovingmeditations.com" />
+                                    <div class="form-group">
+                                        <input name="contactName" class="form-control" type="text" placeholder="Your Name..." ng-model="contactName" ng-minlength="4" ng-maxlength="40" required />
+                                        <div class="help-block" ng-messages="contactForm.contactName.$error" ng-if="contactForm.contactName.$touched">
+                                            <p ng-message="minlength">This name is too short.</p>
+                                            <p ng-message="maxlength">This name is too long.</p>
+                                            <p ng-message="required">A name is required.</p>
                                         </div>
-                                        <div class="form-group">
-                                            <input name="contactTel" class="form-control" type="tel" placeholder="Your Phone Number..." ng-model="contactTel" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" ng-maxlength="40" />
-                                            <div class="help-block" ng-messages="contactForm.contactTel.$error" ng-if="contactForm.contactTel.$touched">
-                                                <p ng-message="maxlength">This phone number is too long.</p>
-                                                <p ng-message="pattern">This must be a valid telephone number.</p>
-                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="contactTel" class="form-control" type="tel" placeholder="Your Phone Number..." ng-model="contactTel" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" ng-maxlength="40" />
+                                        <div class="help-block" ng-messages="contactForm.contactTel.$error" ng-if="contactForm.contactTel.$touched">
+                                            <p ng-message="maxlength">This phone number is too long.</p>
+                                            <p ng-message="pattern">This must be a valid telephone number.</p>
                                         </div>
-                                        <div class="form-group">
-                                            <input name="contactEmail" class="form-control" type="email" placeholder="Your Email..." ng-maxlength="40" ng-model="contactEmail" required />
-                                            <div class="help-block" ng-messages="contactForm.contactEmail.$error" ng-if="contactForm.contactEmail.$touched">
-                                                <p ng-message="email">This must be a valid email address.</p>
-                                                <p ng-message="required">An email address is required.</p>
-                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="contactEmail" class="form-control" type="email" placeholder="Your Email..." ng-maxlength="40" ng-model="contactEmail" required />
+                                        <div class="help-block" ng-messages="contactForm.contactEmail.$error" ng-if="contactForm.contactEmail.$touched">
+                                            <p ng-message="email">This must be a valid email address.</p>
+                                            <p ng-message="required">An email address is required.</p>
                                         </div>
-                                        <div class="form-group">
-                                            <input name="contactDevice" class="form-control" type="text" placeholder="Your Device..." ng-model="contactDevice" ng-minlength="4" ng-maxlength="40" required />
-                                            <div class="help-block" ng-messages="contactForm.contactDevice.$error" ng-if="contactForm.contactDevice.$touched">
-                                                <p ng-message="minlength">This device is too short.</p>
-                                                <p ng-message="maxlength">This device is too long.</p>
-                                                <p ng-message="required">A device is required.</p>
-                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="contactDevice" class="form-control" type="text" placeholder="Your Device..." ng-model="contactDevice" ng-minlength="4" ng-maxlength="40" required />
+                                        <div class="help-block" ng-messages="contactForm.contactDevice.$error" ng-if="contactForm.contactDevice.$touched">
+                                            <p ng-message="minlength">This device is too short.</p>
+                                            <p ng-message="maxlength">This device is too long.</p>
+                                            <p ng-message="required">A device is required.</p>
                                         </div>
-                                        <div class="form-group">
-                                            <input name="contactBrowser" class="form-control" type="text" placeholder="Your Browser and Version..." ng-model="contactBrowser" ng-minlength="4" ng-maxlength="40" required />
-                                            <div class="help-block" ng-messages="contactForm.contactBrowser.$error" ng-if="contactForm.contactBrowser.$touched">
-                                                <p ng-message="minlength">This browser is too short.</p>
-                                                <p ng-message="maxlength">This browser is too long.</p>
-                                                <p ng-message="required">A browser is required.</p>
-                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="contactBrowser" class="form-control" type="text" placeholder="Your Browser and Version..." ng-model="contactBrowser" ng-minlength="4" ng-maxlength="40" required />
+                                        <div class="help-block" ng-messages="contactForm.contactBrowser.$error" ng-if="contactForm.contactBrowser.$touched">
+                                            <p ng-message="minlength">This browser is too short.</p>
+                                            <p ng-message="maxlength">This browser is too long.</p>
+                                            <p ng-message="required">A browser is required.</p>
                                         </div>
-                                        <div class="form-group">
-                                            <textarea name="contactMessage" class="form-control" style="height: 130px;" placeholder="Write down your message..." ng-model="contactMessage" ng-maxlength="500" required></textarea>
-                                            <div class="help-block" ng-messages="contactForm.contactMessage.$error" ng-if="contactForm.contactMessage.$touched">
-                                                <p ng-message="maxlength">This message is too long.</p>
-                                                <p ng-message="required">A message is required.</p>
-                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea name="contactMessage" class="form-control" style="height: 130px;" placeholder="Write down your message..." ng-model="contactMessage" ng-maxlength="500" required></textarea>
+                                        <div class="help-block" ng-messages="contactForm.contactMessage.$error" ng-if="contactForm.contactMessage.$touched">
+                                            <p ng-message="maxlength">This message is too long.</p>
+                                            <p ng-message="required">A message is required.</p>
                                         </div>
-                                        <div class="pull-right border-white">
-                                            <button type="submit" class="contact-btn" value="Send">Send</button>
-                                        </div>
-                                        
-                                    </form>
-                        	
-                                    
-                                </div>
-                                
+                                    </div>
+                                    <div class="pull-right border-white">
+                                        <button type="submit" value="Send">Send</button>
+                                    </div>            
+                                </form>
                             </div>
-                            <div  class="row">
-                                <img class="section-img-bottom" height="100px" src="images/invites.png" align="middle" />
+                            <div class="row">
+                                <img class="section-img" height="100px" src="images/invites.png" align="middle" />
                             </div>
-                        </div>
-                    </div>
+                    </section>
                 </div>
             </div>
                 
             <footer class="text-center">
-                <span><a href="http://lovingmeditations.com/support">Support</a>     </span>
+                <span><a href="http://lovingmeditations.com/support">Support</a> |    </span>
                 <span><a href="http://lovingmeditations.com/privacy-policy">Privacy Policy</a></span><br />
-                <span><a href="http://lovingmeditations.com/web-app-faq">Frequently Asked Questions</a></span><br />
                 <span><a href="http://lovingmeditations.com/terms-of-service">Terms of Service</a></span><br />
+                <span><a href="http://lovingmeditations.com/web-app-faq">Frequently Asked Questions</a></span><br />
+                <span><a href="http://lovingmeditations.com/">Loving Meditations Site</a></span><br />
                 <span id="footerCrusoe">Crusoe Ventures 2016</span>
                 
             </footer>

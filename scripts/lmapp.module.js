@@ -104,7 +104,23 @@
         
         $scope.selectProgram = function(programId, programHashedId) {
             if ($scope.selectedProgramId == -1) {
-                $scope.selectedProgramEmbedSrc = "//fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=360&videoOptions%5BvideoWidth%5D=640&videoOptions%5BvolumeControl%5D=true";
+                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+            
+                if (w <= 374) {
+                    var programWidth = "246";
+                    var programHeight = "150";
+                } else if (w <= 424) {
+                    var programWidth = "301";
+                    var programHeight = "180";
+                } else if (w <= 767) {
+                    var programWidth = "351";
+                    var programHeight = "210";
+                } else {
+                    var programWidth = "640";
+                    var programHeight = "360";
+                }
+                
+                $scope.selectedProgramEmbedSrc = "//fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=" + programHeight +"&videoOptions%5BvideoWidth%5D=" + programWidth + "&videoOptions%5BvolumeControl%5D=true";
                 $scope.selectedProgramId = programId;
                 
                 if ($rootScope.loggedIn === true) {
@@ -157,6 +173,12 @@
             return false;
         };
         
+        $scope.formatProgramImage = function(item) {
+            var thumbnailWidth = "246";
+            var thumbnailHeight = "150";
+            return item.replace("image_crop_resized=200x120", "image_crop_resized=" + thumbnailWidth + "x" + thumbnailHeight);
+        };
+        
         $scope.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
         };
@@ -202,8 +224,24 @@
         
         $scope.selectMeditation = function(meditationId, meditationHashedId, meditationUniqueVideoId) {
             if ($scope.selectedMeditationId != meditationId) {
+                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+            
+                if (w <= 374) {
+                    var meditationWidth = "246";
+                    var meditationHeight = "150";
+                } else if (w <= 424) {
+                    var mediationWidth = "301";
+                    var meditationHeight = "180";
+                } else if (w <= 767) {
+                    var meditationWidth = "351";
+                    var meditationHeight = "210";
+                } else {
+                    var meditationWidth = "640";
+                    var meditationHeight = "360";
+                }
+                
                 $scope.selectedMeditationId = meditationId;
-                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"meditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:360px;width:640px\">&nbsp;</div>");
+                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"meditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
                 $location.hash("meditation-embed");
                 anchorSmoothScroll.scrollTo("meditation-embed");
                 
@@ -260,8 +298,22 @@
         }
         
         $scope.formatMeditationBlurbImage = function(item) {
-            var thumbnailWidth = "300";
-            var thumbnailHeight = "246";
+            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+            if (w <= 374) {
+                var thumbnailWidth = "246";
+                var thumbnailHeight = "150";
+            } else if (w <= 424) {
+                var thumbnailWidth = "301";
+                var thumbnailHeight = "180";
+            } else if (w <= 767) {
+                var thumbnailWidth = "351";
+                var thumbnailHeight = "210";
+            } else {
+                var thumbnailWidth = "340";
+                var thumbnailHeight = "276";
+            }
+            
+            
             return item.replace("image_crop_resized=200x120", "image_crop_resized=" + thumbnailWidth + "x" + thumbnailHeight);
         };
         
@@ -321,9 +373,24 @@
             $scope.showAdviserMeditation = false;
         }
         
-        $scope.displayAdviserMeditation = function(hashedId) {   
+        $scope.displayAdviserMeditation = function(hashedId) {
+            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
             
-            $scope.selectedAdviserMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"adviserMeditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(hashedId) + " center-block\" style=\"height:360px;width:640px\">&nbsp;</div>");
+            if (w <= 374) {
+                var meditationWidth = "246";
+                var meditationHeight = "150";
+            } else if (w <= 424) {
+                var mediationWidth = "301";
+                var meditationHeight = "180";
+            } else if (w <= 767) {
+                var meditationWidth = "351";
+                var meditationHeight = "210";
+            } else {
+                var meditationWidth = "640";
+                var meditationHeight = "360";
+            }
+            
+            $scope.selectedAdviserMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"adviserMeditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(hashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
             $scope.showAdviser = false;
             $scope.showAdviserBlurbs = false;
             $scope.showAdviserMeditation = true;
@@ -453,7 +520,20 @@
         };
         
         $scope.sendInvite = function() {
-            var inviteDfd = $q.defer();
+            //send email
+                                var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
+                                $http.post("http://localhost:8080/api/invite", {toEmail: 'jane@gmail.com', name: 'jane'})
+                                    .success(function(data, status, headers, config) {
+                                      alert("Email sent! Uses Name!"); 
+                                })
+                                .error(function(data, status, headers, config) {
+                                    // log error
+                                    alert("Emailing failed");
+                                    console.log(data);
+                                    console.log(status);
+                                });
+            
+            /*var inviteDfd = $q.defer();
  
             var query = new Parse.Query(Invite);
             query.equalTo("email", $scope.inviteTarget.email);
@@ -475,20 +555,33 @@
                         $scope.inviteTarget.save(null, {
                             success: function(sentInvite) {
                                 alert('Sent invite to ' + sentInvite.name);
-                                //send email
-                                alert("Email sent! Uses Name!");
                                 $scope.inviteTarget = new Invite();
+                                
+                                //send email
+                                var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
+                                $http.post("http://localhost:8080/invite", JSON.stringify(params))
+                                    .success(function(data, status, headers, config) {
+                                      alert("Email sent! Uses Name!"); 
+                                })
+                                .error(function(data, status, headers, config) {
+                                    // log error
+                                    alert("Emailing failed");
+                                    console.log(data);
+                                    console.log(status);
+                                });
                             },
                             error: function(sentInvite, error) {
                                 alert('Failed to send invite, with error code: ' + error.message);
                             }
                         });
+                        
+                        
                     }
                 })
                 .catch(function (error) {
                     // log error
                     alert("Invite retrieval promise failed.");
-                });
+                });*/
        };
     });
     
