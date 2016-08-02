@@ -267,7 +267,7 @@ maximum-scale=1.0; user-scalable=no" />
                   </div>
                     </section>
             
-                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true || loggedIn === false || sessionUser.userType != 0">
+                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="false && (loggedIn === false || sessionUser.userType != 0)">
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
