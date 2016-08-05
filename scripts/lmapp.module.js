@@ -512,6 +512,8 @@
             $scope.userSignup.programEnrolledIn = "";
             $scope.userSignup.emailVerified = false;
             $scope.userSignup.stripeID = stripeID;
+            console.log(stripeID);
+            console.log($scope.userSignup.stripeID);
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     $rootScope.loggedIn = false;
