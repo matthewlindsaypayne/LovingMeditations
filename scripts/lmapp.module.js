@@ -556,9 +556,8 @@
                             })
                             .error(function(data, status, headers, config) {
                             // log error
-                                console.log(data);
                                 console.log(status);
-                                $scope.loginError = 'Failed to log in: ' + data;
+                                $scope.loginError = 'Failed to log in: ' + status;
                                 $rootScope.loggedIn = false;
                                 $rootScope.$apply();
                             });
