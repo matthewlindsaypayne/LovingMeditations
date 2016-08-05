@@ -660,7 +660,7 @@
                                 $scope.inviteTarget = new Invite();
                                 
                                 //send email
-                                $http.post("https://lmserver-1281.appspot.com/api/invite/" + $scope.inviteTarget.email + "/" + $scope.inviteTarget.name)
+                                $http.post("https://lmserver-1281.appspot.com/api/invite/" + $scope.sentInvite.email + "/" + $scope.sentInvite.name)
                                     .success(function(data, status, headers, config) {
                                       $scope.inviteError = "Invite Sent!";
                                 })
