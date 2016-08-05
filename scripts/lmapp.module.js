@@ -436,10 +436,29 @@
         $scope.checkSignup = function() {
             $scope.signupError = "";
             //check if outstanding invite
-            //if yes, signup
+            var inviteDfd = $q.defer();
+ 
+            var query = new Parse.Query(Invite);
+            query.equalTo("email", $scope.inviteTarget.email);
+            query.find({
+                success : function(anInvite) {
+                    inviteDfd.resolve(anInvite);
+                },
+                error : function(aError) {
+                    inviteDfd.reject(aError);
+                }
+            });
             
-            //if no
-            $scope.displayBilling = true;
+            inviteDfd.promise
+                .then(function (anInvite) {
+                    if (anInvite.length > 0) {
+                        //if yes, signup
+                        signup(anInvite.newUserType, 'invited');
+                    } else {
+                        //if no
+                        $scope.displayBilling = true;
+                    }
+            });
         }
         
         
@@ -489,9 +508,11 @@
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     $rootScope.loggedIn = false;
-                    $rootScope.$apply();
-                    $scope.userSignup = new LMUser();
-                    location.reload();
+                    $scope.displayBilling = false;
+                    $scope.billingMonthly = false;
+                    $scope.billingAnnually = false;
+                    $scope.signupError = "You've successfully signed up! Check your email to verify.";
+                    $scope.userSignup = {};
                 },
                 error: function(newUser, error) {
                     $scope.displayBilling = false;
@@ -507,6 +528,7 @@
             if ($rootScope.loggedIn == false) {
             LMUser.logIn($scope.userLogin.username, $scope.userLogin.password, {
                 success: function(loggedInUser) {
+                    
                     $rootScope.loggedIn = true;
                     $rootScope.$apply();
                     location.reload();
@@ -564,14 +586,14 @@
             $scope.activeUsers.activeUsersList = users;
             $scope.activeUsers.count = users.length;
         }, function(error) {
-            alert("Active users promise failed.");
+            console.log("Active users promise failed.");
         });
         
         $rootScope.sessionUser.invitesSent().then(function(invites) {
             $scope.invitesSent.invitesSentList = invites;
             $scope.invitesSent.count = invites.length;
         }, function(error) {
-            alert("Invite promise failed.");
+            console.log("Invite promise failed.");
         });
         
         $scope.activeUsers.activeUsersList = $rootScope.sessionUser.activeUsersInvited();
@@ -609,6 +631,7 @@
                         $scope.inviteError = 'Already been invited, can\'t again.';
                     } else {
                         $scope.inviteTarget.invitedByUserId = $rootScope.sessionUser.id;
+                        $scope.inviteTarget.newUserType = ($rootScope.sessionUser.userType - 1);
                         $scope.inviteTarget.save(null, {
                             success: function(sentInvite) {
                                 $scope.inviteTarget = new Invite();

@@ -135,6 +135,7 @@
             initialize: function(attrs, options) {
                 this.invitedByUserId = {};
                 this.email = "";
+                this.newUserType = 0;
             }
         });
         
@@ -154,6 +155,14 @@
         });
         Invite.prototype.__defineSetter__("email", function(aValue) {
             return this.set("email", aValue);
+        });
+        
+        // NewUserType property
+        Invite.prototype.__defineGetter__("newUserType", function() {
+            return this.get("newUserType");
+        });
+        Invite.prototype.__defineSetter__("newUserType", function(aValue) {
+            return this.set("newUserType", aValue);
         });
         
         return Invite;

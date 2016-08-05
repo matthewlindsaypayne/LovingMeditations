@@ -57,7 +57,7 @@ maximum-scale=1.0; user-scalable=no" />
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
                                     <li spy="lm-login" ng-hide="loggedIn === true">LOG IN</li>
-                                    <li spy="lm-invites" ng-hide="loggedIn === false || sessionUser.userType != 0">INVITES</li>
+                                    <li spy="lm-invites" ng-hide="loggedIn === false || sessionUser.userType <= 0">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
                                     <li ng-hide="loggedIn===false" ng-click="logout()">LOG OUT</li>
                                 </ul>
@@ -338,7 +338,7 @@ maximum-scale=1.0; user-scalable=no" />
                   </div>
                     </section>
             
-                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="true && (loggedIn === false || sessionUser.userType != 0)">
+                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="loggedIn === false || sessionUser.userType <= 0">
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
