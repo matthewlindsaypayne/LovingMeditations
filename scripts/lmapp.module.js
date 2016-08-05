@@ -665,14 +665,12 @@
                         $scope.inviteTarget.newUserType = ($rootScope.sessionUser.userType - 1);
                         $scope.inviteTarget.save(null, {
                             success: function(sentInvite) {
-                                $scope.inviteTarget = new Invite();
-                                
-                                console.log(sentInvite.email);
                                 
                                 //send email
-                                $http.post("https://lmserver-1281.appspot.com/invite/" + $scope.inviteTarget.email + "/" + $scope.inviteTarget.name)
+                                $http.post("https://lmserver-1281.appspot.com/invite/" + sentInvite.email + "/" + sentInvite.name)
                                     .success(function(data, status, headers, config) {
                                       $scope.inviteError = "Invite Sent!";
+                                    $scope.inviteTarget = new Invite();
                                 })
                                 .error(function(data, status, headers, config) {
                                     // log error
@@ -687,6 +685,7 @@
                                             $scope.inviteError = "Invite Failed. Rollback Failed.";
                                         }
                                     });
+                                    $scope.inviteTarget = new Invite();
                                 });
                             },
                             error: function(sentInvite, error) {
