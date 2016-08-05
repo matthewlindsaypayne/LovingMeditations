@@ -528,10 +528,33 @@
             if ($rootScope.loggedIn == false) {
             LMUser.logIn($scope.userLogin.username, $scope.userLogin.password, {
                 success: function(loggedInUser) {
-                    
-                    $rootScope.loggedIn = true;
-                    $rootScope.$apply();
-                    location.reload();
+                    if (loggedInUser.stripeID != 'invited') {
+                        //check stripe
+                        $http.get('/customers/' + loggedInUser.stripeID) 
+                            .success(function(data, status, headers, config) {
+                                if (JSON.parse(data).delinquent) {
+                                    $scope.loginError = "Update your billing information."
+                                    $rootScope.loggedIn = false;
+                                    $rootScope.$apply();
+                                } else {
+                                    $rootScope.loggedIn = true;
+                                    $rootScope.$apply();
+                                    location.reload();
+                                }
+                            })
+                            .error(function(data, status, headers, config) {
+                            // log error
+                                console.log(error.code);
+                                console.log(error.message);
+                                $scope.loginError = 'Failed to log in: ' + error.message;
+                                $rootScope.loggedIn = false;
+                                $rootScope.$apply();
+                            });
+                    } else {
+                        $rootScope.loggedIn = true;
+                        $rootScope.$apply();
+                        location.reload();
+                    }
                 },
                 error: function(loggedInUser, error) {
                     console.log(error.code);
@@ -637,8 +660,7 @@
                                 $scope.inviteTarget = new Invite();
                                 
                                 //send email
-                                var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
-                                $http.post("https://lmserver-1281.appspot.com/api/invite", params)
+                                $http.post("https://lmserver-1281.appspot.com/api/invite/" + $scope.inviteTarget.email + "/" + $scope.inviteTarget.name)
                                     .success(function(data, status, headers, config) {
                                       $scope.inviteError = "Invite Sent!";
                                 })
@@ -646,7 +668,7 @@
                                     // log error
                                     console.log(data);
                                     console.log(status);
-                                    scope.inviteError = "Invite failed.";
+                                    $scope.inviteError = "Invite failed.";
                                     sentInvite.destroy({
                                         success: function(invite) {
                                             $scope.inviteError = "Invite failed.";
