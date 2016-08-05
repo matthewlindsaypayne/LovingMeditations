@@ -206,20 +206,21 @@ maximum-scale=1.0; user-scalable=no" />
                                      
                                 </div>
                                 <div class="form-group">
-                                     <input id="login-password" name="loginPassword" class="center-block" type="password" placeholder="Password" ng-model="userLogin.password" ng-minlength="8" ng-maxlength="20" required />
+                                     <input id="login-password" name="loginPassword" class="center-block" type="password" placeholder="Password" ng-model="userLogin.password" required />
                                     
                                     <div class="help-block" ng-messages="loginForm.loginPassword.$error" ng-if="loginForm.loginPassword.$touched">
-                                        <p ng-message="minlength">Your Password is too short.</p>
-                                        <p ng-message="maxlength">Your Password is too long.</p>
                                         <p ng-message="required">Your Password is required to log in.</p>
                                     </div>
                                 </div>
+                                 <div>
+                                    {{loginError}}
+                                 </div>
                                  <div class="border-white">
                                     <button type="submit" class="center-block">Log In</button>
                                  </div>
                              </form>
-                             <div class="border-white">
-                                <btn class="center-block" ng-click="forgotPassword()">Forget your Password?</btn>
+                             <div class="border-white"  ng-click="forgotPassword()">
+                                <button class="center-block">Forget your Password?</button>
                              </div>
                          </div>
                           
@@ -264,6 +265,9 @@ maximum-scale=1.0; user-scalable=no" />
                                      <div class="help-block" ng-messages="signupForm.signupType.$error">
                                         <p ng-message="required">Please choose a user type.</p>
                                     </div>
+                                 </div>
+                                 <div>
+                                    {{signupError}}
                                  </div>
                                  <div class="border-white">
                                     <button type="submit" class="center-block" value="Send">Sign Up</button>
@@ -395,9 +399,11 @@ maximum-scale=1.0; user-scalable=no" />
                                 </div>
                                 <div class="row">
                                     <ul class="center-block">
+                                        <br />
                                         <li ng-repeat="invite in invitesSent.invitesSentList | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
                                             <p><span class="text-left">Sent To: {{invite.email}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
                                         </li>
+                                        <br />
                                     </ul>
                                 </div>
                                 <div class="row">

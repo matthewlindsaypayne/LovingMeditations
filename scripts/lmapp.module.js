@@ -427,11 +427,15 @@
         $scope.userSignup = new LMUser();
         $scope.userLogin = {};
         
-        $scope.displayBilling = true;
+        $scope.displayBilling = false;
         $scope.billingMonthly = false;
         $scope.billingAnnually = false;
         
+        $scope.loginError = "";
+        $scope.signupError = "";
+        
         $scope.checkSignup = function() {
+            $scope.signupError = "";
             //check if outstanding invite
             //if yes, signup
             
@@ -442,16 +446,18 @@
         
         
         $scope.signupMonthly = function(token) {
-            alert("Got Stripe token: " + token.id);
             $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
-                alert("it worked!");
                 console.log(data);
-                //scope.signup(0);
-                //location.reload();
+                if (scope.signup(0)) {
+                    location.reload();
+                }
             })
             .error(function(data, status) {
                 // log error
+                $scope.displayBilling = false;
+                $scope.billingMonthly = false;
+                $scope.signupError = "Monthly signup failed";
                 console.log("Monthly signup failed");
                 console.log(data);
                 console.log(status);
@@ -459,17 +465,20 @@
         }
         
         $scope.signupAnnually = function() {
-            alert("Got Stripe token: " + token.id);
             $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
-                alert("it worked!");
                 console.log(data);
-                //scope.signup(0);
-                //location.reload();
+                if (scope.signup(0)) {
+                    location.reload();
+                }
             })
             .error(function(data, status) {
                 // log error
+                $scope.displayBilling = false;
+                $scope.billingAnnually = false;
+                $scope.signupError = "Monthly signup failed";
                 console.log("Monthly signup failed");
+                console.log("Annual signup failed");
                 console.log(data);
                 console.log(status);
             });
@@ -491,8 +500,12 @@
                     location.reload();
                 },
                 error: function(newUser, error) {
+                    $scope.displayBilling = false;
+                    $scope.billingMonthly = false;
+                    $scope.billingAnnually = false;
+                    $scope.signupError = "Signup failed.";
                     console.log(error);
-                    alert('Failed to create new object, with error code: ' + error.message);
+                    console.log('Failed to create new object, with error code: ' + error.message);
                     $rootScope.loggedIn = false;
                     $rootScope.$apply();
                 }
@@ -510,6 +523,10 @@
                     return true;
                 },
                 error: function(newUser, error) {
+                    $scope.displayBilling = false;
+                    $scope.billingMonthly = false;
+                    $scope.billingAnnually = false;
+                    $scope.signupError = "Signup failed.";
                     console.log(error);
                     return false;
                 }
@@ -520,30 +537,33 @@
             if ($rootScope.loggedIn == false) {
             LMUser.logIn($scope.userLogin.username, $scope.userLogin.password, {
                 success: function(loggedInUser) {
-                    alert('Logged in as user with objectId: ' + loggedInUser.id);
                     $rootScope.loggedIn = true;
                     $rootScope.$apply();
                     location.reload();
                 },
                 error: function(loggedInUser, error) {
-                    alert('Failed to log in, with error code: ' + error.message);
+                    console.log(error.code);
+                    console.log(error.message);
+                    $scope.loginError = 'Failed to log in: ' + error.message;
                     $rootScope.loggedIn = false;
                     $rootScope.$apply();
                 }
             });
             } else {
-                alert('Attempted log in when user was already logged in.');
+                $scope.loginError = 'Attempted log in when user was already logged in.';
             }
         };
         
         $scope.forgotPassword = function() {
             Parse.User.requestPasswordReset($scope.userLogin.username, {
                 success: function() {
-                    alert("Password reset sent.");
+                    $scope.loginError = "Password reset sent.";
                 },
                 error: function(error) {
                     // Show the error message somewhere
-                    alert("Error: " + error.code + " " + error.message);
+                    console.log(error.code);
+                    console.log(error.message);
+                    $scope.loginError = error.message;
                 }
             });
         }
