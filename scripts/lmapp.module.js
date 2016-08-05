@@ -528,7 +528,7 @@
             if ($rootScope.loggedIn == false) {
             LMUser.logIn($scope.userLogin.username, $scope.userLogin.password, {
                 success: function(loggedInUser) {
-                    if (loggedInUser.stripeID != 'invited') {
+                    if (loggedInUser.stripeID && loggedInUser.stripeID != 'invited') {
                         //check stripe
                         $http.get('/customers/' + loggedInUser.stripeID) 
                             .success(function(data, status, headers, config) {
