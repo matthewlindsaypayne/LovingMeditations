@@ -7,14 +7,16 @@
     var lmApp = angular.module('lmApp', ['ngRoute',
                                          'ngMessages',
                                          'lmApp.scrolling',
-                                         'lmApp.models']);
+                                         'lmApp.models',
+                                         'stripe.checkout']);
     
-    lmApp.config(function($routeProvider, $locationProvider) {
-        
+    lmApp.config(function($routeProvider, $locationProvider, $httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
     });
     
     lmApp.run(function($rootScope, LMUser) {
-        Parse.initialize("JEgXK9fpAD", "gmSkeY1CsB");
+        Parse.initialize('JEgXK9fpAD');
         Parse.serverURL = "https://lmserver-1281.appspot.com/parse";
         
         $rootScope.sessionUser = Parse.User.current();
@@ -50,6 +52,7 @@
         $scope.logout = function() {
             Parse.User.logOut();
             $rootScope.loggedIn = false;
+            location.reload();
         };
         
     });
@@ -247,7 +250,7 @@
                 
                 if ($rootScope.loggedIn === true) {
                     var meditationVideo = Wistia.api("meditationVideo");
-                    video.bind("end", function() {
+                    meditationVideo.bind("end", function() {
                         var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
                         if (userVideo) {
                             userVideo.playCount++;
@@ -424,19 +427,68 @@
         $scope.userSignup = new LMUser();
         $scope.userLogin = {};
         
-        $scope.signup = function() {
+        $scope.displayBilling = true;
+        $scope.billingMonthly = false;
+        $scope.billingAnnually = false;
+        
+        $scope.checkSignup = function() {
+            //check if outstanding invite
+            //if yes, signup
+            
+            //if no
+            $scope.displayBilling = true;
+        }
+        
+        
+        
+        $scope.signupMonthly = function(token) {
+            alert("Got Stripe token: " + token.id);
+            $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
+            .success(function(data, status, headers, config) {
+                alert("it worked!");
+                console.log(data);
+                //scope.signup(0);
+                //location.reload();
+            })
+            .error(function(data, status) {
+                // log error
+                console.log("Monthly signup failed");
+                console.log(data);
+                console.log(status);
+            });
+        }
+        
+        $scope.signupAnnually = function() {
+            alert("Got Stripe token: " + token.id);
+            $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
+            .success(function(data, status, headers, config) {
+                alert("it worked!");
+                console.log(data);
+                //scope.signup(0);
+                //location.reload();
+            })
+            .error(function(data, status) {
+                // log error
+                console.log("Monthly signup failed");
+                console.log(data);
+                console.log(status);
+            });
+        }
+        
+        $scope.signup = function(userType) {
             $scope.userSignup.username = $scope.userSignup.email;
-            $scope.userSignup.userType = 0;
+            $scope.userSignup.userType = userType;
             $scope.userSignup.patientType = parseInt($scope.userSignup.patientType);
             $scope.userSignup.programEnrolledIn = "";
             $scope.userSignup.emailVerified = false;
-            //if ()
+            
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     alert('New object created with objectId: ' + newUser.id);
-                    $rootScope.loggedIn = true;
+                    $rootScope.loggedIn = false;
                     $rootScope.$apply();
                     $scope.userSignup = new LMUser();
+                    location.reload();
                 },
                 error: function(newUser, error) {
                     console.log(error);
@@ -447,6 +499,23 @@
             });
         };
         
+        function signup(userType) {
+            $scope.userSignup.username = $scope.userSignup.email;
+            $scope.userSignup.userType = userType;
+            $scope.userSignup.patientType = parseInt($scope.userSignup.patientType);
+            $scope.userSignup.programEnrolledIn = "";
+            $scope.userSignup.emailVerified = false;
+            $scope.userSignup.signUp(null, {
+                success: function(newUser) {
+                    return true;
+                },
+                error: function(newUser, error) {
+                    console.log(error);
+                    return false;
+                }
+            });
+        }
+        
         $scope.login = function() {
             if ($rootScope.loggedIn == false) {
             LMUser.logIn($scope.userLogin.username, $scope.userLogin.password, {
@@ -454,7 +523,7 @@
                     alert('Logged in as user with objectId: ' + loggedInUser.id);
                     $rootScope.loggedIn = true;
                     $rootScope.$apply();
-                    $scope.userLogin = {};
+                    location.reload();
                 },
                 error: function(loggedInUser, error) {
                     alert('Failed to log in, with error code: ' + error.message);
@@ -520,21 +589,7 @@
         };
         
         $scope.sendInvite = function() {
-            //send email
-                                //var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
-                                var params = {'fromEmail': 'balancetemp@gmail.com', 'toEmail': 'matthew.lindsay.payne@gmail.com', 'subject': 'Email testing from Server', 'content': 'Light: The oldest game in the world.'};
-                                $http.post("https://lmserver-1281.appspot.com/mail", params)
-                                    .success(function(data, status, headers, config) {
-                                      alert("Email sent! Uses Name!"); 
-                                })
-                                .error(function(data, status, headers, config) {
-                                    // log error
-                                    alert("Emailing failed");
-                                    console.log(data);
-                                    console.log(status);
-                                });
-            
-            /*var inviteDfd = $q.defer();
+            var inviteDfd = $q.defer();
  
             var query = new Parse.Query(Invite);
             query.equalTo("email", $scope.inviteTarget.email);
@@ -560,15 +615,23 @@
                                 
                                 //send email
                                 var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
-                                $http.post("http://localhost:8080/invite", JSON.stringify(params))
+                                $http.post("https://lmserver-1281.appspot.com/api/invite", params)
                                     .success(function(data, status, headers, config) {
-                                      alert("Email sent! Uses Name!"); 
+                                      alert("Email sent! Uses Name!");
                                 })
                                 .error(function(data, status, headers, config) {
                                     // log error
                                     alert("Emailing failed");
                                     console.log(data);
                                     console.log(status);
+                                    sentInvite.destroy({
+                                        success: function(invite) {
+                                            alert("Rolled back invite");
+                                        },
+                                        error: function(myObject, error) {
+                                            alert("Rollback failed");
+                                        }
+                                    });
                                 });
                             },
                             error: function(sentInvite, error) {
@@ -582,7 +645,7 @@
                 .catch(function (error) {
                     // log error
                     alert("Invite retrieval promise failed.");
-                });*/
+                });
        };
     });
     

@@ -159,6 +159,15 @@ body {
     margin-top: 20px;
 }
 
+.billing-bottom {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.cancel-billing-btn {
+    margin-top: 30px;
+}
+
 #lm-invites {
     margin: 10px;
 }

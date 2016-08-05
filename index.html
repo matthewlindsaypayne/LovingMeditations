@@ -26,10 +26,10 @@ maximum-scale=1.0; user-scalable=no" />
         <script src="scripts/vendors/bootstrap.min.js"  type="text/javascript"></script>
         <script src="scripts/vendors/parse-1.6.14.js"></script>
         <script src="http://fast.wistia.com/assets/external/E-v1.js"></script>
+        <script src="bower_components/angular-stripe-checkout/angular-stripe-checkout.js"></script>
         
         <script src="scripts/misc/lmApp.models.js" type="text/javascript"></script>
         <script src="scripts/misc/lmApp.scrolling.js" type="text/javascript"></script>
-        <script src="scripts/loving_meditations_controllers.js" type="text/javascript"></script>
         <script src="scripts/lmapp.module.js" type="text/javascript"></script>
         
     </head>
@@ -56,10 +56,10 @@ maximum-scale=1.0; user-scalable=no" />
                                     <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
-                                    <li spy="lm-login" ng-hide="true || loggedIn === true">LOG IN</li>
-                                    <li spy="lm-invites" ng-hide="true || loggedIn === false || sessionUser.userType != 0">INVITES</li>
+                                    <li spy="lm-login" ng-hide="loggedIn === true">LOG IN</li>
+                                    <li spy="lm-invites" ng-hide="loggedIn === false || sessionUser.userType != 0">INVITES</li>
                                     <li spy="lm-contact">CONTACT</li>
-                                    <li ng-hide="true || loggedIn===false" ng-click="logout()">LOG OUT</li>
+                                    <li ng-hide="loggedIn===false" ng-click="logout()">LOG OUT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -88,18 +88,18 @@ maximum-scale=1.0; user-scalable=no" />
                             <img class="section-img" height="100px" src="images/programs.png" align="middle" />
                         </div>
                         <div id="programs-row" class="row">
-                            <div class="col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Patient'}">
-                                <btn ng-click="changeProgramType('Patient')">Patient</btn>
+                            <div class="col-sm-5 text-center" ng-click="changeProgramType('Patient')" ng-class="{'border-white': selectedProgramType=='Patient'}">
+                                <btn>Patient</btn>
                             </div>
-                            <div class="col-sm-offset-2 col-sm-5 text-center" ng-class="{'border-white': selectedProgramType=='Caregiver'}">
-                                <btn ng-click="changeProgramType('Caregiver')">Caregiver</btn>
+                            <div class="col-sm-offset-2 col-sm-5 text-center" ng-click="changeProgramType('Caregiver')" ng-class="{'border-white': selectedProgramType=='Caregiver'}">
+                                <btn>Caregiver</btn>
                             </div>
                         </div>
                         <div class="row">
                             <ul class="center-block" >
                                 <li ng-repeat="program in programs | filter: programDisplayFilter">
-                                    <div class="border-white">
-                                        <btn ng-click="selectProgram(program.id, program.hashedId)">{{program.name | ProgramNameFilter}}</btn>
+                                    <div class="border-white" ng-click="selectProgram(program.id, program.hashedId)">
+                                        <btn>{{program.name | ProgramNameFilter}}</btn>
                                     </div>
                                 </li>
                         </div>
@@ -186,12 +186,13 @@ maximum-scale=1.0; user-scalable=no" />
                             </div>
                     </section>
                      
-                    <section id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="true || loggedIn === true" >
+                    <section id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="loggedIn === true" >
                         <div id="wrapper-login">
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
                       <div class="row">
+                        <div ng-hide="displayBilling === true">
                          <div class="col-sm-5 text-center center-block">
                              <h3 class="center-block">Login</h3>
                              <form name="loginForm" ng-submit="loginForm.$valid && login()" novalidate>
@@ -224,7 +225,7 @@ maximum-scale=1.0; user-scalable=no" />
                           
                          <div class="col-sm-offset-2 col-sm-5">
                              <h3>Sign Up</h3>
-                             <form name="signupForm" ng-submit="signupForm.$valid && signup()" novalidate>
+                             <form name="signupForm" ng-submit="signupForm.$valid && checkSignup()" novalidate>
                                  <div class="form-group">
                                      <input id="signup-email" name="signupEmail" class="center-block" type="email" placeholder="Email" ng-model="userSignup.email" required />
                                      
@@ -240,6 +241,16 @@ maximum-scale=1.0; user-scalable=no" />
                                         <p ng-message="minlength">Your Password is too short.</p>
                                         <p ng-message="maxlength">Your Password is too long.</p>
                                         <p ng-message="required">Your Password is required.</p>
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <input id="signup-password-confirm" name="signupPasswordConfirm" class="center-block" type="password" placeholder="Confirm Password" ng-model="userSignup.passwordConfirm" ng-pattern="{{userSignup.password}}" ng-minlength="8" ng-maxlength="20" required />
+                                     
+                                     <div class="help-block" ng-messages="signupForm.signupPasswordConfirm.$error" ng-if="signupForm.signupPasswordConfirm.$touched">
+                                        <p ng-message="minlength">Your Password is too short.</p>
+                                        <p ng-message="maxlength">Your Password is too long.</p>
+                                        <p ng-message="required">Your Password is required.</p>
+                                        <p ng-message="pattern">Your Passwords do not match.</p>
                                     </div>
                                  </div>
                                  <div class="form-group">
@@ -259,6 +270,71 @@ maximum-scale=1.0; user-scalable=no" />
                                  </div>
                                  
                               </form>
+                          </div>
+                        </div>
+                          <div ng-hide="displayBilling === false || billingAnnually === true || billingMonthly === true">
+                              <div class="col-sm-5 text-center border-white" ng-click="billingMonthly=true">
+                                <h2>Monthly</h2>
+                                <span>$6.99 / month</span><br />
+                                <div class="billing-bottom">$6.99 charged monthly</div>
+                            </div>
+                            <div class="col-sm-offset-2 col-sm-5 text-center border-white" ng-click="billingAnnually=true">
+                                <h2>Yearly</h2>
+                                <span>$3.25 / month</span><br />
+                                <div class="billing-bottom">$38.99 charged yearly</div>
+                            </div>
+                              
+                            <div class="cancel-billing-btn border-white col-sm-offset-4 col-sm-4" ng-click="displayBilling=false">
+                                <button>Cancel</button>  
+                            </div>
+                          </div>
+                          <div ng-hide="billingMonthly === false">
+                            <h2>You've selected Monthly!</h2>
+                              <br />
+                                <button stripe-checkout="signupMonthly"
+                                    data-key="pk_test_BQNNMSnMi4hsWDwhjg0qIbRz"
+                                    data-name="Loving Meditations"
+                                    data-description="Monthly Payment"
+                                    data-image="https://s3.amazonaws.com/stripe-uploads/acct_18KX5uAgBtX5wKi3merchant-icon-1467753633891-icon.png"
+                                    data-locale="auto"
+                                    data-zip-code="true"
+                                    data-label="Sign me up">
+                                        Sign Me Up!
+                                </button>
+                              <div class="cancel-billing-btn border-white col-sm-offset-4 col-sm-4" ng-click="displayBilling=false; billingMonthly=false;">
+                                <button>Cancel</button>  
+                            </div>
+                          </div>
+                          <div ng-hide="billingAnnually === false">
+                            <h2>You've selected Annually!</h2>
+                              <br />
+                              <button stripe-checkout="signupAnnually"
+                                    data-key="pk_test_BQNNMSnMi4hsWDwhjg0qIbRz"
+                                    data-amount="3899"
+                                    data-name="Loving Meditations"
+                                    data-description="Annual Payment"
+                                    data-image="https://s3.amazonaws.com/stripe-uploads/acct_18KX5uAgBtX5wKi3merchant-icon-1467753633891-icon.png"
+                                    data-locale="auto"
+                                    data-zip-code="true"
+                                    data-label="Sign me up">
+                                        Sign Me Up!
+                                </button>
+                              <form action="" method="POST">
+                                <script
+                                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                    data-key="pk_test_BQNNMSnMi4hsWDwhjg0qIbRz"
+                                    data-amount="3899"
+                                    data-name="Loving Meditations"
+                                    data-description="Widget"
+                                    data-image="https://s3.amazonaws.com/stripe-uploads/acct_18KX5uAgBtX5wKi3merchant-icon-1467753633891-icon.png"
+                                    data-locale="auto"
+                                    data-zip-code="true"
+                                    data-label="Sign me up">
+                                </script>
+                                </form>
+                              <div class="cancel-billing-btn border-white col-sm-offset-4 col-sm-4" ng-click="displayBilling=false; billingAnnually=false;">
+                                <button>Cancel</button>  
+                            </div>
                           </div>
                       </div>  
                             <div class="row">
@@ -288,7 +364,7 @@ maximum-scale=1.0; user-scalable=no" />
                                 <div class="row">
                                     <ul class="center-block">
                                         <li ng-repeat="activeUser in activeUsers.activeUserList | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
-                                            <p><span class="text-left">User: {{activeUser.name}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
+                                            <p><span class="text-left">User: {{activeUser.email}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
                                         </li>
                                     </ul>
                                 </div>
@@ -320,7 +396,7 @@ maximum-scale=1.0; user-scalable=no" />
                                 <div class="row">
                                     <ul class="center-block">
                                         <li ng-repeat="invite in invitesSent.invitesSentList | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
-                                            <p><span class="text-left">Sent To: {{invite.name}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
+                                            <p><span class="text-left">Sent To: {{invite.email}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
                                         </li>
                                     </ul>
                                 </div>
