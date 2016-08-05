@@ -76,7 +76,6 @@
         inspirationsDfd.promise
             .then(function (inspiration) {
                 $scope.currentInspiration = inspiration.attributes.text + "\n -" + inspiration.attributes.author;
-                console.log($scope.currentInspiration);
         })
             .catch(function (error) {
             // log error
@@ -448,7 +447,7 @@
         $scope.signupMonthly = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
-                signup(0, data.id));
+                signup(0, data.id);
             })
             .error(function(data, status) {
                 // log error
