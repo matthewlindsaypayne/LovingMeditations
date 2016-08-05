@@ -523,6 +523,7 @@
                     $scope.billingAnnually = false;
                     $scope.signupError = "You've successfully signed up! Check your email to verify.";
                     $scope.userSignup = {};
+                    $rootScope.$apply();
                 },
                 error: function(newUser, error) {
                     $scope.displayBilling = false;
@@ -530,6 +531,7 @@
                     $scope.billingAnnually = false;
                     $scope.signupError = "Signup failed.";
                     console.log(error);
+                    $rootScope.$apply();
                 }
             });
         }
