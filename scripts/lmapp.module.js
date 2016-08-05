@@ -453,8 +453,9 @@
                 .then(function (anInvite) {
                     if (anInvite.length > 0) {
                         //if yes, signup
-                        var newUserType = anInvite.newUserType;
-                        anInvite.destroy({
+                        var newUserType = anInvite[0].newUserType;
+                        console.log(anInvite);
+                        anInvite[0].destroy({
                             success: function(invite) {
                                 signup(newUserType, 'invited');
                             },
@@ -497,7 +498,6 @@
                 $scope.displayBilling = false;
                 $scope.billingAnnually = false;
                 $scope.signupError = "Monthly signup failed";
-                console.log("Monthly signup failed");
                 console.log("Annual signup failed");
                 console.log(data);
                 console.log(status);
@@ -516,6 +516,8 @@
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     $rootScope.loggedIn = false;
+                    $rootScope.sessionUser = null;
+                    newUser = null;
                     $scope.displayBilling = false;
                     $scope.billingMonthly = false;
                     $scope.billingAnnually = false;
@@ -658,6 +660,7 @@
             
             inviteDfd.promise
                 .then(function (anInvite) {
+                    console.log(anInvite);
                     if (anInvite.length > 0) {
                         $scope.inviteError = 'Already been invited, can\'t again.';
                     } else {
