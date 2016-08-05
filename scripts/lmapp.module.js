@@ -448,9 +448,7 @@
         $scope.signupMonthly = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
-                if (signup(0, data.id)) {
-                    location.reload();
-                }
+                signup(0, data.id));
             })
             .error(function(data, status) {
                 // log error
@@ -466,9 +464,7 @@
         $scope.signupAnnually = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
-                if (signup(0, data.id)) {
-                    location.reload();
-                }
+                signup(0, data.id);
             })
             .error(function(data, status) {
                 // log error
@@ -519,7 +515,10 @@
             $scope.userSignup.stripeID = stripeID;
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
-                    return true;
+                    $rootScope.loggedIn = false;
+                    $rootScope.$apply();
+                    $scope.userSignup = new LMUser();
+                    location.reload();
                 },
                 error: function(newUser, error) {
                     $scope.displayBilling = false;
@@ -527,7 +526,6 @@
                     $scope.billingAnnually = false;
                     $scope.signupError = "Signup failed.";
                     console.log(error);
-                    return false;
                 }
             });
         }
