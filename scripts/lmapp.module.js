@@ -454,7 +454,7 @@
                     if (anInvite.length > 0) {
                         //if yes, signup
                         var newUserType = anInvite.newUserType;
-                        newUserType.destroy({
+                        anInvite.destroy({
                             success: function(invite) {
                                 signup(newUserType, 'invited');
                             },
