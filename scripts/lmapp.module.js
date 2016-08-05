@@ -453,7 +453,15 @@
                 .then(function (anInvite) {
                     if (anInvite.length > 0) {
                         //if yes, signup
-                        signup(anInvite.newUserType, 'invited');
+                        var newUserType = anInvite.newUserType;
+                        newUserType.destroy({
+                            success: function(invite) {
+                                signup(newUserType, 'invited');
+                            },
+                            error: function(myObject, error) {
+                                $scope.signupError = "Sign up failed, couldn't remove invite.";
+                            }
+                        });                
                     } else {
                         //if no
                         $scope.displayBilling = true;
@@ -660,7 +668,7 @@
                                 $scope.inviteTarget = new Invite();
                                 
                                 //send email
-                                $http.post("https://lmserver-1281.appspot.com/api/invite/" + $scope.sentInvite.email + "/" + $scope.sentInvite.name)
+                                $http.post("https://lmserver-1281.appspot.com/api/invite/" + sentInvite.email + "/" + sentInvite.name)
                                     .success(function(data, status, headers, config) {
                                       $scope.inviteError = "Invite Sent!";
                                 })
