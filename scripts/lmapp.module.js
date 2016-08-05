@@ -439,7 +439,7 @@
             var inviteDfd = $q.defer();
  
             var query = new Parse.Query(Invite);
-            query.equalTo("email", $scope.inviteTarget.email);
+            query.equalTo("email", $scope.userSignup.email);
             query.find({
                 success : function(anInvite) {
                     inviteDfd.resolve(anInvite);
