@@ -537,7 +537,15 @@
         };
         
         $scope.forgotPassword = function() {
-            alert('Email sent!');
+            Parse.User.requestPasswordReset($scope.userLogin.username, {
+                success: function() {
+                    alert("Password reset sent.");
+                },
+                error: function(error) {
+                    // Show the error message somewhere
+                    alert("Error: " + error.code + " " + error.message);
+                }
+            });
         }
         
     });

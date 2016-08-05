@@ -211,7 +211,7 @@ maximum-scale=1.0; user-scalable=no" />
                                     <div class="help-block" ng-messages="loginForm.loginPassword.$error" ng-if="loginForm.loginPassword.$touched">
                                         <p ng-message="minlength">Your Password is too short.</p>
                                         <p ng-message="maxlength">Your Password is too long.</p>
-                                        <p ng-message="required">Your Password is required.</p>
+                                        <p ng-message="required">Your Password is required to log in.</p>
                                     </div>
                                 </div>
                                  <div class="border-white">
@@ -219,8 +219,8 @@ maximum-scale=1.0; user-scalable=no" />
                                  </div>
                              </form>
                              <div class="border-white">
-                                    <btn class="center-block" ng-click="forgotPassword()">Forget your Password?</btn>
-                                 </div>
+                                <btn class="center-block" ng-click="forgotPassword()">Forget your Password?</btn>
+                             </div>
                          </div>
                           
                          <div class="col-sm-offset-2 col-sm-5">
