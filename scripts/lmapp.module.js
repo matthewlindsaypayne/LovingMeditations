@@ -448,8 +448,7 @@
         $scope.signupMonthly = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
-                console.log(data);
-                if (scope.signup(0)) {
+                if (signup(0, data.id)) {
                     location.reload();
                 }
             })
@@ -467,8 +466,7 @@
         $scope.signupAnnually = function() {
             $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
-                console.log(data);
-                if (scope.signup(0)) {
+                if (signup(0, data.id)) {
                     location.reload();
                 }
             })
@@ -512,12 +510,13 @@
             });
         };
         
-        function signup(userType) {
+        function signup(userType, stripeID) {
             $scope.userSignup.username = $scope.userSignup.email;
             $scope.userSignup.userType = userType;
             $scope.userSignup.patientType = parseInt($scope.userSignup.patientType);
             $scope.userSignup.programEnrolledIn = "";
             $scope.userSignup.emailVerified = false;
+            $scope.userSignup.stripeID = stripeID;
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     return true;
@@ -587,6 +586,8 @@
         $scope.activeUsers.count = 0;
         $scope.invitesSent.count = 0;
         
+        $scope.inviteError = "";
+        
         if ($rootScope.sessionUser) {
         $rootScope.sessionUser.activeUsersInvited().then(function(users) {
             $scope.activeUsers.activeUsersList = users;
@@ -617,6 +618,7 @@
         };
         
         $scope.sendInvite = function() {
+            $scope.inviteError = "";
             var inviteDfd = $q.defer();
  
             var query = new Parse.Query(Invite);
@@ -633,37 +635,36 @@
             inviteDfd.promise
                 .then(function (anInvite) {
                     if (anInvite.length > 0) {
-                        alert('Already been invited, can\'t again.');
+                        $scope.inviteError = 'Already been invited, can\'t again.';
                     } else {
                         $scope.inviteTarget.invitedByUserId = $rootScope.sessionUser.id;
                         $scope.inviteTarget.save(null, {
                             success: function(sentInvite) {
-                                alert('Sent invite to ' + sentInvite.name);
                                 $scope.inviteTarget = new Invite();
                                 
                                 //send email
                                 var params = {'toEmail': $scope.inviteTarget.email, 'name': $scope.inviteTarget.name};
                                 $http.post("https://lmserver-1281.appspot.com/api/invite", params)
                                     .success(function(data, status, headers, config) {
-                                      alert("Email sent! Uses Name!");
+                                      $scope.inviteError = "Invite Sent!";
                                 })
                                 .error(function(data, status, headers, config) {
                                     // log error
-                                    alert("Emailing failed");
                                     console.log(data);
                                     console.log(status);
+                                    scope.inviteError = "Invite failed.";
                                     sentInvite.destroy({
                                         success: function(invite) {
-                                            alert("Rolled back invite");
+                                            $scope.inviteError = "Invite failed.";
                                         },
                                         error: function(myObject, error) {
-                                            alert("Rollback failed");
+                                            $scope.inviteError = "Invite Failed. Rollback Failed.";
                                         }
                                     });
                                 });
                             },
                             error: function(sentInvite, error) {
-                                alert('Failed to send invite, with error code: ' + error.message);
+                                $scope.inviteError = "Failed to send Invite: " + error.message;
                             }
                         });
                         

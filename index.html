@@ -295,7 +295,8 @@ maximum-scale=1.0; user-scalable=no" />
                           <div ng-hide="billingMonthly === false">
                             <h2>You've selected Monthly!</h2>
                               <br />
-                                <button stripe-checkout="signupMonthly"
+                              <div>
+                                <button stripe-checkout="signupMonthly" class="border-white"
                                     data-key="pk_test_BQNNMSnMi4hsWDwhjg0qIbRz"
                                     data-name="Loving Meditations"
                                     data-description="Monthly Payment"
@@ -305,6 +306,7 @@ maximum-scale=1.0; user-scalable=no" />
                                     data-label="Sign me up">
                                         Sign Me Up!
                                 </button>
+                              </div>
                               <div class="cancel-billing-btn border-white col-sm-offset-4 col-sm-4" ng-click="displayBilling=false; billingMonthly=false;">
                                 <button>Cancel</button>  
                             </div>
@@ -312,7 +314,8 @@ maximum-scale=1.0; user-scalable=no" />
                           <div ng-hide="billingAnnually === false">
                             <h2>You've selected Annually!</h2>
                               <br />
-                              <button stripe-checkout="signupAnnually"
+                              <div>
+                                <button stripe-checkout="signupAnnually" class="border-white"
                                     data-key="pk_test_BQNNMSnMi4hsWDwhjg0qIbRz"
                                     data-amount="3899"
                                     data-name="Loving Meditations"
@@ -323,19 +326,7 @@ maximum-scale=1.0; user-scalable=no" />
                                     data-label="Sign me up">
                                         Sign Me Up!
                                 </button>
-                              <form action="" method="POST">
-                                <script
-                                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                                    data-key="pk_test_BQNNMSnMi4hsWDwhjg0qIbRz"
-                                    data-amount="3899"
-                                    data-name="Loving Meditations"
-                                    data-description="Widget"
-                                    data-image="https://s3.amazonaws.com/stripe-uploads/acct_18KX5uAgBtX5wKi3merchant-icon-1467753633891-icon.png"
-                                    data-locale="auto"
-                                    data-zip-code="true"
-                                    data-label="Sign me up">
-                                </script>
-                                </form>
+                              </div>
                               <div class="cancel-billing-btn border-white col-sm-offset-4 col-sm-4" ng-click="displayBilling=false; billingAnnually=false;">
                                 <button>Cancel</button>  
                             </div>
@@ -437,6 +428,9 @@ maximum-scale=1.0; user-scalable=no" />
                                             <p ng-message="maxlength">This name is too long.</p>
                                             <p ng-message="required">A name is required.</p>
                                         </div>
+                                    </div>
+                                    <div>
+                                        {{inviteError}}
                                     </div>
                                     <div class="border-white">
                                         <button type="submit" value="Send">Invite</button>

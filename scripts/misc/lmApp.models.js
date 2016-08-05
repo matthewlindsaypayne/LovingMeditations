@@ -9,6 +9,7 @@
                 this.userType = 0;
                 this.patientType = 0;
                 this.programEnrolledIn = 0;
+                this.stripeID = "";
             },
             
             activeUsersInvited: function() {
@@ -116,6 +117,14 @@
         });
         User.prototype.__defineSetter__("emailVerified", function(aValue) {
             return this.set("emailVerified", aValue);
+        });
+        
+        // StripeID property
+        User.prototype.__defineGetter__("stripeID", function() {
+            return this.get("stripeID");
+        });
+        User.prototype.__defineSetter__("stripeID", function(aValue) {
+            return this.set("stripeID", aValue);
         });
         
         return User;
