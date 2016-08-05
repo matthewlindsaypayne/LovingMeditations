@@ -446,8 +446,8 @@
         
         $scope.signupMonthly = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
-            .success(function(data, status, headers, config) {
-                signup(0, data.id);
+            .success(function(response, status, headers, config) {
+                signup(0, response.data.id);
             })
             .error(function(data, status) {
                 // log error
@@ -462,8 +462,8 @@
         
         $scope.signupAnnually = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
-            .success(function(data, status, headers, config) {
-                signup(0, data.id);
+            .success(function(response, status, headers, config) {
+                signup(0, response.data.id);
             })
             .error(function(data, status) {
                 // log error
