@@ -558,7 +558,7 @@
                             // log error
                                 console.log(data);
                                 console.log(status);
-                                $scope.loginError = 'Failed to log in: ' + error.message;
+                                $scope.loginError = 'Failed to log in: ' + data;
                                 $rootScope.loggedIn = false;
                                 $rootScope.$apply();
                             });
@@ -571,7 +571,7 @@
                 error: function(loggedInUser, error) {
                     console.log(error.code);
                     console.log(error.message);
-                    $scope.loginError = 'Failed to log in: ' + data;
+                    $scope.loginError = 'Failed to log in: ' + error.message;
                     $rootScope.loggedIn = false;
                     $rootScope.$apply();
                 }
