@@ -422,7 +422,7 @@
         }
     });
     
-    lmApp.controller('LoginController', function($scope, $http, $q, LMUser, $rootScope) {
+    lmApp.controller('LoginController', function($scope, $http, $q, LMUser, Invite, $rootScope) {
         $scope.userSignup = new LMUser();
         $scope.userLogin = {};
         
