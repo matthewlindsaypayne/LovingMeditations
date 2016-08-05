@@ -477,34 +477,6 @@
             });
         }
         
-        $scope.signup = function(userType) {
-            $scope.userSignup.username = $scope.userSignup.email;
-            $scope.userSignup.userType = userType;
-            $scope.userSignup.patientType = parseInt($scope.userSignup.patientType);
-            $scope.userSignup.programEnrolledIn = "";
-            $scope.userSignup.emailVerified = false;
-            
-            $scope.userSignup.signUp(null, {
-                success: function(newUser) {
-                    alert('New object created with objectId: ' + newUser.id);
-                    $rootScope.loggedIn = false;
-                    $rootScope.$apply();
-                    $scope.userSignup = new LMUser();
-                    location.reload();
-                },
-                error: function(newUser, error) {
-                    $scope.displayBilling = false;
-                    $scope.billingMonthly = false;
-                    $scope.billingAnnually = false;
-                    $scope.signupError = "Signup failed.";
-                    console.log(error);
-                    console.log('Failed to create new object, with error code: ' + error.message);
-                    $rootScope.loggedIn = false;
-                    $rootScope.$apply();
-                }
-            });
-        };
-        
         function signup(userType, stripeID) {
             $scope.userSignup.username = $scope.userSignup.email;
             $scope.userSignup.userType = userType;
