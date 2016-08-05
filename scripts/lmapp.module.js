@@ -463,7 +463,7 @@
             });
         }
         
-        $scope.signupAnnually = function() {
+        $scope.signupAnnually = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
             .success(function(data, status, headers, config) {
                 if (signup(0, data.id)) {
