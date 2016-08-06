@@ -515,9 +515,7 @@
             console.log($scope.userSignup.stripeID);
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
-                    $scope.userSignup.email.$setUntouched();
-                    $scope.userSignup.password.$setUntouched();
-                    $scope.userSignup.passwordConfirm.$setUntouched();
+                    $scope.signupForm.$setUntouched();
                     Parse.User.logOut();
                     $rootScope.loggedIn = false;
                     $scope.displayBilling = false;
