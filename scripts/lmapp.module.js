@@ -543,7 +543,7 @@
                 success: function(loggedInUser) {
                     if (loggedInUser.stripeID && loggedInUser.stripeID != 'invited') {
                         //check stripe
-                        $http.get('/customers/' + loggedInUser.stripeID) 
+                        $http.get('https://lmserver-1281.appspot.com/customers/' + loggedInUser.stripeID) 
                             .success(function(data, status, headers, config) {
                                 if (JSON.parse(data).delinquent) {
                                     $scope.loginError = "Update your billing information."
@@ -560,7 +560,7 @@
                                 console.log(status);
                                 $scope.loginError = 'Failed to log in: ' + status;
                                 $rootScope.loggedIn = false;
-                                $rootScope.$apply();
+                                Parse.User.logOut();
                             });
                     } else {
                         $rootScope.loggedIn = true;
