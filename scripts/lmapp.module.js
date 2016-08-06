@@ -528,9 +528,7 @@
                     $rootScope.$apply();
                 },
                 error: function(newUser, error) {
-                    $scope.displayBilling = false;
-                    $scope.billingMonthly = false;
-                    $scope.billingAnnually = false;
+                    $scope.signupForm.$setUntouched();
                     $scope.signupError = "Signup failed.";
                     console.log(error);
                     $scope.userSignup.email.$setUntouched();
