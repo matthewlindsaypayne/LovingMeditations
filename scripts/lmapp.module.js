@@ -547,11 +547,8 @@
                             .success(function(data, status, headers, config) {
                                 if (JSON.parse(data).delinquent) {
                                     $scope.loginError = "Update your billing information."
-                                    $rootScope.loggedIn = false;
-                                    $rootScope.$apply();
+                                    Parse.User.logOut();
                                 } else {
-                                    $rootScope.loggedIn = true;
-                                    $rootScope.$apply();
                                     location.reload();
                                 }
                             })
@@ -559,7 +556,6 @@
                             // log error
                                 console.log(status);
                                 $scope.loginError = 'Failed to log in: ' + status;
-                                $rootScope.loggedIn = false;
                                 Parse.User.logOut();
                             });
                     } else {
@@ -675,6 +671,7 @@
                                 $http.post("https://lmserver-1281.appspot.com/invite/" + sentInvite.email + "/" + sentInvite.name)
                                     .success(function(data, status, headers, config) {
                                       $scope.inviteError = "Invite Sent!";
+                                        $scope.inviteForm.$setUntouched();
                                     $scope.inviteTarget = new Invite();
                                 })
                                 .error(function(data, status, headers, config) {
