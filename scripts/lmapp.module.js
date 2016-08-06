@@ -521,10 +521,10 @@
                     $scope.billingMonthly = false;
                     $scope.billingAnnually = false;
                     $scope.signupError = "You've successfully signed up! Check your email to verify.";
-                    $scope.userSignup = {};
                     $scope.userSignup.email.$setUntouched();
                     $scope.userSignup.password.$setUntouched();
                     $scope.userSignup.passwordConfirm.$setUntouched();
+                    $scope.userSignup = {};
                     $rootScope.$apply();
                 },
                 error: function(newUser, error) {
