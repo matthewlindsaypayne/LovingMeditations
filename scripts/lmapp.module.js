@@ -515,14 +515,16 @@
             console.log($scope.userSignup.stripeID);
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
+                    Parse.User.logOut();
                     $rootScope.loggedIn = false;
-                    $rootScope.sessionUser = null;
-                    newUser = null;
                     $scope.displayBilling = false;
                     $scope.billingMonthly = false;
                     $scope.billingAnnually = false;
                     $scope.signupError = "You've successfully signed up! Check your email to verify.";
                     $scope.userSignup = {};
+                    $scope.userSignup.email.$setUntouched();
+                    $scope.userSignup.password.$setUntouched();
+                    $scope.userSignup.passwordConfirm.$setUntouched();
                     $rootScope.$apply();
                 },
                 error: function(newUser, error) {
@@ -531,6 +533,9 @@
                     $scope.billingAnnually = false;
                     $scope.signupError = "Signup failed.";
                     console.log(error);
+                    $scope.userSignup.email.$setUntouched();
+                    $scope.userSignup.password.$setUntouched();
+                    $scope.userSignup.passwordConfirm.$setUntouched();
                     $rootScope.$apply();
                 }
             });
