@@ -578,17 +578,22 @@
         };
         
         $scope.forgotPassword = function() {
-            Parse.User.requestPasswordReset($scope.userLogin.username, {
-                success: function() {
-                    $scope.loginError = "Password reset sent.";
-                },
-                error: function(error) {
-                    // Show the error message somewhere
-                    console.log(error.code);
-                    console.log(error.message);
-                    $scope.loginError = error.message;
-                }
-            });
+            if ($scope.userLogin.username) {
+                Parse.User.requestPasswordReset($scope.userLogin.username, {
+                    success: function() {
+                        $scope.loginError = "Password reset sent.";
+                    },
+                    error: function(error) {
+                        // Show the error message somewhere
+                        console.log(error.code);
+                        console.log(error.message);
+                        $scope.loginError = error.message;
+                    }
+                });
+            } else {
+                $scope.loginError = "Enter your email.";
+            }
+            
         }
         
     });
@@ -673,6 +678,12 @@
                                       $scope.inviteError = "Invite Sent!";
                                         $scope.inviteForm.$setUntouched();
                                     $scope.inviteTarget = new Invite();
+                                    $rootScope.sessionUser.invitesSent().then(function(invites) {
+                                        $scope.invitesSent.invitesSentList = invites;
+                                        $scope.invitesSent.count = invites.length;
+                                    }, function(error) {
+                                        console.log("Invite promise failed.");
+                                    });
                                 })
                                 .error(function(data, status, headers, config) {
                                     // log error
