@@ -539,11 +539,13 @@
                         //check stripe
                         $http.get('https://lmserver-1281.appspot.com/customers/' + loggedInUser.stripeID) 
                             .success(function(data, status, headers, config) {
-                                if (JSON.parse(data).delinquent) {
+                                var stripeCustomer = JSON.parse(data);
+                                var subscription = stripeCustomer.subscriptions.data[0];
+                                if (!stripeCustomer.delinquent && stripeCustomer.status == "active") {
+                                    location.reload();
+                                } else {
                                     $scope.loginError = "Update your billing information."
                                     Parse.User.logOut();
-                                } else {
-                                    location.reload();
                                 }
                             })
                             .error(function(data, status, headers, config) {
@@ -724,7 +726,7 @@
                     .success(function(data, status, headers, config) {
                         stripeCustomer = JSON.parse(data);
                         subscription = stripeCustomer.subscriptions.data[0];
-                        if (subscription.status == "active" || !subscription.cancel_at_period_end) {
+                        if (subscription.status == "active" && !subscription.cancel_at_period_end) {
                             $scope.canCancel = true;
                         }     
                     })
