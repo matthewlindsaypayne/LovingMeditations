@@ -712,7 +712,31 @@
     
     lmApp.controller('LogoutController', function($scope, $http, $rootScope, $q) {
         $scope.displayReady = false;
+        $scope.signoutError = "";
+        $scope.canCancel = false;
         
+        var stripeCustomer;
+        var subscription;
+        
+        if ($rootScope.loggedIn) {
+            if ($rootScope.sessionUser.stripeID && $rootScope.sessionUser.stripeID != 'invited') {
+                $http.get('https://lmserver-1281.appspot.com/customers/' + $rootScope.sessionUser.stripeID)
+                    .success(function(data, status, headers, config) {
+                        stripeCustomer = JSON.parse(data);
+                        subscription = stripeCustomer.subscription.data[0];
+                        if (subscription.status == "active" || !subscription.cancel_at_period_end) {
+                            $scope.canCancel = true;
+                        }     
+                    })
+                    .error(function(data, status, headers, config) {
+                        // log error
+                        console.log(status);
+                        $scope.displayReady = false;
+                        $scope.signoutError = "Error retrieving customer.";
+                    })
+            }
+        }
+            
         $scope.logout = function() {
             Parse.User.logOut();
             $rootScope.loggedIn = false;
@@ -720,27 +744,27 @@
         };
         
         $scope.cancelSubscription = function() {
-            if ($rootScope.sessionUser.stripeID && $rootScope.sessionUser.stripeID != 'invited') {
-                //check stripe
-                $http.get('https://lmserver-1281.appspot.com/customers/' + $rootScope.sessionUser.stripeID) 
-                    .success(function(data, status, headers, config) {
-                        var stripeCustomer = JSON.parse(data);
-                        var subscription = stripeCustomer.subscriptions.data[0];
-                        $http.get('https://lmserver-1281.appspot.com/cancel/' + stripeCustomer.id + '/' + subscription.id)
-                            .success(function(data, status, headers, config) {
-                                var subscription = JSON.parse(data);
-                                console.log(subscription);
-                            })
-                            .error(function(data, status, headers, config) {
-                                console.log(status);
-                            })
-                    })
-                    .error(function(data, status, headers, config) {
-                        // log error
-                        console.log(status);
-                    });
-            } 
-        };
+            if (stripeCustomer && subscription) {
+                $http.get('https://lmserver-1281.appspot.com/cancel/' + stripeCustomer.id + '/' + subscription.id)
+                .success(function(data, status, headers, config) {
+                    var subscription = JSON.parse(data);
+                    console.log(subscription);
+                    if (subscription.cancel_at_period_end) {
+                        $scope.displayReady = false;
+                        $scope.signoutError = "Subscription canceled, you will no longer be billed.";
+                        $scope.canCancel = false;
+                    } else {
+                        $scope.displayReady = false;
+                        $scope.signoutError = "Subscription was not canceled.";
+                    }
+                })
+                .error(function(data, status, headers, config) {
+                    console.log(status);
+                    $scope.displayReady = false;
+                    $scope.signoutError = "Error sending cancel request.";
+                });
+            }
+        }
     });
     
     lmApp.controller('ContactController', function($scope, $http, $q) {

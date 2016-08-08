@@ -448,12 +448,15 @@ maximum-scale=1.0; user-scalable=no" />
                             <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                         </div>
                         <div class="row" ng-show="displayReady === false">
+                            <div>
+                                {{signoutError}}
+                            </div>
                             <div class="col-xs-offset-4 col-xs-4 border-white" ng-click="logout()">
                                 <button>Log Out</button>
                             </div>
                             <br />
                             <br />
-                            <div class="col-xs-offset-4 col-sm-4 border-white" ng-hide="sessionUser.stripeID === 'invited'" ng-click="displayReady = true">
+                            <div class="col-xs-offset-4 col-sm-4 border-white" ng-hide="!canCancel" ng-click="displayReady = true">
                                 <button>Cancel Subscription</button>
                             </div>
                         </div>
