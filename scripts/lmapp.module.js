@@ -725,12 +725,13 @@
                 $http.get('https://lmserver-1281.appspot.com/customers/' + $rootScope.sessionUser.stripeID) 
                     .success(function(data, status, headers, config) {
                         var stripeCustomer = JSON.parse(data);
-                            console.log(stripeCustomer);
-                        })
-                        .error(function(data, status, headers, config) {
-                            // log error
-                            console.log(status);
-                        });
+                        console.log(stripeCustomer);
+                        console.log(stripeCustomer.subscriptions.data[0]);
+                    })
+                    .error(function(data, status, headers, config) {
+                        // log error
+                        console.log(status);
+                    });
             } 
         };
     });
