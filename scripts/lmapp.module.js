@@ -541,7 +541,7 @@
                             .success(function(data, status, headers, config) {
                                 var stripeCustomer = JSON.parse(data);
                                 var subscription = stripeCustomer.subscriptions.data[0];
-                                if (!stripeCustomer.delinquent && stripeCustomer.status == "active") {
+                                if (!stripeCustomer.delinquent && subscription.status == "active") {
                                     location.reload();
                                 } else {
                                     $scope.loginError = "Update your billing information."
