@@ -710,7 +710,7 @@
        };
     });
     
-    lmApp.controller('LogoutController', function($scope, $rootScope, $q) {
+    lmApp.controller('LogoutController', function($scope, $http, $rootScope, $q) {
         $scope.displayReady = false;
         
         $scope.logout = function() {
@@ -720,20 +720,19 @@
         };
         
         $scope.cancelSubscription = function() {
-            
             if ($rootScope.sessionUser.stripeID && $rootScope.sessionUser.stripeID != 'invited') {
-                        //check stripe
-                        $http.get('https://lmserver-1281.appspot.com/customers/' + $rootScope.sessionUser.stripeID) 
-                            .success(function(data, status, headers, config) {
-                                var stripeCustomer = JSON.parse(data);
-                                console.log(stripeCustomer);
-                            })
-                            .error(function(data, status, headers, config) {
+                //check stripe
+                $http.get('https://lmserver-1281.appspot.com/customers/' + $rootScope.sessionUser.stripeID) 
+                    .success(function(data, status, headers, config) {
+                        var stripeCustomer = JSON.parse(data);
+                            console.log(stripeCustomer);
+                        })
+                        .error(function(data, status, headers, config) {
                             // log error
-                                console.log(status);
-                            });
+                            console.log(status);
+                        });
             } 
-        }
+        };
     });
     
     lmApp.controller('ContactController', function($scope, $http, $q) {
