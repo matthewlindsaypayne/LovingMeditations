@@ -725,8 +725,14 @@
                 $http.get('https://lmserver-1281.appspot.com/customers/' + $rootScope.sessionUser.stripeID) 
                     .success(function(data, status, headers, config) {
                         var stripeCustomer = JSON.parse(data);
-                        console.log(stripeCustomer);
-                        console.log(stripeCustomer.subscriptions.data[0]);
+                        var subscription = stripeCustomer.subscriptions.data[0];
+                        $http.get('https://lmserver-1281.appspot.com/cancel/' + stripeCustomer.id + '/' + subscription.id)
+                            .success(function(data, status, headers, config) {
+                                console.log(data);
+                            })
+                            .error(function(data, status, headers, config) {
+                                console.log(status);
+                            })
                     })
                     .error(function(data, status, headers, config) {
                         // log error
