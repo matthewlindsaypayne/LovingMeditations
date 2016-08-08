@@ -56,10 +56,10 @@ maximum-scale=1.0; user-scalable=no" />
                                     <li class="active" spy="lm-inspirations">INSPIRATIONS</li>
                                     <li spy="lm-programs">PROGRAMS</li>
                                     <li spy="lm-meditations">MEDITATIONS</li>
-                                    <li spy="lm-login" ng-hide="loggedIn === true">LOG IN</li>
                                     <li spy="lm-invites" ng-hide="loggedIn === false || sessionUser.userType <= 0">INVITES</li>
+                                    <li spy="lm-login" ng-hide="loggedIn === true">LOG IN</li>
+                                    <li spy="lm-logout" ng-hide="loggedIn===false">LOG OUT</li>
                                     <li spy="lm-contact">CONTACT</li>
-                                    <li ng-hide="loggedIn===false" ng-click="logout()">LOG OUT</li>
                                 </ul>
                             </div><!--/.nav-collapse -->
                         </div><!--/.container-fluid -->
@@ -186,7 +186,111 @@ maximum-scale=1.0; user-scalable=no" />
                             </div>
                     </section>
                      
-                    <section id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="loggedIn === true" >
+                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="loggedIn === false || sessionUser.userType <= 0">
+                            <div class="row">
+                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
+                            </div>
+                            <div class="row">
+                                <h2>Manage Invites</h2>
+                            </div>
+                            <h3>Active Users</h3>
+                            <div ng-show="activeUsers.count > 0">
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                        Previous
+                                    </button>
+                                    {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                        Next
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <ul class="center-block">
+                                        <li ng-repeat="activeUser in activeUsers.activeUserList | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
+                                            <p><span class="text-left">User: {{activeUser.email}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                        Previous
+                                    </button>
+                                        {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
+                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                        Next
+                                    </button>
+                                <br />
+                            </div>
+                            </div>
+                            <div ng-show="activeUsers.count == 0">
+                                <p>None of your invitees have signed up!</p>
+                            </div>
+                            <h3>Invites Sent</h3>
+                            <div ng-show="invitesSent.count > 0">
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                        Previous
+                                    </button>
+                                    {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                        Next
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <ul class="center-block">
+                                        <br />
+                                        <li ng-repeat="invite in invitesSent.invitesSentList | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
+                                            <p><span class="text-left">Sent To: {{invite.email}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
+                                        </li>
+                                        <br />
+                                    </ul>
+                                </div>
+                                <div class="row">
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                        Previous
+                                    </button>
+                                    {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
+                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="invitesSent.count == 0">
+                                <p>You have no pending invites!</p>
+                            </div>
+                            <div class="row center-block">
+                                <h3>Send Invites</h3>
+                                <form name="inviteForm" class="center-block" ng-submit="inviteForm.$valid && sendInvite()" novalidate>
+                                    <div class="form-group">
+                                        <input id="invite-email" name="inviteEmail" class="" type="email" placeholder="Email" ng-model="inviteTarget.email" required/>
+                                        <div class="help-block" ng-messages="inviteForm.inviteEmail.$error" ng-if="inviteForm.inviteEmail.$touched">
+                                            <p ng-message="email">This must be a valid email address.</p>
+                                            <p ng-message="required">An email address is required.</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input id="invite-name" name="inviteName" class="" type="text" placeholder="Name"  ng-model="inviteTarget.name" ng-minlength="2" ng-maxlength="30" required/>
+                                    
+                                        <div class="help-block" ng-messages="inviteForm.inviteName.$error" ng-if="inviteForm.inviteName.$touched">
+                                            <p ng-message="minlength">This name is too short.</p>
+                                            <p ng-message="maxlength">This name is too long.</p>
+                                            <p ng-message="required">A name is required.</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {{inviteError}}
+                                    </div>
+                                    <div>
+                                        <button class="border-white" type="submit" value="Send">Invite</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="row">
+                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
+                            </div>
+                    </section>    
+                        
+                    <section id="lm-login" class="center-block text-center" ng-controller="LoginController as lc" ng-hide="loggedIn === true">
                         <div id="wrapper-login">
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/profile.png" align="middle" />
@@ -332,114 +436,41 @@ maximum-scale=1.0; user-scalable=no" />
                             </div>
                           </div>
                       </div>  
+                            
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/profile.png" align="middle" />
                             </div>
-                  </div>
+                    </div>
                     </section>
-            
-                    <section id="lm-invites" class="center-block text-center" ng-controller="InvitesController as ivc" ng-hide="loggedIn === false || sessionUser.userType <= 0">
-                            <div class="row">
-                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
+                        
+                    <section id="lm-logout" class="center-block text-center" ng-controller="LogoutController as sc" ng-hide="loggedIn === false">
+                        <div class="row">
+                            <img class="section-img" height="100px" src="images/profile.png" align="middle" />
+                        </div>
+                        <div class="row" ng-show="displayReady === false">
+                            <div class="col-xs-offset-4 col-xs-4 border-white" ng-click="logout()">
+                                <button>Log Out</button>
                             </div>
-                            <div class="row">
-                                <h2>Manage Invites</h2>
+                            <br />
+                            <br />
+                            <div class="col-xs-offset-4 col-sm-4 border-white" ng-hide="sessionUser.stripeID = 'invited'" ng-click="displayReady = true">
+                                <button>Cancel Subscription</button>
                             </div>
-                            <h3>Active Users</h3>
-                            <div ng-show="activeUsers.count > 0">
-                                <div class="row">
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
-                                        Previous
-                                    </button>
-                                    {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
-                                        Next
-                                    </button>
-                                </div>
-                                <div class="row">
-                                    <ul class="center-block">
-                                        <li ng-repeat="activeUser in activeUsers.activeUserList | startFrom:activeUsers.currentPage*activeUsers.pageSize | limitTo:activeUsers.pageSize" >
-                                            <p><span class="text-left">User: {{activeUser.email}}</span><span class="text-right"><strong>Logged In:</strong> activeUser.lastLogin</span></p>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="row">
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
-                                        Previous
-                                    </button>
-                                        {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
-                                        Next
-                                    </button>
-                                <br />
+                        </div>
+                        <div class="row" ng-show="displayReady === true">
+                            <h2>Are you sure?</h2>
+                            <div class="col-xs-offset-4 col-xs-4 border-white" ng-click="displayReady = false">
+                                <button>Go Back</button>
                             </div>
+                            <br />
+                            <br />
+                            <div class="col-xs-offset-4 col-xs-4 border-white" ng-click="cancelSubscription()">
+                                <button>Cancel Subscription</button>
                             </div>
-                            <div ng-show="activeUsers.count == 0">
-                                <p>None of your invitees have signed up!</p>
-                            </div>
-                            <h3>Invites Sent</h3>
-                            <div ng-show="invitesSent.count > 0">
-                                <div class="row">
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
-                                        Previous
-                                    </button>
-                                    {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
-                                        Next
-                                    </button>
-                                </div>
-                                <div class="row">
-                                    <ul class="center-block">
-                                        <br />
-                                        <li ng-repeat="invite in invitesSent.invitesSentList | startFrom:invitesSent.currentPage*invitesSent.pageSize | limitTo:invitesSent.pageSize" >
-                                            <p><span class="text-left">Sent To: {{invite.email}}</span><span class="text-right"><strong>Invite Sent: </strong>{{(invite.createdAt).toLocaleString()}}</span></p>
-                                        </li>
-                                        <br />
-                                    </ul>
-                                </div>
-                                <div class="row">
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
-                                        Previous
-                                    </button>
-                                    {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
-                                        Next
-                                    </button>
-                                </div>
-                            </div>
-                            <div ng-show="invitesSent.count == 0">
-                                <p>You have no pending invites!</p>
-                            </div>
-                            <div class="row center-block">
-                                <h3>Send Invites</h3>
-                                <form name="inviteForm" class="center-block" ng-submit="inviteForm.$valid && sendInvite()" novalidate>
-                                    <div class="form-group">
-                                        <input id="invite-email" name="inviteEmail" class="" type="email" placeholder="Email" ng-model="inviteTarget.email" required/>
-                                        <div class="help-block" ng-messages="inviteForm.inviteEmail.$error" ng-if="inviteForm.inviteEmail.$touched">
-                                            <p ng-message="email">This must be a valid email address.</p>
-                                            <p ng-message="required">An email address is required.</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input id="invite-name" name="inviteName" class="" type="text" placeholder="Name"  ng-model="inviteTarget.name" ng-minlength="2" ng-maxlength="30" required/>
-                                    
-                                        <div class="help-block" ng-messages="inviteForm.inviteName.$error" ng-if="inviteForm.inviteName.$touched">
-                                            <p ng-message="minlength">This name is too short.</p>
-                                            <p ng-message="maxlength">This name is too long.</p>
-                                            <p ng-message="required">A name is required.</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        {{inviteError}}
-                                    </div>
-                                    <div class="border-white">
-                                        <button type="submit" value="Send">Invite</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="row">
-                                <img class="section-img" height="100px" src="images/profile.png" align="middle" />
-                            </div>
+                        </div>
+                        <div class="row">
+                            <img class="section-img" height="100px" src="images/profile.png" align="middle" />
+                        </div>
                     </section>
                     
                     <section id="lm-contact" ng-controller="ContactController as cc">
