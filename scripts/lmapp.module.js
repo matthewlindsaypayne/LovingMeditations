@@ -728,7 +728,8 @@
                         var subscription = stripeCustomer.subscriptions.data[0];
                         $http.get('https://lmserver-1281.appspot.com/cancel/' + stripeCustomer.id + '/' + subscription.id)
                             .success(function(data, status, headers, config) {
-                                console.log(data);
+                                var subscription = JSON.parse(data);
+                                console.log(subscription);
                             })
                             .error(function(data, status, headers, config) {
                                 console.log(status);
