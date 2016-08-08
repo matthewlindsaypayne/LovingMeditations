@@ -723,7 +723,7 @@
                 $http.get('https://lmserver-1281.appspot.com/customers/' + $rootScope.sessionUser.stripeID)
                     .success(function(data, status, headers, config) {
                         stripeCustomer = JSON.parse(data);
-                        subscription = stripeCustomer.subscription.data[0];
+                        subscription = stripeCustomer.subscriptions.data[0];
                         if (subscription.status == "active" || !subscription.cancel_at_period_end) {
                             $scope.canCancel = true;
                         }     
