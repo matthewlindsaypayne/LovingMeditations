@@ -46,7 +46,32 @@
         }
     });
 
-    lmApp.controller('LovingMeditationsController', function($scope, $rootScope) {
+    lmApp.controller('LovingMeditationsController', function($scope, $http, $rootScope) {
+        $rootScope.programs = [];
+        $rootScope.freeMedia = [];
+        
+        $http.get("https://api.wistia.com/v1/projects.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
+            .success(function(data, status, headers, config) {
+                $rootScope.programs = data;
+            })
+            .error(function(data, status, headers, config) {
+                // log error
+            console.log("Programs retrieval failed.");
+        });
+        
+        $http.get("https://api.wistia.com/v1/projects/y9r6xq82wn.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
+            .success(function(data, status, headers, config) {
+                if (data.name == "Free") {
+                    $rootScope.freeMedia = data.medias;
+                } else {
+                    alert("Free videos list not found.");
+                }
+            })
+            .error(function(data, status, headers, config) {
+                //log error
+                console.log("Free media program failed.");
+        });
+        
         
         
     });
@@ -78,20 +103,10 @@
         });
     });
     
-    lmApp.controller('ProgramsController', function($scope, $http, $sce, $q) {
-        var programsList;
+    lmApp.controller('ProgramsController', function($scope, $http, $sce, $rootScope, $q) {
         $scope.selectedProgramId = -1;
         $scope.selectedProgramType = 'Patient'; //$scope.programType'';
         $scope.selectedProgramEmbedSrc = '';
-        $http.get("https://api.wistia.com/v1/projects.json?api_password=5450cfdc1299ebebee9129dd19dc06f02db688040667cada25ae12a9924877ee")
-            .success(function(data, status, headers, config) {
-                programsList = data;
-                $scope.programs = programsList;
-            })
-            .error(function(data, status, headers, config) {
-                // log error
-            console.log("Programs retrieval failed.");
-        });
         
         $scope.changeProgramType = function(type) {
             $scope.selectedProgramType = type;
@@ -121,6 +136,7 @@
                 
                 if ($rootScope.loggedIn === true) {
                     var programPlaylist = Wistia.playlist(programHashedId);
+                    console.log(programPlaylist);
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
                         {
                         var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoIndex);
@@ -209,6 +225,10 @@
                 $scope.videosList = $filter('uniqueVideoFilter')(data);
                 $scope.videoCount = $scope.videosList.length;
         });
+        
+        if ($rootScope.loggedIn) {
+            $http.get("https://api.wistia.com/v1/")
+        }
         
         $scope.numberOfPages = function() {
             try {
@@ -770,25 +790,7 @@
     });
     
     lmApp.controller('ContactController', function($scope, $http, $q) {
-        $scope.testSendEmail = function() {
-            var data = $.param({
-                json: JSON.stringify({
-                    toEmail: 'balancetemp@gmail.com',
-                    fromEmail: 'info@lovingmeditations.com',
-                    subject: 'loving meditations test',
-                    content: 'check check check check'
-                })
-            });
-            $http.post('https://lmserver-1281.appspot.com/parse/mail')
-                .success(function(data, status, headers, config) {
-                    programsList = data;
-                    $scope.programs = programsList;
-                })
-                .error(function(data, status, headers, config) {
-                    // log error
-                    console.log("Email send failed " + status);
-                });
-        }
+        
     });
     
 })(window.angular);
