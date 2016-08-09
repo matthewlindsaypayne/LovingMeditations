@@ -268,7 +268,7 @@
                     var meditationVideo = Wistia.api("meditationVideo");
                     console.log(meditationVideo);
                     meditationVideo.bind("end", function() {
-                        var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
+                        var userVideo = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
                         if (userVideo) {
                             userVideo.playCount++;
                             userVideo.save(null, {
