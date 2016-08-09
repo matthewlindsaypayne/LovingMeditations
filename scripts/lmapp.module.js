@@ -144,6 +144,7 @@
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
                         {
                         var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoIndex);
+                        console.log(userVideo);
                         if (userVideo) {
                             userVideo.playCount++;
                             userVideo.save(null, {
