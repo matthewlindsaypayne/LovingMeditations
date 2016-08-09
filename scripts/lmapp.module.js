@@ -262,6 +262,10 @@
                 anchorSmoothScroll.scrollTo("meditation-embed");
                 
                 if ($rootScope.loggedIn === true) {
+                        window._wq = window._wq || [];
+                        _wq.push({ meditationHashedId: function(video) {
+                            console.log("I got a handle to the video!", video);
+                        }});
                     var meditationVideo = Wistia.api(meditationHashedId);
                     meditationVideo.bind("end", function() {
                         var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
