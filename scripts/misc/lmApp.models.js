@@ -168,7 +168,7 @@
         return Invite;
     });
     
-    modelsModule.factory('UserVideo', function() {
+    modelsModule.factory('UserVideo', function($q) {
         var UserVideo = Parse.Object.extend('UserVideo', {
             initialize: function(attrs, options) {
             }
