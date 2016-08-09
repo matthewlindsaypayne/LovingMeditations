@@ -179,7 +179,7 @@
                     var queryUserVideo = new Parse.Query(this);
                     queryUserVideo.equalTo("userId", userId);
                     queryUserVideo.equalTo("videoId", videoId);
-                    queryInspirations.find({
+                    queryUserVideo.find({
                         success: function(aUserVideo) {
                         userVideoDfd.resolve(aUserVideo);
                     },
