@@ -200,7 +200,7 @@
         };
     });
     
-    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, $filter, $rootScope, anchorSmoothScroll, UserVideo, AdviserVideoCollection) {
+    lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, $filter, $timeout, $rootScope, anchorSmoothScroll, UserVideo, AdviserVideoCollection) {
         $scope.selectedMeditationId = -1;
         $scope.selectedMeditationEmbed = '';
         $scope.currentPage = 0;
@@ -230,9 +230,6 @@
                 $scope.videoCount = $scope.videosList.length;
         });
         
-        if ($rootScope.loggedIn) {
-            $http.get("https://api.wistia.com/v1/")
-        }
         
         $scope.numberOfPages = function() {
             try {
@@ -263,25 +260,13 @@
                 $scope.selectedMeditationId = meditationId;
                 $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"meditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
                 
-                document.getElementById(meditationVideo);
-                console.log(meditationVideo);
-                
                 $location.hash("meditation-embed");
                 anchorSmoothScroll.scrollTo("meditation-embed");
                 
-                window._wq = window._wq || [];
-                        console.log(window._wq);
-                        _wq.push({ meditationHashedId: function(video) {
-                            console.log("I got a handle to the video!", video);
-                        }});
-                
+                $timeout(function () {
                 if ($rootScope.loggedIn === true) {
-                        window._wq = window._wq || [];
-                        console.log(window._wq);
-                        _wq.push({ meditationHashedId: function(video) {
-                            console.log("I got a handle to the video!", video);
-                        }});
-                    var meditationVideo = Wistia.api(meditationHashedId);
+                    var meditationVideo = Wistia.api("meditationVideo");
+                    console.log(meditationVideo);
                     meditationVideo.bind("end", function() {
                         var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
                         if (userVideo) {
@@ -310,6 +295,7 @@
                         }
                     });
                 }
+                }, 1000);
             } else {
                 $scope.selectedMeditationId = -1;
                 $scope.selectedMeditationEmbed = '';
@@ -613,6 +599,8 @@
         };
         
         $scope.forgotPassword = function() {
+            var meditationVideo = Wistia.api("meditationVideo");
+            console.log(meditationVideo);
             if ($scope.userLogin.username) {
                 Parse.User.requestPasswordReset($scope.userLogin.username, {
                     success: function() {
