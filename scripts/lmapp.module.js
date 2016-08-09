@@ -131,8 +131,12 @@
                     var programHeight = "360";
                 }
                 
-                $scope.selectedProgramEmbedSrc = "//fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=" + programHeight +"&videoOptions%5BvideoWidth%5D=" + programWidth + "&videoOptions%5BvolumeControl%5D=true";
+                $scope.selectedProgramEmbedSrc = "http://fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=" + programHeight +"&videoOptions%5BvideoWidth%5D=" + programWidth + "&videoOptions%5BvolumeControl%5D=true";
                 $scope.selectedProgramId = programId;
+                
+                var programPlaylist = Wistia.playlist(programHashedId);
+                console.log(programPlaylist);
+                
                 
                 if ($rootScope.loggedIn === true) {
                     var programPlaylist = Wistia.playlist(programHashedId);
@@ -257,12 +261,23 @@
                 }
                 
                 $scope.selectedMeditationId = meditationId;
-                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"meditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
+                $scope.selectedMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"meditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(meditationHashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
+                
+                document.getElementById(meditationVideo);
+                console.log(meditationVideo);
+                
                 $location.hash("meditation-embed");
                 anchorSmoothScroll.scrollTo("meditation-embed");
                 
+                window._wq = window._wq || [];
+                        console.log(window._wq);
+                        _wq.push({ meditationHashedId: function(video) {
+                            console.log("I got a handle to the video!", video);
+                        }});
+                
                 if ($rootScope.loggedIn === true) {
                         window._wq = window._wq || [];
+                        console.log(window._wq);
                         _wq.push({ meditationHashedId: function(video) {
                             console.log("I got a handle to the video!", video);
                         }});
@@ -410,7 +425,7 @@
                 var meditationHeight = "360";
             }
             
-            $scope.selectedAdviserMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"//fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"adviserMeditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(hashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
+            $scope.selectedAdviserMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"adviserMeditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(hashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
             $scope.showAdviser = false;
             $scope.showAdviserBlurbs = false;
             $scope.showAdviserMeditation = true;
