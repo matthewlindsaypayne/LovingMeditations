@@ -106,7 +106,7 @@ maximum-scale=1.0; user-scalable=no" />
                         <div class="row center-block" ng-show="selectedProgramId != -1">
                             <div ng-bind-html="selectedProgramEmbed"></div>
                             <br />
-                            
+                            <iframe id="program-playlist" ng-src="{{trustSrc(selectedProgramEmbedSrc)}}" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_playlist" align="middle" name="wistia_playlist" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen></iframe>
                         </div>
                         <div  class="row">
                             <img class="section-img" height="100px" src="images/programs.png" align="middle" />
