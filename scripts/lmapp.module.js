@@ -145,6 +145,9 @@
                         {
                         var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoIndex);
                         console.log(userVideo);
+                        userVideo.then(function(video) {
+                            
+                        })
                         if (userVideo) {
                             userVideo.playCount++;
                             userVideo.save(null, {
@@ -269,31 +272,34 @@
                     var meditationVideo = Wistia.api("meditationVideo");
                     console.log(meditationVideo);
                     meditationVideo.bind("end", function() {
-                        var userVideo = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
-                        if (userVideo) {
-                            userVideo.playCount++;
-                            userVideo.save(null, {
-                                success: function (userVideo) {
-                                    alert("User_Video updated!");
-                                },
-                                error: function(userVideo, error) {
-                                    alert("User_Video update failed, " + error.message);
-                                }
-                            });
-                        } else {
-                            userVideo = new UserVideo();
-                            userVideo.userId = $rootScope.sessionUser.id;
-                            userVideo.videoId = meditationUniqueVideoId;
-                            userVideo.playCount = 1;
-                            userVideo.save(null, {
-                                success: function (userVideo) {
-                                    alert("User_Video created!");
-                                },
-                                error: function(userVideo, error) {
-                                    alert("User_Video creation failed, " + error.message);
-                                }
-                            });
-                        }
+                        var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
+                        userVideoPromise.then(function(videos) {
+                            if (videos.length > 0) {
+                                var userVideo = videos[0];
+                                userVideo.playCount++;
+                                userVideo.save(null, {
+                                    success: function (savedVideo) {
+                                        alert("User_Video updated!");
+                                    },
+                                    error: function(savedVideo, error) {
+                                        alert("User_Video update failed, " error.message);
+                                    }
+                                })
+                            } else {
+                                var userVideo = new UserVideo();
+                                userVideo.userId = $rootScope.sessionUser.id;
+                                userVideo.videoId = meditationUniqueVideoId;
+                                userVideo.playCount = 1;
+                                userVideo.save(null, {
+                                    success: function(savedVideo) {
+                                        alert("User_Video created!");
+                                    },
+                                    error: function(savedVideo, error) {
+                                        alert("User_Video creation failed, " + error.message);
+                                    }
+                                })
+                            }
+                        })
                     });
                 }
                 }, 1000);
