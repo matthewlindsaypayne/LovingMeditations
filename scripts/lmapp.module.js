@@ -281,7 +281,7 @@
                                         alert("User_Video updated!");
                                     },
                                     error: function(savedVideo, error) {
-                                        alert("User_Video update failed, " error.message);
+                                        alert("User_Video update failed, " + error.message);
                                     }
                                 })
                             } else {
@@ -299,7 +299,6 @@
                                 })
                             }
                         })
-=======
                         var userVideo = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
                         console.log(userVideo);
                         if (userVideo) {
@@ -326,7 +325,6 @@
                                 }
                             });
                         }
->>>>>>> publish uservideo in meditations
                     });
                 }
                 }, 1000);
