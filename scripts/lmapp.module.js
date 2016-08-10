@@ -103,7 +103,7 @@
         });
     });
     
-    lmApp.controller('ProgramsController', function($scope, $http, $sce, $rootScope, $q) {
+    lmApp.controller('ProgramsController', function($scope, $http, $sce, $timeout, $rootScope, $q) {
         $scope.selectedProgramId = -1;
         $scope.selectedProgramType = 'Patient'; //$scope.programType'';
         $scope.selectedProgramEmbedSrc = '';
@@ -131,11 +131,17 @@
                     var programHeight = "360";
                 }
                 
+                $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed\" data-video-width=\"" + programWidth +"\" data-video-height=\"" + programHeight + "\">&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script>");
+                
                 $scope.selectedProgramEmbedSrc = "http://fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=" + programHeight +"&videoOptions%5BvideoWidth%5D=" + programWidth + "&videoOptions%5BvolumeControl%5D=true";
                 $scope.selectedProgramId = programId;
                 
-                var programPlaylist = Wistia.playlist(programHashedId);
-                console.log(programPlaylist);
+                
+                $timeout(function () {
+                    console.log(Wistia.playlist(programHashedId));
+                    var programPlaylist = Wistia.playlist(programHashedId);
+                }, 1000);
+                
                 
                 
                 if ($rootScope.loggedIn === true) {
@@ -245,6 +251,17 @@
         
         $scope.selectMeditation = function(meditationId, meditationHashedId, meditationUniqueVideoId) {
             if ($scope.selectedMeditationId != meditationId) {
+                
+                var isFreeVideo = false;
+                $.each($rootScope.freeMedia, function(i, obj) {
+                    if (obj.hashedId == meditationHashedId) { isFreeVideo = true; return false;}
+                });
+                
+                if (!$rootScope.loggedIn && !isFreeVideo) {
+                    $location.hash("lm-login");
+                    anchorSmoothScroll.scrollTo("lm-login");
+                } else {
+                    
                 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
             
                 if (w <= 374) {
@@ -268,8 +285,8 @@
                 anchorSmoothScroll.scrollTo("meditation-embed");
                 
                 $timeout(function () {
-                if ($rootScope.loggedIn === true) {
                     var meditationVideo = Wistia.api("meditationVideo");
+                if ($rootScope.loggedIn === true) {
                     meditationVideo.bind("end", function() {
                         var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
                         userVideoPromise.then(function(videos) {
@@ -305,10 +322,10 @@
                             userVideo.playCount++;
                             userVideo.save(null, {
                                 success: function (userVideo) {
-                                    alert("User_Video updated!");
+                                    console.log("User_Video updated!");
                                 },
                                 error: function(userVideo, error) {
-                                    alert("User_Video update failed, " + error.message);
+                                    console.log("User_Video update failed, " + error.message);
                                 }
                             });
                         } else {
@@ -318,21 +335,29 @@
                             userVideo.playCount = 1;
                             userVideo.save(null, {
                                 success: function (userVideo) {
-                                    alert("User_Video created!");
+                                    console.log("User_Video created!");
                                 },
                                 error: function(userVideo, error) {
-                                    alert("User_Video creation failed, " + error.message);
+                                    console.log("User_Video creation failed, " + error.message);
                                 }
                             });
                         }
                     });
+                } else {
+                    //check if meditationHashedId is in list of free videos
+                    //pause and scroll to signup section
+                    var isFreeVideo = false;
+                    $.each($rootScope.freeMedia, function(i, obj) {
+                        if (obj.hashedId == meditationHashedId) { isFreeVideo = true; return false;}
+                    });
                 }
                 }, 1000);
+            }
             } else {
                 $scope.selectedMeditationId = -1;
                 $scope.selectedMeditationEmbed = '';
             }
-        };
+        }
         
         $scope.meditationDescriptionFilter = function(item) {
             var description;
