@@ -271,7 +271,6 @@
                 if ($rootScope.loggedIn === true) {
                     var meditationVideo = Wistia.api("meditationVideo");
                     meditationVideo.bind("end", function() {
-<<<<<<< e7eaa7f8c0c5ec208cbb606d94f79cc1ed88b9ab
                         var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
                         userVideoPromise.then(function(videos) {
                             if (videos.length > 0) {
