@@ -131,27 +131,15 @@
                     var programHeight = "360";
                 }
                 
-                $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed\" style=\"width:947px;height:388px;\" data-video-width=\"" + programWidth +"\" data-video-height=\"" + programHeight + "\">&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script>");
+                $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed center-block\" style=\"width:" + programWidth + "px;height:" + programHeight + "px;\" >&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script>");
                 
                 $scope.selectedProgramEmbedSrc = "http://fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=" + programHeight +"&videoOptions%5BvideoWidth%5D=" + programWidth + "&videoOptions%5BvolumeControl%5D=true";
                 $scope.selectedProgramId = programId;
                 
                 $timeout(function () {
-                    console.log(Wistia.playlist(programHashedId));
                     var programPlaylist = Wistia.playlist(programHashedId);
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
-                        
-                    });
-                }, 1000);
-                
-                if ($rootScope.loggedIn === true) {
-                    var programPlaylist = Wistia.playlist(programHashedId);
-                    console.log(programPlaylist);
-                    programPlaylist.bind("end", function(sectionIndex, videoIndex) {
-                        var userVideo = userVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoIndex);
-                        console.log(userVideo);
-                        userVideo.then(function(video) {
-                            var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, programPlaylist.currentVideo().hashedId);
+                        var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, programPlaylist.currentVideo().hashedId);
                         userVideoPromise.then(function(videos) {
                             if (videos.length > 0) {
                                 var userVideo = videos[0];
@@ -167,7 +155,7 @@
                             } else {
                                 var userVideo = new UserVideo();
                                 userVideo.userId = $rootScope.sessionUser.id;
-                                userVideo.videoId = meditationUniqueVideoId;
+                                userVideo.videoId = programPlaylist.currentVideo().hashedId;
                                 userVideo.playCount = 1;
                                 userVideo.save(null, {
                                     success: function(savedVideo) {
@@ -179,9 +167,9 @@
                                 })
                             }
                         })
-                        })
-                });
-                }
+                    });
+                }, 1000);
+                
             } else {
                 $scope.selectedProgramId = -1;
                 $scope.selectedProgramEmbedSrc = '';
@@ -317,32 +305,6 @@
                                 })
                             }
                         })
-                        var userVideo = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
-                        console.log(userVideo);
-                        if (userVideo) {
-                            userVideo.playCount++;
-                            userVideo.save(null, {
-                                success: function (userVideo) {
-                                    console.log("User_Video updated!");
-                                },
-                                error: function(userVideo, error) {
-                                    console.log("User_Video update failed, " + error.message);
-                                }
-                            });
-                        } else {
-                            userVideo = new UserVideo();
-                            userVideo.userId = $rootScope.sessionUser.id;
-                            userVideo.videoId = meditationUniqueVideoId;
-                            userVideo.playCount = 1;
-                            userVideo.save(null, {
-                                success: function (userVideo) {
-                                    console.log("User_Video created!");
-                                },
-                                error: function(userVideo, error) {
-                                    console.log("User_Video creation failed, " + error.message);
-                                }
-                            });
-                        }
                     });
                 } else {
                     //check if meditationHashedId is in list of free videos
