@@ -139,7 +139,8 @@
                     var programPlaylist = Wistia.playlist(programHashedId);
                     if ($rootScope.loggedIn) {
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
-                        var videoId = programPlaylist.currentVideo().hashedId;
+                        var currentVideo = programPlaylist.currentVideo();
+                        var videoId = currentVideo.hashedId;
                         var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoId);
                         userVideoPromise.then(function(videos) {
                             if (videos.length > 0) {
@@ -171,7 +172,8 @@
                     });
                     } else {
                         programPlaylist.bind("play", function(sectionIndex, videoIndex) {
-                            var videoId = programPlaylist.currentVideo().hashedId;
+                            var currentVideo = programPlaylist.currentVideo();
+                            var videoId = currentVideo.hashedId;
                             var isFreeVideo = false;
                             $.each($rootScope.freeMedia, function(i, obj) {
                             if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
@@ -375,6 +377,18 @@
             return item.replace("image_crop_resized=200x120", "image_crop_resized=" + thumbnailWidth + "x" + thumbnailHeight);
         };
         
+        $scope.meditationPrevious = function() {
+            $scope.currentPage= $scope.currentPage - 1;
+            $location.hash("meditation-blurb-window");
+            anchorSmoothScroll.scrollTo("meditation-blurb-window");
+        }
+        
+        $scope.meditationNext = function() {
+            $scope.currentPage= $scope.currentPage + 1;
+            $location.hash("meditation-blurb-window");
+            anchorSmoothScroll.scrollTo("meditation-blurb-window");
+        }
+        
         $scope.toggleAdviser = function() {
             if ($scope.showAdviser || $scope.showAdviserMeditation || $scope.showAdviserBlurbs) {
                 $scope.showAdviser = false;
@@ -492,6 +506,27 @@
         $scope.checkSignup = function() {
             $scope.signupError = "";
             //check if outstanding invite
+            
+            var userDfd = $q.defer();
+            
+            var userQuery = new Parse.Query(LMUser);
+            userQuery.equalTo("username", $scope.userSignup.email);
+            userQuery.find({
+                success: function(userList) {
+                    userDfd.resolve(userList);
+                },
+                error: function(userList) {
+                    userDfd.reject(userList);
+                }
+            });
+            
+            userDfd.promise
+                .then(function (userList) {
+                    if (userList.length > 0) {
+                        $scope.signupError = "Sign up failed, username already exists.";
+                    } else {
+            
+            
             var inviteDfd = $q.defer();
  
             var query = new Parse.Query(Invite);
@@ -524,6 +559,8 @@
                         $scope.displayBilling = true;
                     }
             });
+            }
+            })
         }
         
         

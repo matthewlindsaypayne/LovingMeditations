@@ -149,13 +149,13 @@ maximum-scale=1.0; user-scalable=no" />
                                 <div class="row" ng-show="showAdviserMeditation === true" ng-bind-html="selectedAdviserMeditationEmbed"></div>
                             </div>
                             
-                            <div ng-show="showAdviser === false && showAdviserMeditation === false && showAdviserBlurbs === false">
+                            <div id="meditation-blurb-window" ng-show="showAdviser === false && showAdviserMeditation === false && showAdviserBlurbs === false">
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="meditationPrevious()">
                                         Previous
                                     </button>
                                     {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="meditationNext()">
                                         Next
                                     </button>
                                 </div>
@@ -170,11 +170,11 @@ maximum-scale=1.0; user-scalable=no" />
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="meditationPrevious()">
                                         Previous
                                     </button>
                                         {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="meditationNext()">
                                         Next
                                     </button>
                                 </div>
