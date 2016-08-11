@@ -140,7 +140,7 @@
                     if ($rootScope.loggedIn) {
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
                         var currentVideo = programPlaylist.currentVideo();
-                        var videoId = currentVideo.hashedId;
+                        var videoId = currentVideo.hashedId();
                         var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoId);
                         userVideoPromise.then(function(videos) {
                             if (videos.length > 0) {
@@ -173,7 +173,7 @@
                     } else {
                         programPlaylist.bind("play", function(sectionIndex, videoIndex) {
                             var currentVideo = programPlaylist.currentVideo();
-                            var videoId = currentVideo.hashedId;
+                            var videoId = currentVideo.hashedId();
                             var isFreeVideo = false;
                             $.each($rootScope.freeMedia, function(i, obj) {
                             if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
