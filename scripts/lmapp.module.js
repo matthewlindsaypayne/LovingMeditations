@@ -138,6 +138,7 @@
                 
                 $timeout(function () {
                     var programPlaylist = Wistia.playlist(programHashedId);
+                    if ($rootScope.loggedIn) {
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
                         var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, programPlaylist.currentVideo().hashedId);
                         userVideoPromise.then(function(videos) {
@@ -168,6 +169,21 @@
                             }
                         })
                     });
+                    } else {
+                        programPlaylist.bind("play", function(sectionIndex, videoIndex) {
+                            var isFreeVideo = false;
+                            $.each($rootScope.freeMedia, function(i, obj) {
+                            if (obj.hashedId == programPlaylist.currentVideo().hashedId) { isFreeVideo = true; return false;}
+                            
+                            if (!isFreeVideo) {
+                                programPlaylist.currentVideo.pause();
+                                $location.hash("lm-login");
+                                anchorSmoothScroll.scrollTo("lm-login");
+                            }
+                        })
+                        
+                });
+                    }
                 }, 1000);
                 
             } else {
