@@ -179,7 +179,7 @@
                             if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
                             
                             if (!isFreeVideo) {
-                                programPlaylist.currentVideo.pause();
+                                programPlaylist.currentVideo().pause();
                                 $location.hash("lm-login");
                                 anchorSmoothScroll.scrollTo("lm-login");
                             }
