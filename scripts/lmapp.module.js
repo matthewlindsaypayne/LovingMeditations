@@ -133,14 +133,14 @@
                 
                 $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed center-block\" style=\"width:" + programWidth + "px;height:" + programHeight + "px;\" >&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script>");
                 
-                $scope.selectedProgramEmbedSrc = "http://fast.wistia.net/embed/playlists/" + programHashedId + "?media_0_0%5BautoPlay%5D=false&media_0_0%5BcontrolsVisibleOnLoad%5D=false&theme=tab&version=v1&videoOptions%5BautoPlay%5D=true&videoOptions%5BvideoHeight%5D=" + programHeight +"&videoOptions%5BvideoWidth%5D=" + programWidth + "&videoOptions%5BvolumeControl%5D=true";
                 $scope.selectedProgramId = programId;
                 
-                $timeout(function () {
+                 $timeout(function () {
                     var programPlaylist = Wistia.playlist(programHashedId);
                     if ($rootScope.loggedIn) {
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
-                        var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, programPlaylist.currentVideo().hashedId);
+                        var videoId = programPlaylist.currentVideo().description.match("<h2>(.*)</h2>")[1];
+                        var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoId);
                         userVideoPromise.then(function(videos) {
                             if (videos.length > 0) {
                                 var userVideo = videos[0];
@@ -156,7 +156,7 @@
                             } else {
                                 var userVideo = new UserVideo();
                                 userVideo.userId = $rootScope.sessionUser.id;
-                                userVideo.videoId = programPlaylist.currentVideo().hashedId;
+                                userVideo.videoId = videoId;
                                 userVideo.playCount = 1;
                                 userVideo.save(null, {
                                     success: function(savedVideo) {
@@ -171,9 +171,10 @@
                     });
                     } else {
                         programPlaylist.bind("play", function(sectionIndex, videoIndex) {
+                            var videoId = programPlaylist.currentVideo().description.match("<h2>(.*)</h2>")[1];
                             var isFreeVideo = false;
                             $.each($rootScope.freeMedia, function(i, obj) {
-                            if (obj.hashedId == programPlaylist.currentVideo().hashedId) { isFreeVideo = true; return false;}
+                            if (obj.currentVideo().description.match("<h2>(.*)</h2>")[1] == videoId) { isFreeVideo = true; return false;}
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo.pause();
