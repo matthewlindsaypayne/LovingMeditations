@@ -169,7 +169,7 @@
     });
     
     modelsModule.factory('UserVideo', function($q) {
-        var UserVideo = Parse.Object.extend('UserVideo', {
+        var UserVideo = Parse.Object.extend('User_Video', {
             initialize: function(attrs, options) {
             }
         }, 
@@ -359,5 +359,32 @@
         
         return AdviserVideoCollection;
     });
+    
+    modelsModule.factory("UserUser", function() {
+        var UserUser = Parse.Object.extend('User_User', {
+            initialize: function(attrs, options) {
+                this.target_id = "";
+                this.sender_id = "";
+            }
+        });
+        
+        // Target_id property
+        Invite.prototype.__defineGetter__("target_id", function() {
+            return this.get("target_id");
+        });
+        Invite.prototype.__defineSetter__("target_id", function(aValue) {
+            return this.set("target_id", aValue);
+        });
+        
+        // Sender_id property
+        Invite.prototype.__defineGetter__("sender_id", function() {
+            return this.get("sender_id");
+        });
+        Invite.prototype.__defineSetter__("sender_id", function(aValue) {
+            return this.set("sender_id", aValue);
+        });
+        
+        return UserUser;
+    })
     
 })(window.angular);

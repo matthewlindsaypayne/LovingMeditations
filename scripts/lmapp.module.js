@@ -492,7 +492,7 @@
         }
     });
     
-    lmApp.controller('LoginController', function($scope, $http, $q, LMUser, Invite, $rootScope) {
+    lmApp.controller('LoginController', function($scope, $http, $q, LMUser, UserUser, Invite, $rootScope) {
         $scope.userSignup = new LMUser();
         $scope.userLogin = {};
         
@@ -545,10 +545,22 @@
                     if (anInvite.length > 0) {
                         //if yes, signup
                         var newUserType = anInvite[0].newUserType;
+                        var senderId = anInvite[0].invitedByUserId;
                         console.log(anInvite);
                         anInvite[0].destroy({
                             success: function(invite) {
                                 signup(newUserType, 'invited');
+                                var newUserUser = new UserUser();
+                                newUserUser.sender_id = senderId;
+                                newUserUser.target_id = $scope.userSignup.email;
+                                newUserUser.save(null, {
+                                    success: function(aUserUser) {
+                                        console.log("User_User created.");
+                                    },
+                                    error: function(aUserUser, error) {
+                                        console.log("Error creating User_User.");
+                                    }
+                                })
                             },
                             error: function(myObject, error) {
                                 $scope.signupError = "Sign up failed, couldn't remove invite.";
