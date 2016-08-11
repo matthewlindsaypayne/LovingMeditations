@@ -103,7 +103,7 @@
         });
     });
     
-    lmApp.controller('ProgramsController', function($scope, $http, $sce, $timeout, $rootScope, $q) {
+    lmApp.controller('ProgramsController', function($scope, $http, $sce, UserVideo, $timeout, $rootScope, $q) {
         $scope.selectedProgramId = -1;
         $scope.selectedProgramType = 'Patient'; //$scope.programType'';
         $scope.selectedProgramEmbedSrc = '';
