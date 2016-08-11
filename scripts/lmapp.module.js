@@ -139,7 +139,7 @@
                     var programPlaylist = Wistia.playlist(programHashedId);
                     if ($rootScope.loggedIn) {
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
-                        var videoId = programPlaylist.currentVideo().description.match("<h2>(.*)</h2>")[1];
+                        var videoId = programPlaylist.currentVideo().hashedId;
                         var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, videoId);
                         userVideoPromise.then(function(videos) {
                             if (videos.length > 0) {
@@ -171,10 +171,10 @@
                     });
                     } else {
                         programPlaylist.bind("play", function(sectionIndex, videoIndex) {
-                            var videoId = programPlaylist.currentVideo().description.match("<h2>(.*)</h2>")[1];
+                            var videoId = programPlaylist.currentVideo().hashedId;
                             var isFreeVideo = false;
                             $.each($rootScope.freeMedia, function(i, obj) {
-                            if (obj.currentVideo().description.match("<h2>(.*)</h2>")[1] == videoId) { isFreeVideo = true; return false;}
+                            if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo.pause();
@@ -294,7 +294,7 @@
                     var meditationVideo = Wistia.api("meditationVideo");
                 if ($rootScope.loggedIn === true) {
                     meditationVideo.bind("end", function() {
-                        var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationUniqueVideoId);
+                        var userVideoPromise = UserVideo.getByUserIdAndVideoId($rootScope.sessionUser.id, meditationHashedId);
                         userVideoPromise.then(function(videos) {
                             if (videos.length > 0) {
                                 var userVideo = videos[0];
@@ -310,7 +310,7 @@
                             } else {
                                 var userVideo = new UserVideo();
                                 userVideo.userId = $rootScope.sessionUser.id;
-                                userVideo.videoId = meditationUniqueVideoId;
+                                userVideo.videoId = meditationHashedId;
                                 userVideo.playCount = 1;
                                 userVideo.save(null, {
                                     success: function(savedVideo) {
