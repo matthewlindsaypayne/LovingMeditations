@@ -176,14 +176,14 @@
                             var videoId = currentVideo.hashedId();
                             var isFreeVideo = false;
                             $.each($rootScope.freeMedia, function(i, obj) {
-                            if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
+                                if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
+                            });
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo().pause();
                                 $location.hash("lm-login");
                                 anchorSmoothScroll.scrollTo("lm-login");
                             }
-                        })
                         
                 });
                     }
