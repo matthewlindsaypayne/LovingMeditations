@@ -369,18 +369,18 @@
         });
         
         // Target_id property
-        Invite.prototype.__defineGetter__("target_id", function() {
+        UserUser.prototype.__defineGetter__("target_id", function() {
             return this.get("target_id");
         });
-        Invite.prototype.__defineSetter__("target_id", function(aValue) {
+        UserUser.prototype.__defineSetter__("target_id", function(aValue) {
             return this.set("target_id", aValue);
         });
         
         // Sender_id property
-        Invite.prototype.__defineGetter__("sender_id", function() {
+        UserUser.prototype.__defineGetter__("sender_id", function() {
             return this.get("sender_id");
         });
-        Invite.prototype.__defineSetter__("sender_id", function(aValue) {
+        UserUser.prototype.__defineSetter__("sender_id", function(aValue) {
             return this.set("sender_id", aValue);
         });
         
