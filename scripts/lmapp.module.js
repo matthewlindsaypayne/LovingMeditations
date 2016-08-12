@@ -139,7 +139,7 @@
                     var styleHeight = "392";
                 }
                 
-                $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed center-block\" style=\"width:" + programWidth + "px;height:" + programHeight + "px;\" data-video-width=\"" + programWidth +"\" data-video-height=\"" + programHeight +"\">&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script><script>wistiaPlaylist = Wistia.playlist(\"" + programHashedId + "\", {version: \"v1\", theme: \"tab\",videoOptions: {volumeControl: true,autoPlay: true,videoWidth: \"" + programWidth + "\",videoHeight: \"" + programHeight + "\"},media_0_0: {autoPlay: false,controlsVisibleOnLoad: false}});</script>");
+                $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed center-block\" style=\"width:" + programWidth + "px;height:" + programHeight + "px;\" data-video-width=\"" + programWidth +"\" data-video-height=\"" + programHeight +"\">&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script><script src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script><script>wistiaPlaylist = Wistia.playlist(\"" + programHashedId + "\", {version: \"v1\", theme: \"tab\",videoOptions: {volumeControl: true,autoPlay: true,videoWidth: \"" + programWidth + "\",videoHeight: \"" + programHeight + "\"},media_0_0: {autoPlay: false,controlsVisibleOnLoad: false}});</script>");
                 
                 $scope.selectedProgramId = programId;
                 
