@@ -189,8 +189,8 @@
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo().pause();
-                                $location.hash("lm-login");
-                                anchorSmoothScroll.scrollTo("lm-login");
+                                $location.hash("login-container");
+                                anchorSmoothScroll.scrollTo("login-container");
                             }
                         
                 });
@@ -205,8 +205,8 @@
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo().pause();
-                                $location.hash("lm-login");
-                                anchorSmoothScroll.scrollTo("lm-login");
+                                $location.hash("login-container");
+                                anchorSmoothScroll.scrollTo("login-container");
                             }
                         
                 });
@@ -290,8 +290,8 @@
                 });
                 
                 if (!$rootScope.loggedIn && !isFreeVideo) {
-                    $location.hash("lm-login");
-                    anchorSmoothScroll.scrollTo("lm-login");
+                    $location.hash("login-container");
+                    anchorSmoothScroll.scrollTo("login-container");
                 } else {
                     
                 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
@@ -327,10 +327,10 @@
                                 userVideo.playCount++;
                                 userVideo.save(null, {
                                     success: function (savedVideo) {
-                                        alert("User_Video updated!");
+                                        console.log("User_Video updated!");
                                     },
                                     error: function(savedVideo, error) {
-                                        alert("User_Video update failed, " + error.message);
+                                        console.log("User_Video update failed, " + error.message);
                                     }
                                 })
                             } else {
@@ -340,10 +340,10 @@
                                 userVideo.playCount = 1;
                                 userVideo.save(null, {
                                     success: function(savedVideo) {
-                                        alert("User_Video created!");
+                                        console.log("User_Video created!");
                                     },
                                     error: function(savedVideo, error) {
-                                        alert("User_Video creation failed, " + error.message);
+                                        console.log("User_Video creation failed, " + error.message);
                                     }
                                 })
                             }
