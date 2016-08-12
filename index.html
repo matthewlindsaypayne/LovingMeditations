@@ -165,7 +165,7 @@ maximum-scale=1.0; user-scalable=no" />
                                     <div class="center-block">
                                         <div class="meditations-blurb border-white" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
                                             <div style="position: relative; left: 0; top: 0;"><img class="meditations-blurb-image pull-left" style="position: relative; top: 0; left: 0;" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
-                                            <img ng-if="!video.isFree" style="position: absolute; top: 10px; left: 10px;" height="100" width="100" src="images/premiumBadge.png" />
+                                            <img ng-if="loggedIn === false && video.isFree === false" style="position: absolute; top: 10px; left: 10px;" height="100" width="100" src="images/premiumBadge.png" />
                                             </div>
                                             <span class="meditations-blurb-title">{{video.name}}</span><br/>
                                             <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span><br />
