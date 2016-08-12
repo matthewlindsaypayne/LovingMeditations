@@ -212,7 +212,7 @@
                                 $rootScope.premiumError = true;
                                 $scope.selectedProgramId = -1;
                                 $scope.selectedProgramEmbedSrc = '';
-                                $rootScope.apply();
+                                $rootScope.$apply();
                             }
                         
                 });
@@ -232,7 +232,7 @@
                                 $rootScope.premiumError = true;
                                 $scope.selectedProgramId = -1;
                                 $scope.selectedProgramEmbedSrc = '';
-                                $rootScope.apply();
+                                $rootScope.$apply();
                             }
                         
                 });
