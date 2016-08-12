@@ -210,6 +210,9 @@
                                 $location.hash("login-container");
                                 anchorSmoothScroll.scrollTo("login-container");
                                 $rootScope.premiumError = true;
+                                $scope.selectedProgramId = -1;
+                                $scope.selectedProgramEmbedSrc = '';
+                                $rootScope.apply();
                             }
                         
                 });
@@ -227,6 +230,9 @@
                                 $location.hash("login-container");
                                 anchorSmoothScroll.scrollTo("login-container");
                                 $rootScope.premiumError = true;
+                                $scope.selectedProgramId = -1;
+                                $scope.selectedProgramEmbedSrc = '';
+                                $rootScope.apply();
                             }
                         
                 });
