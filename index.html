@@ -302,7 +302,7 @@ maximum-scale=1.0; user-scalable=no" />
                              <h3 class="center-block">Login</h3>
                              <form name="loginForm" ng-submit="loginForm.$valid && login()" novalidate>
                                  <div class="form-group">
-                                     <input id="login-username" name="loginUsername" class="center-block" type="email" placeholder="Email" ng-model="userLogin.username" required />
+                                     <input id="login-username" name="loginUsername" class="center-block" type="email" placeholder="email" ng-model="userLogin.username" required />
                                      
                                      <div class="help-block" ng-messages="loginForm.loginUsername.$error" ng-if="loginForm.loginUsername.$touched">
                                         <p ng-message="email">This must be a valid email address.</p>
@@ -333,7 +333,7 @@ maximum-scale=1.0; user-scalable=no" />
                              <h3>Sign Up</h3>
                              <form name="signupForm" ng-submit="signupForm.$valid && checkSignup()" novalidate>
                                  <div class="form-group">
-                                     <input id="signup-email" name="signupEmail" class="center-block" type="email" placeholder="Email" ng-model="userSignup.email" required />
+                                     <input id="signup-email" name="signupEmail" class="center-block" type="email" placeholder="email" ng-model="userSignup.email" required />
                                      
                                      <div class="help-block" ng-messages="signupForm.signupEmail.$error" ng-if="signupForm.signupEmail.$touched">
                                         <p ng-message="email">This must be a valid email address.</p>
@@ -341,7 +341,7 @@ maximum-scale=1.0; user-scalable=no" />
                                     </div>
                                  </div>
                                  <div class="form-group">
-                                     <input id="signup-password" name="signupPassword" class="center-block" type="password" placeholder="Password" ng-model="userSignup.password" ng-minlength="8" ng-maxlength="20" required />
+                                     <input id="signup-password" name="signupPassword" class="center-block" type="password" placeholder="password" ng-model="userSignup.password" ng-minlength="8" ng-maxlength="20" required />
                                      
                                      <div class="help-block" ng-messages="signupForm.signupPassword.$error" ng-if="signupForm.signupPassword.$touched">
                                         <p ng-message="minlength">Your Password is too short.</p>
@@ -350,7 +350,7 @@ maximum-scale=1.0; user-scalable=no" />
                                     </div>
                                  </div>
                                  <div class="form-group">
-                                     <input id="signup-password-confirm" name="signupPasswordConfirm" class="center-block" type="password" placeholder="Confirm Password" ng-model="userSignup.passwordConfirm" ng-pattern="{{userSignup.password}}" ng-minlength="8" ng-maxlength="20" required />
+                                     <input id="signup-password-confirm" name="signupPasswordConfirm" class="center-block" type="password" placeholder="confirm" ng-model="userSignup.passwordConfirm" ng-pattern="{{userSignup.password}}" ng-minlength="8" ng-maxlength="20" required />
                                      
                                      <div class="help-block" ng-messages="signupForm.signupPasswordConfirm.$error" ng-if="signupForm.signupPasswordConfirm.$touched">
                                         <p ng-message="minlength">Your Password is too short.</p>

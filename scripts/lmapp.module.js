@@ -119,19 +119,27 @@
             
                 if (w <= 374) {
                     var programWidth = "246";
-                    var programHeight = "150";
+                    var programHeight = "138";
+                    var styleWidth = "330";
+                    var styleHeight = "170";
                 } else if (w <= 424) {
                     var programWidth = "301";
-                    var programHeight = "180";
+                    var programHeight = "169";
+                    var styleWidth = "385";
+                    var styleHeight = "201";
                 } else if (w <= 767) {
                     var programWidth = "351";
-                    var programHeight = "210";
+                    var programHeight = "197";
+                    var styleWidth = "435";
+                    var styleHeight = "229";
                 } else {
                     var programWidth = "640";
                     var programHeight = "360";
+                    var styleWidth = "724";
+                    var styleHeight = "392";
                 }
                 
-                $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed center-block\" style=\"width:" + programWidth + "px;height:" + programHeight + "px;\" >&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script>");
+                $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed center-block\" style=\"width:" + programWidth + "px;height:" + programHeight + "px;\" data-video-width=\"" + programWidth +"\" data-video-height=\"" + programHeight +"\">&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script><script>wistiaPlaylist = Wistia.playlist(\"" + programHashedId + "\", {version: \"v1\", theme: \"tab\",videoOptions: {volumeControl: true,autoPlay: true,videoWidth: \"" + programWidth + "\",videoHeight: \"" + programHeight + "\"},media_0_0: {autoPlay: false,controlsVisibleOnLoad: false}});</script>");
                 
                 $scope.selectedProgramId = programId;
                 
@@ -171,6 +179,22 @@
                         })
                     });
                     } else {
+                        programPlaylist.bind("afterembed", function(sectionIndex, videoIndex) {
+                            var currentVideo = programPlaylist.currentVideo();
+                            var videoId = currentVideo.hashedId();
+                            var isFreeVideo = false;
+                            $.each($rootScope.freeMedia, function(i, obj) {
+                                if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
+                            });
+                            
+                            if (!isFreeVideo) {
+                                programPlaylist.currentVideo().pause();
+                                $location.hash("lm-login");
+                                anchorSmoothScroll.scrollTo("lm-login");
+                            }
+                        
+                });
+                        
                         programPlaylist.bind("play", function(sectionIndex, videoIndex) {
                             var currentVideo = programPlaylist.currentVideo();
                             var videoId = currentVideo.hashedId();
@@ -549,10 +573,10 @@
                         console.log(anInvite);
                         anInvite[0].destroy({
                             success: function(invite) {
-                                signup(newUserType, 'invited');
+                                var newUserId = signup(newUserType, 'invited');
                                 var newUserUser = new UserUser();
                                 newUserUser.sender_id = senderId;
-                                newUserUser.target_id = $scope.userSignup.email;
+                                newUserUser.target_id = newUserId;
                                 newUserUser.save(null, {
                                     success: function(aUserUser) {
                                         console.log("User_User created.");
@@ -620,6 +644,7 @@
             console.log($scope.userSignup.stripeID);
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
+                    var userId = newUser.id;
                     $scope.signupForm.$setUntouched();
                     Parse.User.logOut();
                     $rootScope.loggedIn = false;
@@ -629,6 +654,7 @@
                     $scope.signupError = "You've successfully signed up! Check your email to verify.";
                     $scope.userSignup = {};
                     $rootScope.$apply();
+                    return userId;
                 },
                 error: function(newUser, error) {
                     $scope.signupForm.$setUntouched();
@@ -638,6 +664,7 @@
                     $scope.userSignup.password.$setUntouched();
                     $scope.userSignup.passwordConfirm.$setUntouched();
                     $rootScope.$apply();
+                    return null;
                 }
             });
         }
