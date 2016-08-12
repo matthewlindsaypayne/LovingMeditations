@@ -144,7 +144,20 @@
                 $scope.selectedProgramId = programId;
                 
                  $timeout(function () {
-                    var programPlaylist = Wistia.playlist(programHashedId);
+                    var programPlaylist = Wistia.playlist(programHashedId, {
+  version: "v1",
+  theme: "tab",
+  videoOptions: {
+    volumeControl: true,
+    autoPlay: true,
+    videoWidth: programWidth,
+    videoHeight: programHeight
+  },
+  media_0_0: {
+    autoPlay: false,
+    controlsVisibleOnLoad: false
+  }
+});
                     if ($rootScope.loggedIn) {
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
                         var currentVideo = programPlaylist.currentVideo();
