@@ -21,10 +21,10 @@
         
         $rootScope.sessionUser = Parse.User.current();
         $rootScope.loggedIn = ($rootScope.sessionUser != null);
-        console.log("User is : " + $rootScope.sessionUser);
+        $rootScope.premiumError = false;
     });
     
-    lmApp.filter('uniqueVideoFilter', function () {
+    lmApp.filter('uniqueVideoFilter', function ($rootScope) {
         return function(videos) {
             var out = [];
             var used = [];
@@ -37,6 +37,11 @@
                     if (videoId && used.indexOf(videoId) < 0) {
                         used.push(videoId);
                         video.uniqueVideoId = videoId;
+                        var isFreeVideo = false;
+                        $.each($rootScope.freeMedia, function(i, obj) {
+                            if (obj.hashed_id == video.hashed_id) { isFreeVideo = true; return false;}
+                        });
+                        video.isFree = isFreeVideo
                         out.push(video);
                     }
                 }
@@ -197,13 +202,14 @@
                             var videoId = currentVideo.hashedId();
                             var isFreeVideo = false;
                             $.each($rootScope.freeMedia, function(i, obj) {
-                                if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
+                                if (obj.hashed_id == videoId) { isFreeVideo = true; return false;}
                             });
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo().pause();
                                 $location.hash("login-container");
                                 anchorSmoothScroll.scrollTo("login-container");
+                                $rootScope.premiumError = true;
                             }
                         
                 });
@@ -213,13 +219,14 @@
                             var videoId = currentVideo.hashedId();
                             var isFreeVideo = false;
                             $.each($rootScope.freeMedia, function(i, obj) {
-                                if (obj.hashedId == videoId) { isFreeVideo = true; return false;}
+                                if (obj.hashed_id == videoId) { isFreeVideo = true; return false;}
                             });
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo().pause();
                                 $location.hash("login-container");
                                 anchorSmoothScroll.scrollTo("login-container");
+                                $rootScope.premiumError = true;
                             }
                         
                 });
@@ -299,12 +306,13 @@
                 
                 var isFreeVideo = false;
                 $.each($rootScope.freeMedia, function(i, obj) {
-                    if (obj.hashedId == meditationHashedId) { isFreeVideo = true; return false;}
+                    if (obj.hashed_id == meditationHashedId) { isFreeVideo = true; return false;}
                 });
                 
                 if (!$rootScope.loggedIn && !isFreeVideo) {
                     $location.hash("login-container");
                     anchorSmoothScroll.scrollTo("login-container");
+                    $rootScope.premiumError = true;
                 } else {
                     
                 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
@@ -367,7 +375,7 @@
                     //pause and scroll to signup section
                     var isFreeVideo = false;
                     $.each($rootScope.freeMedia, function(i, obj) {
-                        if (obj.hashedId == meditationHashedId) { isFreeVideo = true; return false;}
+                        if (obj.hashed_id == meditationHashedId) { isFreeVideo = true; return false;}
                     });
                 }
                 }, 1000);
@@ -561,6 +569,7 @@
                 .then(function (userList) {
                     if (userList.length > 0) {
                         $scope.signupError = "Sign up failed, username already exists.";
+                        $rootScope.premiumError = false;
                     } else {
             
             
@@ -601,6 +610,7 @@
                             },
                             error: function(myObject, error) {
                                 $scope.signupError = "Sign up failed, couldn't remove invite.";
+                                $rootScope.premiumError = false;
                             }
                         });                
                     } else {
@@ -624,6 +634,7 @@
                 $scope.displayBilling = false;
                 $scope.billingMonthly = false;
                 $scope.signupError = "Monthly signup failed";
+                $rootScope.premiumError = false;
                 console.log("Monthly signup failed");
                 console.log(data);
                 console.log(status);
@@ -640,6 +651,7 @@
                 $scope.displayBilling = false;
                 $scope.billingAnnually = false;
                 $scope.signupError = "Monthly signup failed";
+                $rootScope.premiumError = false;
                 console.log("Annual signup failed");
                 console.log(data);
                 console.log(status);
@@ -664,6 +676,7 @@
                     $scope.displayBilling = false;
                     $scope.billingMonthly = false;
                     $scope.billingAnnually = false;
+                    $rootScope.premiumError = false;
                     $scope.signupError = "You've successfully signed up! Check your email to verify.";
                     $scope.userSignup = {};
                     $rootScope.$apply();
@@ -671,6 +684,7 @@
                 },
                 error: function(newUser, error) {
                     $scope.signupForm.$setUntouched();
+                    $rootScope.premiumError = false;
                     $scope.signupError = "Signup failed.";
                     console.log(error);
                     $scope.userSignup.email.$setUntouched();
@@ -696,6 +710,7 @@
                                     location.reload();
                                 } else {
                                     $scope.loginError = "Update your billing information."
+                                    $rootScope.premiumError = false;
                                     Parse.User.logOut();
                                 }
                             })
@@ -703,6 +718,7 @@
                             // log error
                                 console.log(status);
                                 $scope.loginError = 'Failed to log in: ' + status;
+                                $rootScope.premiumError = false;
                                 Parse.User.logOut();
                             });
                     } else {
@@ -715,12 +731,14 @@
                     console.log(error.code);
                     console.log(error.message);
                     $scope.loginError = 'Failed to log in: ' + error.message;
+                    $rootScope.premiumError = false;
                     $rootScope.loggedIn = false;
                     $rootScope.$apply();
                 }
             });
             } else {
                 $scope.loginError = 'Attempted log in when user was already logged in.';
+                $rootScope.premiumError = false;
             }
         };
         
@@ -731,11 +749,13 @@
                 Parse.User.requestPasswordReset($scope.userLogin.username, {
                     success: function() {
                         $scope.loginError = "Password reset sent.";
+                        $rootScope.premiumError = false;
                     },
                     error: function(error) {
                         // Show the error message somewhere
                         console.log(error.code);
                         console.log(error.message);
+                        $rootScope.premiumError = false;
                         $scope.loginError = error.message;
                     }
                 });

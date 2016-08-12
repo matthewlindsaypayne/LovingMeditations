@@ -164,7 +164,9 @@ maximum-scale=1.0; user-scalable=no" />
                                 <div class="row">
                                     <div class="center-block">
                                         <div class="meditations-blurb border-white" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
-                                            <img class="meditations-blurb-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
+                                            <div style="position: relative; left: 0; top: 0;"><img class="meditations-blurb-image pull-left" style="position: relative; top: 0; left: 0;" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
+                                            <img ng-if="!video.isFree" style="position: absolute; top: 10px; left: 10px;" height="100" width="100" src="images/premiumBadge.png" />
+                                            </div>
                                             <span class="meditations-blurb-title">{{video.name}}</span><br/>
                                             <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span><br />
                                             <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
@@ -300,6 +302,7 @@ maximum-scale=1.0; user-scalable=no" />
                             </div>
                       <div class="row">
                         <div ng-hide="displayBilling === true">
+                            <div ng-if="premiumError === true" class="col-sm-offset-2 col-sm-8 border-white">This content is only available to members of the Loving Meditations Community.</div>
                          <div id="login-container" class="col-sm-5 text-center center-block">
                              <h3 class="center-block">Login</h3>
                              <form name="loginForm" ng-submit="loginForm.$valid && login()" novalidate>
@@ -313,7 +316,7 @@ maximum-scale=1.0; user-scalable=no" />
                                      
                                 </div>
                                 <div class="form-group">
-                                     <input id="login-password" name="loginPassword" class="center-block" type="password" placeholder="Password" ng-model="userLogin.password" required />
+                                     <input id="login-password" name="loginPassword" class="center-block" type="password" placeholder="password" ng-model="userLogin.password" required />
                                     
                                     <div class="help-block" ng-messages="loginForm.loginPassword.$error" ng-if="loginForm.loginPassword.$touched">
                                         <p ng-message="required">Your Password is required to log in.</p>
