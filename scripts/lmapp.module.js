@@ -18,7 +18,7 @@ var zoomEnable = function() {
 // if the device is an iProduct, apply the fix whenever the users touches an input
 if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent ) ) {
     // define as many target fields as your like 
-    $( ".search-form input, .contact-form input" )
+    $( ".search-form input, .contact-form input, input" )
         .on( { 'touchstart' : function() { zoomDisable() } } )
         .on( { 'touchend' : function() { setTimeout( zoomEnable , 500 ) } } );
  }
