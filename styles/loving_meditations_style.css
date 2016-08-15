@@ -247,18 +247,6 @@ footer {
         width: 301px;
         height: 180px;
     }
-    
-    select,
-    textarea,
-    input {
-        font-size: 16px;
-    }
-    
-    select:focus,
-    textarea:focus,
-    input:focus {
-        font-size: 16px;
-    }
 }
 
 @media (max-width: 1023px) {
@@ -270,18 +258,6 @@ footer {
         padding: 17px 5px;
         font-size: 15px;
     }
-    
-    select,
-    textarea,
-    input {
-        font-size: 16px;
-    }
-    
-    select:focus,
-    textarea:focus,
-    input:focus {
-        font-size: 16px;
-    }
 }
 
 @media (max-width: 424px) {
@@ -289,18 +265,4 @@ footer {
         width: 246px;
         height: 150px;
     }
-    
-    select,
-    textarea,
-    input {
-        font-size: 16px;
-    }
-    
-    select:focus,
-    textarea:focus,
-    input:focus {
-        font-size: 16px;
-    }
 }
-
-select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] { font-size: 20px; }
