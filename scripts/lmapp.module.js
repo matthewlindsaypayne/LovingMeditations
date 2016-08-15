@@ -6,15 +6,13 @@
 // define a function to disable zooming
 var zoomDisable = function() {
     $objHead.find( 'meta[name=viewport]' ).remove();
-    $objHead.prepend( '<meta name="viewport" 
-        content="width=device-width, initial-scale=1.0, user-scalable=0" />' );
+    $objHead.prepend( '<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />' );
 };
 
 // ... and another to re-enable it
 var zoomEnable = function() {
     $objHead.find( 'meta[name=viewport]' ).remove();
-    $objHead.prepend( '<meta name="viewport" 
-        content="width=device-width, initial-scale=1.0, user-scalable=1" />');
+    $objHead.prepend( '<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1" />');
 };
 
 // if the device is an iProduct, apply the fix whenever the users touches an input
