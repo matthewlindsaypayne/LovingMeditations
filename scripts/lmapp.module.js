@@ -694,7 +694,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
             $scope.userSignup.emailVerified = false;
             $scope.userSignup.stripeID = stripeID;
             $scope.userSignup.wasInvited = wasInvited;
-            $scope.userSignup.activeUntil = new Date(activeUntil);
+            $scope.userSignup.activeUntil = new Date(activeUntil*1000);
             console.log(stripeID);
             console.log($scope.userSignup.stripeID);
             $scope.userSignup.signUp(null, {
@@ -743,7 +743,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                             .success(function(data, status, headers, config) {
                                 var stripeCustomer = JSON.parse(data);
                                 var subscription = stripeCustomer.subscriptions.data[0];
-                                var currentPeriodEnd = new Date(subscription.current_period_end);
+                                var currentPeriodEnd = new Date(subscription.current_period_end * 1000);
                                 console.log(subscription);
                                 if (!stripeCustomer.delinquent && subscription.status == "active" && currentPeriodEnd.getTime() > currentDate.getTime()) {
                                     //update activeUntil
