@@ -91,7 +91,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 if (data.name == "Free") {
                     $rootScope.freeMedia = data.medias;
                 } else {
-                    alert("Free videos list not found.");
+                    console.log("Free videos list not found.");
                 }
             })
             .error(function(data, status, headers, config) {
@@ -196,10 +196,10 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                                 userVideo.playCount++;
                                 userVideo.save(null, {
                                     success: function (savedVideo) {
-                                        alert("User_Video updated!");
+                                        console.log("User_Video updated!");
                                     },
                                     error: function(savedVideo, error) {
-                                        alert("User_Video update failed, " + error.message);
+                                        console.log("User_Video update failed, " + error.message);
                                     }
                                 })
                             } else {
@@ -209,10 +209,10 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                                 userVideo.playCount = 1;
                                 userVideo.save(null, {
                                     success: function(savedVideo) {
-                                        alert("User_Video created!");
+                                        console.log("User_Video created!");
                                     },
                                     error: function(savedVideo, error) {
-                                        alert("User_Video creation failed, " + error.message);
+                                        console.log("User_Video creation failed, " + error.message);
                                     }
                                 })
                             }
@@ -618,12 +618,12 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 .then(function (anInvite) {
                     if (anInvite.length > 0) {
                         //if yes, signup
-                        var newUserType = anInvite[0].newUserType;
+                        var invitationType = anInvite[0].invitationType;
                         var senderId = anInvite[0].invitedByUserId;
                         console.log(anInvite);
                         anInvite[0].destroy({
                             success: function(invite) {
-                                var newUserId = signup(newUserType, 'invited');
+                                var newUserId = signup(invitationType, true, 'invited', '');
                                 var newUserUser = new UserUser();
                                 newUserUser.sender_id = senderId;
                                 newUserUser.target_id = newUserId;
@@ -655,7 +655,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         $scope.signupMonthly = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
             .success(function(response, status, headers, config) {
-                signup(0, JSON.parse(response).id);
+                signup(0, false, JSON.parse(response).id, JSON.parse(response).subscriptions.data[0].current_period_end);
             })
             .error(function(data, status) {
                 // log error
@@ -672,7 +672,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         $scope.signupAnnually = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
             .success(function(response, status, headers, config) {
-                signup(0, JSON.parse(response).id);
+                signup(0, false, JSON.parse(response).id, JSON.parse(response).subscriptions.data[0].current_period_end);
             })
             .error(function(data, status) {
                 // log error
@@ -686,13 +686,15 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
             });
         }
         
-        function signup(userType, stripeID) {
+        function signup(userType, wasInvited, stripeID, activeUntil) {
             $scope.userSignup.username = $scope.userSignup.email;
             $scope.userSignup.userType = userType;
             $scope.userSignup.patientType = parseInt($scope.userSignup.patientType);
             $scope.userSignup.programEnrolledIn = "";
             $scope.userSignup.emailVerified = false;
             $scope.userSignup.stripeID = stripeID;
+            $scope.userSignup.wasInvited = wasInvited;
+            $scope.userSignup.activeUntil = activeUntil;
             console.log(stripeID);
             console.log($scope.userSignup.stripeID);
             $scope.userSignup.signUp(null, {
@@ -728,13 +730,24 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
             if ($rootScope.loggedIn == false) {
             LMUser.logIn($scope.userLogin.username, $scope.userLogin.password, {
                 success: function(loggedInUser) {
-                    if (loggedInUser.stripeID && loggedInUser.stripeID != 'invited') {
-                        //check stripe
-                        $http.get('https://lmserver-1281.appspot.com/customers/' + loggedInUser.stripeID) 
+                    if (loggedInUser.wasInvited || loggedInUser.userType == 1 || loggedInUser.userType == 2) {
+                        //allow login
+                        $rootScope.loggedIn = true;
+                        $rootScope.$apply();
+                        location.reload();
+                    } else if (loggedInUser.stripeID && loggedInUser.stripeID != 'invited') {
+                        var currentDate = new Date();
+                        if (loggedInUser.activeUntil < currentDate) {
+                            //check stripe
+                            $http.get('https://lmserver-1281.appspot.com/customers/' + loggedInUser.stripeID) 
                             .success(function(data, status, headers, config) {
                                 var stripeCustomer = JSON.parse(data);
                                 var subscription = stripeCustomer.subscriptions.data[0];
-                                if (!stripeCustomer.delinquent && subscription.status == "active") {
+                                console.log(subscription);
+                                if (!stripeCustomer.delinquent && subscription.status == "active" && subscription.current_period_end > currentDate) {
+                                    //update activeUntil
+                                    loggedInUser.activeUntil = subscription.current_period_end
+                                    //save this
                                     location.reload();
                                 } else {
                                     $scope.loginError = "Update your billing information."
@@ -749,10 +762,17 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                                 $rootScope.premiumError = false;
                                 Parse.User.logOut();
                             });
+                        } else {
+                            //allow login
+                            $rootScope.loggedIn = true;
+                            $rootScope.$apply();
+                            location.reload();
+                        }
                     } else {
-                        $rootScope.loggedIn = true;
-                        $rootScope.$apply();
-                        location.reload();
+                        //reject for improper set up
+                        $scope.loginError = 'Failed to log in: missing Stripe ID and not invited';
+                        $rootScope.premiumError = false;
+                        Parse.User.logOut();
                     }
                 },
                 error: function(loggedInUser, error) {
@@ -865,7 +885,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                         $scope.inviteError = 'Already been invited, can\'t again.';
                     } else {
                         $scope.inviteTarget.invitedByUserId = $rootScope.sessionUser.id;
-                        $scope.inviteTarget.newUserType = ($rootScope.sessionUser.userType - 1);
+                        $scope.inviteTarget.invitationType = ($rootScope.sessionUser.userType - 1);
                         $scope.inviteTarget.save(null, {
                             success: function(sentInvite) {
                                 
@@ -908,7 +928,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 })
                 .catch(function (error) {
                     // log error
-                    alert("Invite retrieval promise failed.");
+                    console.log("Invite retrieval promise failed.");
                 });
        };
     });

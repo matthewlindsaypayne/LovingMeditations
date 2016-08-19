@@ -10,6 +10,8 @@
                 this.patientType = 0;
                 this.programEnrolledIn = 0;
                 this.stripeID = "";
+                this.wasInvited = false;
+                this.activeUntil = "";
             },
             
             activeUsersInvited: function() {
@@ -127,6 +129,22 @@
             return this.set("stripeID", aValue);
         });
         
+        // WasInvited property
+        User.prototype.__defineGetter__("wasInvited", function() {
+            return this.get("wasInvited");
+        });
+        User.prototype.__defineSetter__("wasInvited", function(aValue) {
+            return this.set("wasInvited", aValue);
+        });
+        
+        // ActiveUntil property
+        User.prototype.__defineGetter__("activeUntil", function() {
+            return this.get("activeUntil");
+        });
+        User.prototype.__defineSetter__("activeUntil", function(aValue) {
+            return this.set("activeUntil", aValue);
+        });
+        
         return User;
     });
     
@@ -135,7 +153,7 @@
             initialize: function(attrs, options) {
                 this.invitedByUserId = {};
                 this.email = "";
-                this.newUserType = 0;
+                this.invitationType = 0;
             }
         });
         
@@ -158,11 +176,11 @@
         });
         
         // NewUserType property
-        Invite.prototype.__defineGetter__("newUserType", function() {
-            return this.get("newUserType");
+        Invite.prototype.__defineGetter__("invitationType", function() {
+            return this.get("invitationType");
         });
-        Invite.prototype.__defineSetter__("newUserType", function(aValue) {
-            return this.set("newUserType", aValue);
+        Invite.prototype.__defineSetter__("invitationType", function(aValue) {
+            return this.set("invitationType", aValue);
         });
         
         return Invite;
