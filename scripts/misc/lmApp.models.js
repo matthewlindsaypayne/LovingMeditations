@@ -246,6 +246,7 @@
             this.description = '';
             this.duration = null;
             this.thumbnailUrl = '';
+            this.isFree = false;
             this.tags = {};
         }
         
@@ -257,13 +258,14 @@
             this.adviserVideos = [];
         };
         
-        AdviserVideoCollection.prototype.addVideo = function(hashedId, name, description, duration, thumbnailUrl, tags) {
+        AdviserVideoCollection.prototype.addVideo = function(hashedId, name, description, duration, thumbnailUrl, isFree, tags) {
             var adviserVideo = new AdviserVideo();
             adviserVideo.hashedId = hashedId;
             adviserVideo.name = name;
             adviserVideo.description = description;
             adviserVideo.duration = duration;
             adviserVideo.thumbnailUrl = thumbnailUrl;
+            adviserVideo.isFree = isFree;
             adviserVideo.tags = tags;
             
             this.adviserVideos.push(adviserVideo);

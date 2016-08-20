@@ -89,17 +89,17 @@
                             <img class="section-img" height="100px" src="images/programs.png" align="middle" />
                         </div>
                         <div id="programs-row" class="row">
-                            <div class="col-sm-5 text-center" ng-click="changeProgramType('Patient')" ng-class="{'border-white': selectedProgramType=='Patient'}">
+                            <div class="col-sm-5 text-center" ng-click="changeProgramType('Patient')" ng-class="{'border-white button-highlight': selectedProgramType=='Patient'}">
                                 <btn>Patient</btn>
                             </div>
-                            <div class="col-sm-offset-2 col-sm-5 text-center" ng-click="changeProgramType('Caregiver')" ng-class="{'border-white': selectedProgramType=='Caregiver'}">
+                            <div class="col-sm-offset-2 col-sm-5 text-center" ng-click="changeProgramType('Caregiver')" ng-class="{'border-white button-highlight': selectedProgramType=='Caregiver'}">
                                 <btn>Caregiver</btn>
                             </div>
                         </div>
                         <div class="row">
                             <ul class="center-block" >
                                 <li ng-repeat="program in programs | filter: programDisplayFilter">
-                                    <div class="border-white" ng-click="selectProgram(program.id, program.hashedId)">
+                                    <div class="program-header border-white" ng-click="selectProgram(program.id, program.hashedId)">
                                         <btn>{{program.name | ProgramNameFilter}}</btn>
                                     </div>
                                 </li>
@@ -118,26 +118,29 @@
                                 <img class="section-img" height="100px" src="images/meditations.png" align="middle" />
                             </div>
                             <div class="adviser-button row" ng-hide="false">
-                                <button class="border-white" ng-click="toggleAdviser()">Adviser</button>
+                                <button class="button-highlight border-white" ng-click="toggleAdviser()">Adviser</button>
                             </div>
                             
                             <div ng-show="showAdviser === true">
                                 <div class="adviser-question border-white">{{adviserQuestionText}}</div>
-                                <div class="col-xs-5 text-center border-white" ng-click="adviserAnswer(false)">
+                                <div class="col-xs-5 text-center form-button border-white" ng-click="adviserAnswer(false)">
                                     <button>No</button>
                                 </div>
-                                <div class="col-xs-offset-2 col-xs-5 border-white" ng-click="adviserAnswer(true)">
+                                <div class="col-xs-offset-2 col-xs-5 form-button border-white" ng-click="adviserAnswer(true)">
                                     <button>Yes</button>
                                 </div>
                                 <div>
-                                    <button class="border-white adviser-display-videos" ng-click="displayAdviserBlurbs()">Display Videos ({{adviserVideoCollection.adviserVideos.length}})</button>
+                                    <button class="border-white button-highlight adviser-display-videos" ng-click="displayAdviserBlurbs()">Display Videos ({{adviserVideoCollection.adviserVideos.length}})</button>
                                 </div>
                             </div>
                         
                             <div ng-show="showAdviserBlurbs === true">
                                 <div class="center-block">
                                     <div class="meditations-blurb border-white" ng-repeat="video in adviserVideoCollection.adviserVideos" ng-click="displayAdviserMeditation(video.hashedId)">
-                                        <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnailUrl)}}" />
+                                        <div class="meditations-blurb-image-section">
+                                            <img class="meditations-blurg-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnailUrl)}}" />
+                                            <img ng-if="loggedIn === false && video.isFree === false" class="meditations-blurb-premium" height="100" width="100" src="images/premiumBadge.png" />
+                                        </div>
                                         <span class="meditations-blurb-title">{{video.name}}</span><br/>
                                         <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span>
                                         
@@ -152,20 +155,21 @@
                             
                             <div id="meditation-blurb-window" ng-show="showAdviser === false && showAdviserMeditation === false && showAdviserBlurbs === false">
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="meditationPrevious()">
+                                    <button class="border-white form-button" ng-disabled="currentPage == 0" ng-click="meditationPrevious()">
                                         Previous
                                     </button>
                                     {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="meditationNext()">
+                                    <button class="border-white form-button" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="meditationNext()">
                                         Next
                                     </button>
                                 </div>
                                 <div class="row">
                                     <div class="center-block">
                                         <div class="meditations-blurb border-white" ng-repeat="video in videosList | startFrom:currentPage*pageSize | limitTo:pageSize" ng-click="selectMeditation(video.id, video.hashed_id, video.uniqueVideoId)">
-                                            <div style="position: relative; left: 0; top: 0;"><img class="meditations-blurb-image pull-left" style="position: relative; top: 0; left: 0;" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
-                                            <img ng-if="loggedIn === false && video.isFree === false" style="position: absolute; top: 10px; left: 10px;" height="100" width="100" src="images/premiumBadge.png" />
-                                            </div>
+                                            <div class="meditations-blurb-image-section">
+                                            <img class="meditations-blurb-image pull-left" ng-src="{{formatMeditationBlurbImage(video.thumbnail.url)}}" />
+                                            <img ng-if="loggedIn === false && video.isFree === false" class="meditations-blurb-premium" height="100" width="100" src="images/premiumBadge.png" />
+                                        </div>
                                             <span class="meditations-blurb-title">{{video.name}}</span><br/>
                                             <span class="meditations-blurb-description">{{meditationDescriptionFilter(video.description)}}</span><br />
                                             <span class="meditations-blurb-duration">{{video.duration | secondsToHHmmss}}</span>
@@ -173,11 +177,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="currentPage == 0" ng-click="meditationPrevious()">
+                                    <button class="border-white form-button" ng-disabled="currentPage == 0" ng-click="meditationPrevious()">
                                         Previous
                                     </button>
                                         {{currentPage+1}}/{{numberOfPages(videosList.length, pageSize)}}
-                                    <button class="border-white" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="meditationNext()">
+                                    <button class="border-white form-button" ng-disabled="currentPage >= videosList.length/pageSize - 1" ng-click="meditationNext()">
                                         Next
                                     </button>
                                 </div>
@@ -200,11 +204,11 @@
                             <h3>Active Users</h3>
                             <div ng-show="activeUsers.count > 0">
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                    <button class="border-white form-button" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
                                     </button>
                                     {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                    <button class="border-white form-button" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
                                         Next
                                     </button>
                                 </div>
@@ -216,11 +220,11 @@
                                     </ul>
                                 </div>
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
+                                    <button class="border-white form-button" ng-disabled="activeUsers.currentPage == 0" ng-click="activeUsers.currentPage=activeUsers.currentPage-1">
                                         Previous
                                     </button>
                                         {{activeUsers.currentPage+1}}/{{numberOfPages(activeUsers.count, activeUsers.pageSize)}}
-                                    <button class="border-white" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
+                                    <button class="border-white form-button" ng-disabled="activeUsers.currentPage >= activeUsers.count/activeUsers.pageSize - 1" ng-click="activeUsers.currentPage=activeUsers.currentPage+1">
                                         Next
                                     </button>
                                 <br />
@@ -232,11 +236,11 @@
                             <h3>Invites Sent</h3>
                             <div ng-show="invitesSent.count > 0">
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                    <button class="border-white form-button" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
                                     </button>
                                     {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                    <button class="border-white form-button" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
                                         Next
                                     </button>
                                 </div>
@@ -250,11 +254,11 @@
                                     </ul>
                                 </div>
                                 <div class="row">
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
+                                    <button class="border-white form-button" ng-disabled="invitesSent.currentPage == 0" ng-click="invitesSent.currentPage=invitesSent.currentPage-1">
                                         Previous
                                     </button>
                                     {{invitesSent.currentPage+1}}/{{numberOfPages(invitesSent.count, invitesSent.pageSize)}}
-                                    <button class="border-white" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
+                                    <button class="border-white form-button" ng-disabled="invitesSent.currentPage >= invitesSent.count/invitesSent.pageSize - 1" ng-click="invitesSent.currentPage=invitesSent.currentPage+1">
                                         Next
                                     </button>
                                 </div>
@@ -285,7 +289,7 @@
                                         {{inviteError}}
                                     </div>
                                     <div>
-                                        <button class="border-white" type="submit" value="Send">Invite</button>
+                                        <button class="border-white button-highlight" type="submit" value="Send">Invite</button>
                                     </div>
                                 </form>
                             </div>
@@ -301,7 +305,7 @@
                             </div>
                       <div class="row">
                         <div ng-hide="displayBilling === true">
-                            <div ng-if="premiumError === true" class="col-sm-offset-2 col-sm-8 border-white">This content is only available to members of the Loving Meditations Community.</div>
+                            <div ng-if="premiumError === true" class="col-sm-offset-2 col-sm-8 button-highlight border-white">This content is only available to members of the Loving Meditations Community.</div>
                          <div id="login-container" class="col-sm-5 text-center center-block">
                              <h3 class="center-block">Login</h3>
                              <form name="loginForm" ng-submit="loginForm.$valid && login()" novalidate>
@@ -324,12 +328,13 @@
                                  <div>
                                     {{loginError}}
                                  </div>
-                                 <div class="border-white">
-                                    <button type="submit" class="center-block">Log In</button>
+                                 <div >
+                                    <button class="button-highlight border-white" type="submit">Log In</button>
                                  </div>
                              </form>
-                             <div class="border-white"  ng-click="forgotPassword()">
-                                <button class="center-block">Forget your Password?</button>
+                             <div ng-click="forgotPassword()">
+                                 <br />
+                                <button class="form-button border-white">Forget your Password?</button>
                              </div>
                          </div>
                           
@@ -378,8 +383,8 @@
                                  <div>
                                     {{signupError}}
                                  </div>
-                                 <div class="border-white">
-                                    <button type="submit" class="center-block" value="Send">Sign Up</button>
+                                 <div>
+                                    <button type="submit" class="button-highlight border-white" value="Send">Sign Up</button>
                                  </div>
                                  
                               </form>
@@ -456,23 +461,23 @@
                             <div>
                                 {{signoutError}}
                             </div>
-                            <div class="col-xs-offset-4 col-xs-4 border-white" ng-click="logout()">
+                            <div class="col-xs-offset-4 col-xs-4 button-highlight border-white" ng-click="logout()">
                                 <button>Log Out</button>
                             </div>
                             <br />
                             <br />
-                            <div class="col-xs-offset-4 col-sm-4 border-white" ng-hide="!canCancel" ng-click="displayReady = true">
+                            <div class="col-xs-offset-4 col-sm-4 form-button border-white" ng-hide="!canCancel" ng-click="displayReady = true">
                                 <button>Cancel Subscription</button>
                             </div>
                         </div>
                         <div class="row" ng-show="displayReady === true">
                             <h2>Are you sure?</h2>
-                            <div class="col-xs-offset-4 col-xs-4 border-white" ng-click="displayReady = false">
+                            <div class="col-xs-offset-4 col-xs-4 button-highlight border-white" ng-click="displayReady = false">
                                 <button>Go Back</button>
                             </div>
                             <br />
                             <br />
-                            <div class="col-xs-offset-4 col-xs-4 border-white" ng-click="cancelSubscription()">
+                            <div class="col-xs-offset-4 col-xs-4 form-button border-white" ng-click="cancelSubscription()">
                                 <button>Cancel Subscription</button>
                             </div>
                         </div>
@@ -538,7 +543,7 @@
                                             <p ng-message="required">A message is required.</p>
                                         </div>
                                     </div>
-                                    <div class="pull-right border-white">
+                                    <div class="pull-right button-highlight border-white">
                                         <button type="submit" value="Send">Send</button>
                                     </div>            
                                 </form>

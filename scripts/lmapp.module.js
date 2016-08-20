@@ -186,6 +186,17 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
   }
 });
                     if ($rootScope.loggedIn) {
+                        if (programId.toString() != $rootScope.sessionUser.programEnrolledIn) {
+                            $rootScope.sessionUser.programEnrolledIn = programId.toString();
+                            $rootScope.sessionUser.save(null, {
+                                    success: function (savedVideo) {
+                                        console.log("Program enrolled in updated!");
+                                    },
+                                    error: function(savedVideo, error) {
+                                        console.log("Program enrolled in update failed, " + error.message);
+                                    }
+                            });
+                        }
                     programPlaylist.bind("end", function(sectionIndex, videoIndex) {
                         var currentVideo = programPlaylist.currentVideo();
                         var videoId = currentVideo.hashedId();
@@ -229,8 +240,8 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo().pause();
-                                $location.hash("login-container");
-                                anchorSmoothScroll.scrollTo("login-container");
+                                $location.hash("wrapper-login");
+                                anchorSmoothScroll.scrollTo("wrapper-login");
                                 $rootScope.premiumError = true;
                                 $scope.selectedProgramId = -1;
                                 $scope.selectedProgramEmbedSrc = '';
@@ -249,8 +260,8 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                             
                             if (!isFreeVideo) {
                                 programPlaylist.currentVideo().pause();
-                                $location.hash("login-container");
-                                anchorSmoothScroll.scrollTo("login-container");
+                                $location.hash("wrapper-login");
+                                anchorSmoothScroll.scrollTo("wrapper-login");
                                 $rootScope.premiumError = true;
                                 $scope.selectedProgramId = -1;
                                 $scope.selectedProgramEmbedSrc = '';
@@ -338,8 +349,8 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 });
                 
                 if (!$rootScope.loggedIn && !isFreeVideo) {
-                    $location.hash("login-container");
-                    anchorSmoothScroll.scrollTo("login-container");
+                    $location.hash("wrapper-login");
+                    anchorSmoothScroll.scrollTo("wrapper-login");
                     $rootScope.premiumError = true;
                 } else {
                     
@@ -484,7 +495,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 $scope.videosList.forEach(function(video) {
                     try {
                         var tags = video.description.match("<h1>(.*)</h1>")[1].split(",");
-                        $scope.adviserVideoCollection.addVideo(video.hashed_id, video.name, video.description, video.duration, video.thumbnail.url, tags);
+                        $scope.adviserVideoCollection.addVideo(video.hashed_id, video.name, video.description, video.duration, video.thumbnail.url, video.isFree, tags);
                     } catch (err) {
                         console.log("Poorly formed description.");
                     }
@@ -519,26 +530,39 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         }
         
         $scope.displayAdviserMeditation = function(hashedId) {
-            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
-            
-            if (w <= 374) {
-                var meditationWidth = "246";
-                var meditationHeight = "150";
-            } else if (w <= 424) {
-                var mediationWidth = "301";
-                var meditationHeight = "180";
-            } else if (w <= 767) {
-                var meditationWidth = "351";
-                var meditationHeight = "210";
+            var isFreeVideo = false;
+                
+            $.each($rootScope.freeMedia, function(i, obj) {
+                if (obj.hashed_id == hashedId) { isFreeVideo = true; return false;}
+            });
+                
+            if (!$rootScope.loggedIn && !isFreeVideo) {
+                $location.hash("wrapper-login");
+                anchorSmoothScroll.scrollTo("wrapper-login");
+                $rootScope.premiumError = true;
             } else {
-                var meditationWidth = "640";
-                var meditationHeight = "360";
-            }
+                
+                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
             
-            $scope.selectedAdviserMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"adviserMeditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(hashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
-            $scope.showAdviser = false;
-            $scope.showAdviserBlurbs = false;
-            $scope.showAdviserMeditation = true;
+                if (w <= 374) {
+                    var meditationWidth = "246";
+                    var meditationHeight = "150";
+                } else if (w <= 424) {
+                    var mediationWidth = "301";
+                    var meditationHeight = "180";
+                } else if (w <= 767) {
+                    var meditationWidth = "351";
+                    var meditationHeight = "210";
+                } else {
+                    var meditationWidth = "640";
+                    var meditationHeight = "360";
+                }
+            
+                $scope.selectedAdviserMeditationEmbed = $sce.trustAsHtml("<script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/E-v1.js\" async></script><div id=\"adviserMeditationVideo\" class=\"wistia_embed wistia_async_" + $sce.trustAsHtml(hashedId) + " center-block\" style=\"height:" + meditationHeight + "px;width:" + mediationWidth + "px\">&nbsp;</div>");
+                $scope.showAdviser = false;
+                $scope.showAdviserBlurbs = false;
+                $scope.showAdviserMeditation = true;
+            }
         }
         
     });
@@ -621,9 +645,9 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                         var invitationType = anInvite[0].invitationType;
                         var senderId = anInvite[0].invitedByUserId;
                         console.log(anInvite);
+                        var newUserId = signup(invitationType, true, 'invited', '');
                         anInvite[0].destroy({
                             success: function(invite) {
-                                var newUserId = signup(invitationType, true, 'invited', '');
                                 var newUserUser = new UserUser();
                                 newUserUser.sender_id = senderId;
                                 newUserUser.target_id = newUserId;
@@ -637,7 +661,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                                 })
                             },
                             error: function(myObject, error) {
-                                $scope.signupError = "Sign up failed, couldn't remove invite.";
+                                $scope.signupError = "Couldn't remove invite.";
                                 $rootScope.premiumError = false;
                             }
                         });                
@@ -747,8 +771,16 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                                 console.log(subscription);
                                 if (!stripeCustomer.delinquent && subscription.status == "active" && currentPeriodEnd.getTime() > currentDate.getTime()) {
                                     //update activeUntil
-                                    loggedInUser.activeUntil = subscription.current_period_end
+                                    loggedInUser.activeUntil = subscription.current_period_end;
                                     //save this
+                                    loggedInUser.save({
+                                        success: function(user) { 
+                                            console.log("Active date updated for user.");
+                                        },
+                                        error: function(user, error) {
+                                            console.log("Failed to update active date for user.");
+                                        }
+                                    });
                                     location.reload();
                                 } else {
                                     $scope.loginError = "Update your billing information, out of date."
