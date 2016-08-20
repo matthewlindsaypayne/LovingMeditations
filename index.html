@@ -100,7 +100,7 @@
                             <ul class="center-block" >
                                 <li ng-repeat="program in programs | filter: programDisplayFilter">
                                     <div class="program-header border-white" ng-click="selectProgram(program.id, program.hashedId)">
-                                        <btn>{{program.name | ProgramNameFilter}}</btn>
+                                        <btn>{{program.name | programNameFilter}}</btn>
                                     </div>
                                 </li>
                         </div>
@@ -486,7 +486,7 @@
                         </div>
                     </section>
                     
-                    <section id="lm-contact" ng-controller="ContactController as cc">
+                    <section id="lm-contact">
                             <div class="row">
                                 <img class="section-img" height="100px" src="images/invites.png" align="middle" />
                             </div>

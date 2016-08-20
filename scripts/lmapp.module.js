@@ -45,33 +45,6 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         $rootScope.loggedIn = ($rootScope.sessionUser != null);
         $rootScope.premiumError = false;
     });
-    
-    lmApp.filter('uniqueVideoFilter', function ($rootScope) {
-        return function(videos) {
-            var out = [];
-            var used = [];
-            var videoId, matches;
-            
-            angular.forEach(videos, function(video) {
-                matches = video.description.match("<h2>(.*)</h2>");
-                if (matches) {
-                videoId = matches[1];
-                    if (videoId && used.indexOf(videoId) < 0) {
-                        used.push(videoId);
-                        video.uniqueVideoId = videoId;
-                        var isFreeVideo = false;
-                        $.each($rootScope.freeMedia, function(i, obj) {
-                            if (obj.hashed_id == video.hashed_id) { isFreeVideo = true; return false;}
-                        });
-                        video.isFree = isFreeVideo
-                        out.push(video);
-                    }
-                }
-            });
-            
-            return out;
-        }
-    });
 
     lmApp.controller('LovingMeditationsController', function($scope, $http, $rootScope) {
         $rootScope.programs = [];
@@ -142,29 +115,21 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         
         $scope.selectProgram = function(programId, programHashedId) {
             if ($scope.selectedProgramId == -1) {
+                //opening Program
                 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
-            
+                var programWidth = "640";
+                var programHeight = "360";
+                
                 if (w <= 374) {
-                    var programWidth = "246";
-                    var programHeight = "138";
-                    var styleWidth = "330";
-                    var styleHeight = "170";
+                    programWidth = "246";
+                    programHeight = "138";
                 } else if (w <= 424) {
-                    var programWidth = "301";
-                    var programHeight = "169";
-                    var styleWidth = "385";
-                    var styleHeight = "201";
+                    programWidth = "301";
+                    programHeight = "169";
                 } else if (w <= 767) {
-                    var programWidth = "351";
-                    var programHeight = "197";
-                    var styleWidth = "435";
-                    var styleHeight = "229";
-                } else {
-                    var programWidth = "640";
-                    var programHeight = "360";
-                    var styleWidth = "724";
-                    var styleHeight = "392";
-                }
+                    programWidth = "351";
+                    programHeight = "197";
+                } 
                 
                 $scope.selectedProgramEmbed = $sce.trustAsHtml("<div id=\"wistia_" + programHashedId + "\" class=\"wistia_embed center-block\" style=\"width:" + programWidth + "px;height:" + programHeight + "px;\" data-video-width=\"" + programWidth +"\" data-video-height=\"" + programHeight +"\">&nbsp;</div><script charset=\"ISO-8859-1\" src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script><script src=\"http://fast.wistia.com/assets/external/playlist-v1.js\"></script><script>wistiaPlaylist = Wistia.playlist(\"" + programHashedId + "\", {version: \"v1\", theme: \"tab\",videoOptions: {volumeControl: true,autoPlay: true,videoWidth: \"" + programWidth + "\",videoHeight: \"" + programHeight + "\"},media_0_0: {autoPlay: false,controlsVisibleOnLoad: false}});</script>");
                 
@@ -172,20 +137,22 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 
                  $timeout(function () {
                     var programPlaylist = Wistia.playlist(programHashedId, {
-  version: "v1",
-  theme: "tab",
-  videoOptions: {
-    volumeControl: true,
-    autoPlay: true,
-    videoWidth: programWidth,
-    videoHeight: programHeight
-  },
-  media_0_0: {
-    autoPlay: false,
-    controlsVisibleOnLoad: false
-  }
-});
+                        version: "v1",
+                        theme: "tab",
+                        videoOptions: {
+                            volumeControl: true,
+                            autoPlay: true,
+                            videoWidth: programWidth,
+                            videoHeight: programHeight
+                        },
+                        media_0_0: {
+                            autoPlay: false,
+                            controlsVisibleOnLoad: false
+                        }
+                    });
+                     
                     if ($rootScope.loggedIn) {
+                        //update program enrolled in
                         if (programId.toString() != $rootScope.sessionUser.programEnrolledIn) {
                             $rootScope.sessionUser.programEnrolledIn = programId.toString();
                             $rootScope.sessionUser.save(null, {
@@ -273,6 +240,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 }, 1000);
                 
             } else {
+                //closing Program
                 $scope.selectedProgramId = -1;
                 $scope.selectedProgramEmbedSrc = '';
             }
@@ -295,10 +263,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
             var thumbnailHeight = "150";
             return item.replace("image_crop_resized=200x120", "image_crop_resized=" + thumbnailWidth + "x" + thumbnailHeight);
         };
-        
-        $scope.trustSrc = function(src) {
-            return $sce.trustAsResourceUrl(src);
-        };
+
     });
     
     lmApp.controller('MeditationsController', function($scope, $http, $sce, $q, $location, $filter, $timeout, $rootScope, anchorSmoothScroll, UserVideo, AdviserVideoCollection) {
@@ -330,7 +295,6 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                 $scope.videosList = $filter('uniqueVideoFilter')(data);
                 $scope.videoCount = $scope.videosList.length;
         });
-        
         
         $scope.numberOfPages = function() {
             try {
@@ -408,13 +372,6 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                                 })
                             }
                         })
-                    });
-                } else {
-                    //check if meditationHashedId is in list of free videos
-                    //pause and scroll to signup section
-                    var isFreeVideo = false;
-                    $.each($rootScope.freeMedia, function(i, obj) {
-                        if (obj.hashed_id == meditationHashedId) { isFreeVideo = true; return false;}
                     });
                 }
                 }, 1000);
@@ -567,27 +524,6 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         
     });
     
-    lmApp.filter('ProgramNameFilter', function () {
-        return function(programName) {
-                    var programDisplayName = programName.split('_')[2];
-                    return programDisplayName;
-                }
-    });
-    
-    lmApp.filter('secondsToHHmmss', function($filter) {
-        return function(seconds) {
-            return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
-        };
-    });
-    
-    lmApp.filter('startFrom', function() {
-        return function(input, start) {
-            if (input != null && input.length > 0) {
-                start = +start; //parse to int
-                return input.slice(start)
-            }
-        }
-    });
     
     lmApp.controller('LoginController', function($scope, $http, $q, LMUser, UserUser, Invite, $rootScope) {
         $scope.userSignup = new LMUser();
@@ -645,20 +581,10 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                         var invitationType = anInvite[0].invitationType;
                         var senderId = anInvite[0].invitedByUserId;
                         console.log(anInvite);
-                        var newUserId = signup(invitationType, true, 'invited', '');
+                        signup(invitationType, true, 'invited', '', senderId);
                         anInvite[0].destroy({
                             success: function(invite) {
-                                var newUserUser = new UserUser();
-                                newUserUser.sender_id = senderId;
-                                newUserUser.target_id = newUserId;
-                                newUserUser.save(null, {
-                                    success: function(aUserUser) {
-                                        console.log("User_User created.");
-                                    },
-                                    error: function(aUserUser, error) {
-                                        console.log("Error creating User_User.");
-                                    }
-                                })
+                                console.log("Invite successfully destroyed.");
                             },
                             error: function(myObject, error) {
                                 $scope.signupError = "Couldn't remove invite.";
@@ -679,7 +605,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         $scope.signupMonthly = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeMonthly/" + token.id + "/" + $scope.userSignup.email)
             .success(function(response, status, headers, config) {
-                signup(0, false, JSON.parse(response).id, JSON.parse(response).subscriptions.data[0].current_period_end);
+                signup(0, false, JSON.parse(response).id, JSON.parse(response).subscriptions.data[0].current_period_end, null);
             })
             .error(function(data, status) {
                 // log error
@@ -696,7 +622,7 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         $scope.signupAnnually = function(token) {
             $http.get("https://lmserver-1281.appspot.com/subscribeAnnually/" + token.id + "/" + $scope.userSignup.email)
             .success(function(response, status, headers, config) {
-                signup(0, false, JSON.parse(response).id, JSON.parse(response).subscriptions.data[0].current_period_end);
+                signup(0, false, JSON.parse(response).id, JSON.parse(response).subscriptions.data[0].current_period_end, null);
             })
             .error(function(data, status) {
                 // log error
@@ -710,7 +636,21 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
             });
         }
         
-        function signup(userType, wasInvited, stripeID, activeUntil) {
+        function createUserUser (senderId, targetId) {
+            var newUserUser = new UserUser();
+            newUserUser.sender_id = senderId;
+            newUserUser.target_id = targetId;
+            newUserUser.save(null, {
+                success: function(aUserUser) {
+                    console.log("User_User created.");
+                },
+                error: function(aUserUser, error) {
+                    console.log("Error creating User_User.");
+                }
+            });
+        }
+        
+        function signup(userType, wasInvited, stripeID, activeUntil, senderId) {
             $scope.userSignup.username = $scope.userSignup.email;
             $scope.userSignup.userType = userType;
             $scope.userSignup.patientType = parseInt($scope.userSignup.patientType);
@@ -724,6 +664,9 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
             $scope.userSignup.signUp(null, {
                 success: function(newUser) {
                     var userId = newUser.id;
+                    if (wasInvited) {
+                        createUserUser(senderId, userId);
+                    }
                     $scope.signupForm.$setUntouched();
                     Parse.User.logOut();
                     $rootScope.loggedIn = false;
@@ -734,7 +677,6 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                     $scope.signupError = "You've successfully signed up! Check your email to verify.";
                     $scope.userSignup = {};
                     $rootScope.$apply();
-                    return userId;
                 },
                 error: function(newUser, error) {
                     $scope.signupForm.$setUntouched();
@@ -745,7 +687,6 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
                     $scope.userSignup.password.$setUntouched();
                     $scope.userSignup.passwordConfirm.$setUntouched();
                     $rootScope.$apply();
-                    return null;
                 }
             });
         }
@@ -1023,8 +964,53 @@ if( navigator.userAgent.length && /iPhone|iPad|iPod/i.test( navigator.userAgent 
         }
     });
     
-    lmApp.controller('ContactController', function($scope, $http, $q) {
-        
+    lmApp.filter('programNameFilter', function () {
+        return function(programName) {
+                    var programDisplayName = programName.split('_')[2];
+                    return programDisplayName;
+                }
+    });
+    
+    lmApp.filter('secondsToHHmmss', function($filter) {
+        return function(seconds) {
+            return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
+        };
+    });
+    
+    lmApp.filter('startFrom', function() {
+        return function(input, start) {
+            if (input != null && input.length > 0) {
+                start = +start; //parse to int
+                return input.slice(start)
+            }
+        }
+    });
+    
+    lmApp.filter('uniqueVideoFilter', function ($rootScope) {
+        return function(videos) {
+            var out = [];
+            var used = [];
+            var videoId, matches;
+            
+            angular.forEach(videos, function(video) {
+                matches = video.description.match("<h2>(.*)</h2>");
+                if (matches) {
+                videoId = matches[1];
+                    if (videoId && used.indexOf(videoId) < 0) {
+                        used.push(videoId);
+                        video.uniqueVideoId = videoId;
+                        var isFreeVideo = false;
+                        $.each($rootScope.freeMedia, function(i, obj) {
+                            if (obj.hashed_id == video.hashed_id) { isFreeVideo = true; return false;}
+                        });
+                        video.isFree = isFreeVideo
+                        out.push(video);
+                    }
+                }
+            });
+            
+            return out;
+        }
     });
     
 })(window.angular);
