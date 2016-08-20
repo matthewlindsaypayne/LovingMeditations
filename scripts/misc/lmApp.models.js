@@ -18,9 +18,11 @@
                 var deferOuter = $q.defer();
                 
                 var innerQuery = new Parse.Query("User_User");
-                innerQuery.equalTo("sender_id", this.id);
                 var query = new Parse.Query(this);
+                
+                innerQuery.equalTo("sender_id", this.id);
                 query.matchesQuery("id", innerQuery);
+                
                 query.descending("lastLogin");
                 query.find({
                     success: function(users) {
